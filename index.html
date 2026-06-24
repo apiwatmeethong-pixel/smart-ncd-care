@@ -474,9 +474,10 @@
     let tableSearchDebounceTimeout;
     let targetMgSearchDebounceTimeout;
 
-    // 🚨 วางลิงก์ Web App URL ที่ลงท้ายด้วย /exec ตรงนี้
-    const API_URL = "https://script.google.com/macros/s/AKfycbxmyNLkCDzCspy5d2-kguZDCFneaoeNjUW5yHYwqpkbLzYOzgAY-60BcBU59HE8tyMlIw/exec";
+    // 🚨 สำคัญที่สุด: วางลิงก์ Web App URL ที่ได้จากการ Deploy Google Apps Script ลงในตัวแปรนี้เพื่อเชื่อมระบบหลังบ้าน
+    const API_URL = "https://script.google.com/macros/s/AKfycbwhqO7NT-bNvsZf-VYndwYcDUBLMYBTuAb4vPWEQKhZXiYcv2l9Mvpe2ZD1eQDvC5Eyqg/exec";
 
+    // ฟังก์ชันศูนย์กลางจัดส่งชุดคำสั่งเชื่อมต่อระบบหลังบ้านผ่าน API (Bypass CORS Preflight via text/plain payload)
     async function callBackendApi(actionName, dataPayload = {}) {
       try {
         const fullPayload = { action: actionName, ...dataPayload };
@@ -596,7 +597,7 @@
               document.getElementById('username').disabled = true;
               document.getElementById('password').disabled = true;
               document.querySelector('#loginForm button[type="submit"]').disabled = true;
-              Swal.fire({ icon: 'error', title: 'บัญชีระบบโดนล็อก', text: 'กรอกรหัสผ่านผิดกำหนด 5 ครั้ง บัญชีถูกล็อกถาวรแล้วครับ' });
+              Swal.fire({ icon: 'error', title: 'บัญชีระบบโดนล็อก', text: 'กรอกรหัสผ่านผิดเกินกำหนด 5 ครั้ง บัญชีถูกล็อกถาวรแล้วครับ' });
             } else {
               Swal.fire({ icon: 'error', title: 'รหัสผ่านไม่ถูกต้อง', text: response.message + ` (เหลือสิทธิ์พยายามอีก ${5 - failedLoginAttemptsCount} ครั้ง)` });
             }
@@ -831,7 +832,7 @@
       } else if (sbp >= 120 || dbp >= 80 || bsl >= 100 || bmiVal >= 23 || cvdColor.includes('warning')) {
         tSt.innerText = "กลุ่มเสี่ยงโรคเรื้อรัง (สีเหลือง)"; 
         box.style.borderColor = "#ca8a04"; box.style.backgroundColor = "#fef9c3"; tSt.className = "fw-black my-2 fs-2 text-warning-dark";
-        tAd.innerHTML = `<strong>💡 คำแนะนำประเมินตนเอง:</strong> ร่างกายของท่านเริ่มส่งสัญญาณเตือนว่ามีความเสี่ยงต่อโรค NCDs แนะนำให้ปรับเปลี่ยนพฤติกรรมในชีวิตประจำวัน โดยลดการบริโภคอาหารรสหวาน มัน เค็ม เพิ่มการรับประทานผักผลไม้ และออกกำลังกายหรือแกว่งแขนอย่างน้อยวันละ 30 นาที แล้วอีก 6 เดือนมาติดตามดูระดับตัวเลขสุขภาพร่วมกับ อสม. อีกครั้งนะครับ` + exTxt;
+        tAd.innerHTML = `<strong>💡 คำแนะนำประเมินตนเอง:</strong> ร่างกายของท่านเริ่มส่งสัญญาณเตือนว่ามีความเสี่ยงต่อโรค NCDs แนะนำให้ปรับเปลี่ยนพฤทีพรรมในชีวิตประจำวัน โดยลดการบริโภคอาหารรสหวาน มัน เค็ม เพิ่มการรับประทานผักผลไม้ และออกกำลังกายหรือแกว่งแขนอย่างน้อยวันละ 30 นาที แล้วอีก 6 เดือนมาติดตามดูระดับตัวเลขสุขภาพร่วมกับ อสม. อีกครั้งนะครับ` + exTxt;
       } else if (w > 0 && h > 0) {
         tSt.innerText = "กลุ่มปกติ สุขภาพดี (สีเขียว)"; 
         box.style.borderColor = "#16a34a"; box.style.backgroundColor = "#dcfce7"; tSt.className = "fw-black my-2 fs-2 text-success";
