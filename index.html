@@ -61,8 +61,9 @@
     .login-card { background: var(--glass-fill); backdrop-filter: blur(20px); border: 2px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: 24px; width: 100%; max-width: 520px; }
     .header-glass { background: rgba(255, 255, 255, 0.95); border-bottom: 2px solid var(--glass-border); z-index: 1050; }
     
+    /* โครงสร้างเมนูแถบข้างบน PC แบบพับเก็บซ่อนได้ */
     .sidebar-glass { 
-      background: rgba(255, 255, 255, 0.8); 
+      background: rgba(255, 255, 255, 0.9); 
       border-right: 2px solid var(--glass-border); 
       height: 100vh; 
       position: fixed; 
@@ -72,8 +73,15 @@
       z-index: 1000; 
       width: 270px;
       max-height: 100vh;
-      overflow-y: auto; 
+      overflow-y: auto;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    
+    /* คลาสสั่งปิดพับเมนูฝั่งซ้ายของคอมพิวเตอร์ */
+    .sidebar-glass.collapsed-pc {
+      left: -270px !important;
+    }
+
     .sidebar-glass::-webkit-scrollbar { width: 5px; }
     .sidebar-glass::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); border-radius: 10px; }
 
@@ -84,8 +92,29 @@
     .sidebar-glass .nav-link:hover { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
     .sidebar-glass .nav-link.active { background: #3b82f6; color: #ffffff !important; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3); }
 
-    .wrapper-layout { margin-top: 90px; }
-    .main-frame { padding-top: 15px; min-height: calc(100vh - 90px); display: flex; flex-direction: column; }
+    .wrapper-layout { margin-top: 95px; }
+    
+    /* พื้นที่แสดงผลฝั่งขวาบนหน้าจอ PC */
+    .main-frame { 
+      padding-top: 15px; 
+      min-height: calc(100vh - 95px); 
+      display: flex; 
+      flex-direction: column;
+      margin-left: 270px !important;
+      width: calc(100% - 270px) !important;
+      flex: 0 0 calc(100% - 270px) !important;
+      max-width: calc(100% - 270px) !important;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* คลาสเร่งขยายหน้าจอฝั่งขวาให้กว้างสุด 100% เมื่อกดปุ่มซ่อนเมนูคอมพิวเตอร์ */
+    .main-frame.expanded-pc {
+      margin-left: 0 !important;
+      width: 100% !important;
+      flex: 0 0 100% !important;
+      max-width: 100% !important;
+    }
+
     .required::after { content: " *"; color: #ef4444; font-weight: bold; }
     .fw-extrabold { font-weight: 800; }
     .fw-black { font-weight: 900; }
@@ -96,23 +125,11 @@
     .page-item.active .page-link { background-color: #0284c7; border-color: #0284c7; }
 
     /* ====================================================================================
-       🔥 CSS แก้ไขระยะซ้อนทับ (Overlap) สำหรับ PC
-       ==================================================================================== */
-    @media (min-width: 768px) {
-      .main-frame {
-        margin-left: 270px !important; /* ดันเนื้อหาหลักหลบเมนูด้านซ้ายแบบตายตัว 270px */
-        width: calc(100% - 270px) !important;
-        flex: 0 0 calc(100% - 270px) !important;
-        max-width: calc(100% - 270px) !important;
-      }
-    }
-
-    /* ====================================================================================
-       🔥 CSS RESPONSIVE FOR SMARTPHONES (แก้ปัญหา Header บังเนื้อหาบนมือถือ)
+       🔥 CSS RESPONSIVE FOR SMARTPHONES (แก้ระยะ Overlap บังหน้าเว็บ และล็อกพิกเซลขอบ)
        ==================================================================================== */
     @media (max-width: 767.98px) {
       .wrapper-layout {
-        margin-top: 120px !important; /* ดันเนื้อหาทั้งหมดลงอีก เพื่อหลบ Header ด้านบนสุดไม่ให้บังข้อความ */
+        margin-top: 155px !important; /* ดันเนื้อหาลงมาด้านล่างสุดเพิ่มขึ้น ป้องกันแถบข้อความด้านบนบังหน้าเว็บ 100% */
       }
       
       .main-frame {
@@ -167,8 +184,6 @@
         text-align: center !important;
       }
       .sidebar-glass .nav-link i { font-size: 20px !important; margin-right: 0 !important; margin-bottom: 3px !important; }
-
-      header .btn.d-md-none { display: none !important; }
 
       .form-control-custom { height: 55px !important; font-size: 20px !important; }
 
@@ -240,8 +255,9 @@
     
     <header class="navbar navbar-expand-lg header-glass fixed-top px-4 py-2 d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center gap-3">
-        <button class="btn d-md-none text-secondary p-0 me-2" onclick="toggleMobileSidebar()">
-          <i class="fa-solid fa-bars fs-2"></i>
+        <!-- 📌 ปุ่มเปิด-ปิดซ่อนเมนูด้านซ้ายสำหรับหน้าจอคอมพิวเตอร์ PC -->
+        <button class="btn btn-outline-primary rounded-pill px-3 py-2 fw-bold" onclick="toggleSidebarMenuForPcDevice()">
+          <i class="fa-solid fa-arrows-left-right me-1"></i> <span class="d-none d-sm-inline">ซ่อน/เปิดเมนู</span>
         </button>
         <img id="menuHeaderLogo" src="" alt="Logo" class="rounded" style="height: 50px; width: 50px; object-fit: cover;">
         <span class="fs-2 fw-black text-primary">Smart NCD Care</span>
@@ -275,7 +291,7 @@
           </div>
         </nav>
 
-        <main class="main-frame px-3 px-md-4">
+        <main id="mainContentArea" class="main-frame px-3 px-md-4">
           <div id="windowViewManager">
             
             <div id="view-window-dash" class="sub-view-panel">
@@ -450,10 +466,7 @@
                   <thead class="table-dark fs-5 text-white"><tr><th>เลขทะเบียน PID</th><th>ชื่อ - นามสกุล</th><th>วันที่คัดกรอง</th><th>น้ำหนัก (กก.)</th><th>ส่วนสูง (ซม.)</th><th>รอบเอว (ซม.)</th><th>SYS (บน)</th><th>DIA (ล่าง)</th><th>BSL (น้ำตาล)</th><th>พฤติกรรมสูบบุหรี่</th><th>การดื่มสุรา</th><th>การออกกำลังกาย</th></tr></thead>
                   <tbody id="reportTableBody"><tr><td colspan="12" class="text-center text-muted py-4">กำลังจัดเตรียมโครงสร้างเอกสารรายงาน...</td></tr></tbody>
                 </table>
-                <div class="p-3 d-flex justify-content-between align-items-center bg-light border-top print-hide flex-wrap gap-2">
-                  <span class="fs-4 text-muted fw-bold" id="labelReportPaginationInfo">-</span>
-                  <nav><ul class="pagination pagination-lg mb-0" id="paginationReportWrapper"></ul></nav>
-                </div>
+                <div class="p-3 d-flex justify-content-between align-items-center bg-light border-top print-hide flex-wrap gap-2"><span class="fs-4 text-muted fw-bold" id="labelReportPaginationInfo">-</span><nav><ul class="pagination pagination-lg mb-0" id="paginationReportWrapper"></ul></nav></div>
               </div>
             </div>
 
@@ -472,7 +485,7 @@
             </div>
 
           </div>
-          <footer class="mt-auto py-3 text-center text-muted fw-bold fs-5 border-top">&copy; 2569 ระบบข้อมูลสุขภาพคัดกรองเชิงรุก Ver.4.0 | Design & Developed by Apiwat Meethong</footer>
+          <footer class="mt-auto py-3 text-center text-muted fw-bold fs-5 border-top">&copy; 2569 ระบบข้อมูลสุขภาพคัดกรองเชิงรุก Ver.4.1 | Design & Developed by Apiwat Meethong</footer>
         </main>
       </div>
     </div>
@@ -529,6 +542,16 @@
     let targetMgSearchDebounceTimeout;
 
     const API_URL = "https://script.google.com/macros/s/AKfycbymA_M4uMbNZiKWdCucLi_MWajv2mtgV5FnIxifvinUagoVvyumobD5ooOxeZ4HvtSU7Q/exec";
+
+    // 📌 ฟังก์ชันสั่ง เปิด-ปิด พับเก็บแถวเมนูด้านซ้ายสำหรับคอมพิวเตอร์ PC ป้องกันการบังตัวหน้าฝั่งขวา
+    function toggleSidebarMenuForPcDevice() {
+      const menu = document.getElementById('sidebarMenu');
+      const frame = document.getElementById('mainContentArea');
+      if (menu && frame) {
+        menu.classList.toggle('collapsed-pc');
+        frame.classList.toggle('expanded-pc');
+      }
+    }
 
     async function callBackendApi(actionName, dataPayload = {}) {
       try {
@@ -594,8 +617,10 @@
       const sidebar = document.getElementById('sidebarMenu');
       if (sidebar && sidebar.classList.contains('show')) { sidebar.classList.remove('show'); }
 
-      // 📌 คำสั่งเลื่อนหน้าจอกลับไปบนสุดเสมอเมื่อมีการเปลี่ยนหน้า
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      // 📌 ดีดหน้าจอหลักกลับไปตำแหน่ง (0, 0) บนสุดของเว็บทันทีที่มีการสลับหน้าเมนู
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
 
       if (targetView === 'dash') { fetchDashboardCountsFromServer(); }
       else if (targetView === 'list') { fetchPopulationListFromServer(); }
@@ -781,13 +806,9 @@
           return (r.name.toLowerCase().includes(q) || r.pid.toString().includes(q)) && (st === "" || r.last_screening_status.includes(st)); 
         });
         
-        if (isFromUserInput) {
-          tableCurrentPage = 1; 
-        }
-        
+        if (isFromUserInput) { tableCurrentPage = 1; }
         const maxPage = Math.ceil(displayFilteredDataset.length / rowsPerPageLimit) || 1;
         tableCurrentPage = Math.max(1, Math.min(tableCurrentPage, maxPage));
-        
         renderPopulationTableElements();
       }, 300);
     }
@@ -852,6 +873,13 @@
       }
       toggleBehaviorFreqPanel('smoke'); toggleBehaviorFreqPanel('alc'); toggleBehaviorFreqPanel('ex');
       attachRealtimeClinicalCalculationListeners(); runClinicalEvaluationEngine();
+
+      // 📌 🔥 สั่งดีดหน้าจอสมาร์ทโฟนขึ้นบนสุดด้วยชุดคำสั่ง Timeout (แก้ไขเรื่องฟอร์มแสดงผลตรงกลางหน้าเว็บ)
+      setTimeout(function() {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }, 80);
     }
 
     function attachRealtimeClinicalCalculationListeners() {
@@ -951,9 +979,7 @@
     }
 
     function submitFormScreeningData(e) {
-      e.preventDefault(); 
-      const form = document.getElementById('ncdForm'); 
-      
+      e.preventDefault(); const form = document.getElementById('ncdForm'); 
       const wRaw = document.getElementById('in_weight').value;
       const hRaw = document.getElementById('in_height').value;
       const waistRaw = document.getElementById('in_waist').value;
@@ -963,8 +989,7 @@
 
       if (wRaw === "" || hRaw === "" || waistRaw === "" || sbpRaw === "" || dbpRaw === "" || bslRaw === "") {
         Swal.fire({ icon: 'error', title: 'ไม่สามารถบันทึกข้อมูลได้', text: 'ขออภัยด้วยครับ บังคับว่าหากกรอกข้อมูลไม่ครบทุกช่องสัญญาณชีพ ระบบจะไม่ยินยอมให้ทำการบันทึกข้อมูลเด็ดขาด โปรดตรวจทานช่องที่ว่างอยู่ครับ!' });
-        if (form) form.classList.add('was-validated');
-        return;
+        if (form) form.classList.add('was-validated'); return;
       }
 
       const sbp = parseInt(sbpRaw); const dbp = parseInt(dbpRaw); const bsl = parseInt(bslRaw);
@@ -976,25 +1001,18 @@
       };
       
       toggleLoaderDisplay(true); 
-      callBackendApi('saveNcdScreening', { payload: payload })
-        .then(res => { 
-          toggleLoaderDisplay(false); 
-          if (res.success) { 
-            Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', timer: 1500, showConfirmButton: false }); 
-            changeViewWindow('list'); 
-          } 
-        });
+      callBackendApi('saveNcdScreening', { payload: payload }).then(res => { 
+        toggleLoaderDisplay(false); if (res.success) { Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', timer: 1500, showConfirmButton: false }); changeViewWindow('list'); } 
+      });
     }
 
     function renderHealthRulesTable() {
       const tbody = document.getElementById('healthRulesTableBody'); if (!tbody) return; tbody.innerHTML = '';
-      
       masterHealthRules.forEach(r => { 
         if(['BMI','BP','FBS'].indexOf(r.category) !== -1) { 
           tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge bg-primary fs-5 px-3 py-2">${r.category}</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ช่วงค่า: ${r.min_value} - ${r.max_value}</td><td data-label="ผลการวิเคราะห์" class="fs-4 text-dark fw-bold">${r.result}</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">${r.advice}</td></tr>`; 
         } 
       });
-      
       tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge fs-5 px-3 py-2" style="background-color: #0284c7;">รอบเอว (ชาย)</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ไม่เกิน 90 เซนติเมตร (หรือ ไม่เกิน ส่วนสูง ÷ 2)</td><td data-label="ผลการวิเคราะห์" class="fs-4 text-success fw-bold">ปกติ</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">รอบเอวอยู่ในเกณฑ์ปลอดภัย ดัชนีรอบเอวสมส่วน ไม่มีความเสี่ยงภาวะอ้วนลงพุง</td></tr>`;
       tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge fs-5 px-3 py-2" style="background-color: #b91c1c;">รอบเอว (ชาย)</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ตั้งแต่ 91 เซนติเมตร ขึ้นไป (หรือ เกินเกณฑ์ ส่วนสูง ÷ 2)</td><td class="fs-4 text-danger fw-bold">อ้วนลงพุง</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">มีภาวะอ้วนลงพุง เสี่ยงต่อโรคแทรกซ้อนหลอดเลือดหัวใจ สมอง และเบาหวานรายใหม่</td></tr>`;
       tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge fs-5 px-3 py-2" style="background-color: #ec4899;">รอบเอว (หญิง)</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ไม่เกิน 80 เซนติเมตร (หรือ ไม่เกิน ส่วนสูง ÷ 2)</td><td class="fs-4 text-success fw-bold">ปกติ</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">รอบเอวอยู่ในเกณฑ์ปลอดภัย ดัชนีรอบเอวสมส่วน ไม่มีความเสี่ยงภาวะอ้วนลงพุง</td></tr>`;
@@ -1003,25 +1021,17 @@
 
     function fetchVhvPerformanceReportFromServer() { 
       toggleLoaderDisplay(true); 
-      callBackendApi('getVhvPerformanceReport')
-        .then(data => { 
-          toggleLoaderDisplay(false); 
-          masterVhvPerformanceList = data; 
-          
-          const maxPage = Math.ceil(masterVhvPerformanceList.length / rowsPerPageLimit) || 1;
-          perfCurrentPage = Math.max(1, Math.min(perfCurrentPage, maxPage));
-          
-          renderVhvPerformanceTable(); 
-        }); 
+      callBackendApi('getVhvPerformanceReport').then(data => { 
+        toggleLoaderDisplay(false); masterVhvPerformanceList = data; 
+        const maxPage = Math.ceil(masterVhvPerformanceList.length / rowsPerPageLimit) || 1;
+        perfCurrentPage = Math.max(1, Math.min(perfCurrentPage, maxPage));
+        renderVhvPerformanceTable(); 
+      }); 
     }
     
     function renderVhvPerformanceTable() {
       const tbody = document.getElementById('vhvPerformanceTableBody'); if (!tbody) return; tbody.innerHTML = ''; if(masterVhvPerformanceList.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="text-center">ไม่พบรายงาน</td></tr>'; return; }
-      
-      const st = (perfCurrentPage - 1) * rowsPerPageLimit; 
-      const ed = Math.min(st + rowsPerPageLimit, masterVhvPerformanceList.length); 
-      const slice = masterVhvPerformanceList.slice(st, ed);
-      
+      const st = (perfCurrentPage - 1) * rowsPerPageLimit; const ed = Math.min(st + rowsPerPageLimit, masterVhvPerformanceList.length); const slice = masterVhvPerformanceList.slice(st, ed);
       slice.forEach(item => { 
         tbody.innerHTML += `<tr><td data-label="ชื่อ อสม.">${item.name}</td><td data-label="หมู่ที่">หมู่ที่ ${item.moo}</td><td data-label="เป้าหมายทั้งหมด">${item.target} คน</td><td data-label="คัดกรองแล้ว" class="text-success">${item.done} คน</td><td data-label="คงเหลือ" class="text-danger">${item.pending} คน</td><td data-label="ร้อยละผลงาน"><div class="d-flex align-items-center gap-2 w-100 justify-content-end justify-content-md-start"><div class="progress flex-grow-1 d-none d-md-flex" style="height:12px; min-width:100px;"><div class="progress-bar bg-success" style="width:${item.percentage}%"></div></div><span>${item.percentage}%</span></div></td></tr>`; 
       });
@@ -1031,12 +1041,9 @@
 
     function fetchManagementTargetsFromServer() { 
       toggleLoaderDisplay(true); 
-      callBackendApi('getTargetPopulation', { vhvId: 'ALL', role: 'admin' })
-        .then(records => { 
-          toggleLoaderDisplay(false); 
-          masterTargetMgList = records; 
-          executeTargetMgTableFilter(false);
-        }); 
+      callBackendApi('getTargetPopulation', { vhvId: 'ALL', role: 'admin' }).then(records => { 
+        toggleLoaderDisplay(false); masterTargetMgList = records; executeTargetMgTableFilter(false);
+      }); 
     }
     
     function executeTargetMgTableFilter(isFromUserInput = false) { 
@@ -1044,33 +1051,22 @@
       targetMgSearchDebounceTimeout = setTimeout(() => {
         const q = document.getElementById('inputSearchTargetMg').value.toLowerCase(); 
         const residencyStatusFilter = document.getElementById('selectTargetMgStatus') ? document.getElementById('selectTargetMgStatus').value : '';
-        
         filteredTargetMgList = masterTargetMgList.filter(r => {
-          const matchText = r.name.toLowerCase().includes(q);
-          let matchResidency = true;
+          const matchText = r.name.toLowerCase().includes(q); let matchResidency = true;
           if (residencyStatusFilter === "อยู่ในพื้นที่") { matchResidency = (r.status_area !== "ไม่อยู่ในพื้นที่"); } 
           else if (residencyStatusFilter === "ไม่อยู่ในพื้นที่") { matchResidency = (r.status_area === "ไม่อยู่ในพื้นที่"); }
           return matchText && matchResidency;
         });
-        
-        if (isFromUserInput) {
-          tgtMgCurrentPage = 1; 
-        }
-        
+        if (isFromUserInput) { tgtMgCurrentPage = 1; }
         const maxPage = Math.ceil(filteredTargetMgList.length / rowsPerPageLimit) || 1;
         tgtMgCurrentPage = Math.max(1, Math.min(tgtMgCurrentPage, maxPage));
-        
         renderTargetMgTable(); 
       }, 300);
     }
 
     function renderTargetMgTable() {
       const tbody = document.getElementById('targetMgTableBody'); if (!tbody) return; tbody.innerHTML = ''; if(filteredTargetMgList.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">ไม่พบประวัติ</td></tr>'; return; }
-      
-      const st = (tgtMgCurrentPage - 1) * rowsPerPageLimit; 
-      const ed = Math.min(st + rowsPerPageLimit, filteredTargetMgList.length); 
-      const slice = filteredTargetMgList.slice(st, ed);
-      
+      const st = (tgtMgCurrentPage - 1) * rowsPerPageLimit; const ed = Math.min(st + rowsPerPageLimit, filteredTargetMgList.length); const slice = filteredTargetMgList.slice(st, ed);
       slice.forEach(item => {
         const isChecked = item.status_area !== 'ไม่อยู่ในพื้นที่' ? 'checked' : ''; const statusLabel = item.status_area !== 'ไม่อยู่ในพื้นที่' ? '<span class="text-success fw-bold"><i class="fa fa-home"></i> อยู่ในพื้นที่</span>' : '<span class="text-danger fw-bold"><i class="fa fa-plane-departure"></i> ไม่อยู่ในพื้นที่</span>';
         tbody.innerHTML += `<tr><td data-label="ชื่อ - นามสกุลเป้าหมาย">${item.name}</td><td data-label="อายุ">${item.age} ปี</td><td data-label="ที่อยู่ปัจจุบัน" class="small text-muted">${item.address}</td><td data-label="อสม. ผู้รับผิดชอบ">${item.vhv_name}</td><td data-label="สถานะถิ่นพำนักปัจจุบัน" class="text-center print-hide"><div class="d-flex flex-row flex-md-column align-items-center justify-content-end justify-content-md-center gap-2 w-100"><div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" role="switch" ${isChecked} onchange="toggleTargetLocationState('${item.pid}', this)"></div><div class="fs-6">${statusLabel}</div></div></td></tr>`;
@@ -1081,55 +1077,42 @@
 
     function toggleTargetLocationState(pid, el) { 
       const statusStr = el.checked ? 'อยู่ในพื้นที่' : 'ไม่อยู่ในพื้นที่'; 
-      callBackendApi('updateTargetAreaStatus', { pid: pid, statusStr: statusStr })
-        .then(res => { 
-          if(res.success) { 
-            const idx = masterTargetMgList.findIndex(t => t.pid.toString() === pid.toString()); 
-            if(idx !== -1) masterTargetMgList[idx].status_area = statusStr; 
-            executeTargetMgTableFilter(false);
-          } 
-        }); 
+      callBackendApi('updateTargetAreaStatus', { pid: pid, statusStr: statusStr }).then(res => { 
+        if(res.success) { 
+          const idx = masterTargetMgList.findIndex(t => t.pid.toString() === pid.toString()); 
+          if(idx !== -1) masterTargetMgList[idx].status_area = statusStr; executeTargetMgTableFilter(false);
+        } 
+      }); 
     }
     
     function executeSaveLogoConfig() { 
-      const url = document.getElementById('inputAgencyLogoUrl').value.trim(); 
-      toggleLoaderDisplay(true); 
-      callBackendApi('saveAgencyLogoUrl', { url: url })
-        .then(res => { 
-          toggleLoaderDisplay(false); 
-          if(res.success) { 
-            const img = document.getElementById('menuHeaderLogo'); if (img) img.src = url; 
-            Swal.fire({ icon: 'success', title: 'อัปเดตโลโก้สำเร็จ' }); 
-          } 
-        }); 
+      const url = document.getElementById('inputAgencyLogoUrl').value.trim(); toggleLoaderDisplay(true); 
+      callBackendApi('saveAgencyLogoUrl', { url: url }).then(res => { 
+        toggleLoaderDisplay(false); if(res.success) { const img = document.getElementById('menuHeaderLogo'); if (img) img.src = url; Swal.fire({ icon: 'success', title: 'อัปเดตโลโก้สำเร็จ' }); } 
+      }); 
     }
 
     function fetchUserAccountsFromServer() {
       toggleLoaderDisplay(true);
-      callBackendApi('processUserDatabaseAction', { actionType: 'READ', payload: {}, role: activeVhvSession.role })
-        .then(users => {
-          toggleLoaderDisplay(false);
-          const tbody = document.getElementById('usersTableBody'); if (!tbody) return; tbody.innerHTML = '';
-          users.forEach(u => {
-            let editBtn = `<button class="btn btn-sm btn-warning fw-bold fs-6 rounded-pill px-3 me-2" onclick="openEditUserModal(${JSON.stringify(u).replace(/"/g, '&quot;')})"><i class="fa-solid fa-user-pen"></i> แก้ไข</button>`;
-            let deleteBtn = `<button class="btn btn-sm btn-danger fw-bold fs-6 rounded-pill px-3" onclick="executeUserCrudAction('DELETE', ${u.user_id})"><i class="fa fa-trash"></i> ลบ</button>`;
-            if(activeVhvSession.role === 'staff') {
-              deleteBtn = `<span class="badge bg-light text-muted fs-6">ล็อกสิทธิ์การลบ</span>`;
-              if (u.type === 'admin') { editBtn = `<span class="badge bg-light text-muted fs-6 me-2">ล็อกสิทธิ์จัดการ Admin</span>`; }
-            }
-            tbody.innerHTML += `<tr><td data-label="รหัสผู้ใช้">${u.user_id}</td><td data-label="ชื่อผู้ใช้">${u.user}</td><td data-label="รหัสผ่าน"><code>${u.pass}</code></td><td data-label="สิทธิ์ระบบ"><span class="badge bg-secondary">${u.type}</span></td><td data-label="ชื่อ - นามสกุล">${u.fullname}</td><td data-label="หมู่ที่">หมู่ ${u.moo}</td><td data-label="จัดการคำสั่ง" class="text-center w-100">${editBtn} ${deleteBtn}</td></tr>`;
-          });
-        }); 
+      callBackendApi('processUserDatabaseAction', { actionType: 'READ', payload: {}, role: activeVhvSession.role }).then(users => {
+        toggleLoaderDisplay(false); const tbody = document.getElementById('usersTableBody'); if (!tbody) return; tbody.innerHTML = '';
+        users.forEach(u => {
+          let editBtn = `<button class="btn btn-sm btn-warning fw-bold fs-6 rounded-pill px-3 me-2" onclick="openEditUserModal(${JSON.stringify(u).replace(/"/g, '&quot;')})"><i class="fa-solid fa-user-pen"></i> แก้ไข</button>`;
+          let deleteBtn = `<button class="btn btn-sm btn-danger fw-bold fs-6 rounded-pill px-3" onclick="executeUserCrudAction('DELETE', ${u.user_id})"><i class="fa fa-trash"></i> ลบ</button>`;
+          if(activeVhvSession.role === 'staff') {
+            deleteBtn = `<span class="badge bg-light text-muted fs-6">ล็อกสิทธิ์การลบ</span>`;
+            if (u.type === 'admin') { editBtn = `<span class="badge bg-light text-muted fs-6 me-2">ล็อกสิทธิ์จัดการ Admin</span>`; }
+          }
+          tbody.innerHTML += `<tr><td data-label="รหัสผู้ใช้">${u.user_id}</td><td data-label="ชื่อผู้ใช้">${u.user}</td><td data-label="รหัสผ่าน"><code>${u.pass}</code></td><td data-label="สิทธิ์ระบบ"><span class="badge bg-secondary">${u.type}</span></td><td data-label="ชื่อ - นามสกุล">${u.fullname}</td><td data-label="หมู่ที่">หมู่ ${u.moo}</td><td data-label="จัดการคำสั่ง" class="text-center w-100">${editBtn} ${deleteBtn}</td></tr>`;
+        });
+      }); 
     }
 
     function openAddUserModal() {
       const form = document.getElementById('userActionForm'); if (form) form.reset();
       safetySetInputValue('modal_user_id', ""); safetySetTextContent('userModalTitle', "เพิ่มบัญชีรายชื่อ อสม. คณะทำงานใหม่");
       const typeSelect = document.getElementById('modal_type');
-      if (typeSelect) {
-        if (activeVhvSession.role === 'staff') { typeSelect.value = 'user'; typeSelect.disabled = true; } 
-        else { typeSelect.disabled = false; }
-      }
+      if (typeSelect) { if (activeVhvSession.role === 'staff') { typeSelect.value = 'user'; typeSelect.disabled = true; } else { typeSelect.disabled = false; } }
       if (bootstrapUserModalInstance) bootstrapUserModalInstance.show();
     }
 
@@ -1146,12 +1129,10 @@
         user_id: uid, user: document.getElementById('modal_user').value.trim(), pass: document.getElementById('modal_pass').value.trim(), fullname: document.getElementById('modal_fullname').value.trim(), type: document.getElementById('modal_type').value, moo: parseInt(document.getElementById('modal_moo').value), 'PID อสม.': document.getElementById('modal_pid_อสม').value.trim(), community: 'ชุมชนโทกหัวช้าง'
       };
       toggleLoaderDisplay(true);
-      callBackendApi('processUserDatabaseAction', { actionType: act, payload: payload, role: activeVhvSession.role })
-        .then(res => {
-          toggleLoaderDisplay(false);
-          if(res.success) { if (bootstrapUserModalInstance) bootstrapUserModalInstance.hide(); fetchUserAccountsFromServer(); Swal.fire({ icon: 'success', title: 'ดำเนินการสำเร็จ', timer: 1200, showConfirmButton:false }); } 
-          else { Swal.fire({ icon: 'error', title: 'ไม่สามารถทำรายการได้', text: res.message }); }
-        }); 
+      callBackendApi('processUserDatabaseAction', { actionType: act, payload: payload, role: activeVhvSession.role }).then(res => {
+        toggleLoaderDisplay(false); if(res.success) { if (bootstrapUserModalInstance) bootstrapUserModalInstance.hide(); fetchUserAccountsFromServer(); Swal.fire({ icon: 'success', title: 'ดำเนินการสำเร็จ', timer: 1200, showConfirmButton:false }); } 
+        else { Swal.fire({ icon: 'error', title: 'ไม่สามารถทำรายการได้', text: res.message }); }
+      }); 
     }
 
     function executeUserCrudAction(action, userId) {
@@ -1159,11 +1140,10 @@
         Swal.fire({ title: 'ยืนยันการลบระเบียบบัญชีนี้?', text: "เมื่อยืนยันแล้ว บัญชี อสม. ดังกล่าวจะไม่สามารถเข้าสู่ระบบได้อีกต่อไป!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'ลบข้อมูล' }).then((result) => {
           if (result.isConfirmed) {
             toggleLoaderDisplay(true);
-            callBackendApi('processUserDatabaseAction', { actionType: 'DELETE', payload: { user_id: userId }, role: activeVhvSession.role })
-              .then(res => {
-                toggleLoaderDisplay(false); if(res.success) { fetchUserAccountsFromServer(); Swal.fire('ถูกลบแล้ว!', '', 'success'); } 
-                else { Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res.message }); }
-              }); 
+            callBackendApi('processUserDatabaseAction', { actionType: 'DELETE', payload: { user_id: userId }, role: activeVhvSession.role }).then(res => {
+              toggleLoaderDisplay(false); if(res.success) { fetchUserAccountsFromServer(); Swal.fire('ถูกลบแล้ว!', '', 'success'); } 
+              else { Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res.message }); }
+            }); 
           }
         });
       }
@@ -1171,161 +1151,96 @@
 
     function fetchScreeningReportDataFromServer() {
       toggleLoaderDisplay(true);
-      callBackendApi('getAllScreeningReportData')
-        .then(records => {
-          toggleLoaderDisplay(false); 
-          masterReportList = records;
-          
-          const maxPage = Math.ceil(masterReportList.length / rowsPerPageLimit) || 1;
-          reportCurrentPage = Math.max(1, Math.min(reportCurrentPage, maxPage));
-          
-          renderReportTable();
-        });
+      callBackendApi('getAllScreeningReportData').then(records => {
+        toggleLoaderDisplay(false); masterReportList = records;
+        const maxPage = Math.ceil(masterReportList.length / rowsPerPageLimit) || 1;
+        reportCurrentPage = Math.max(1, Math.min(reportCurrentPage, maxPage));
+        renderReportTable();
+      });
     }
 
     function renderReportTable() {
       const tbody = document.getElementById('reportTableBody'); if (!tbody) return; tbody.innerHTML = '';
       if (masterReportList.length === 0) { tbody.innerHTML = '<tr><td colspan="12" class="text-center text-muted py-4 fs-4">ยังไม่พบบันทึกประวัติการคัดกรอง NCDs ในระบบ</td></tr>'; return; }
-      
-      const st = (reportCurrentPage - 1) * rowsPerPageLimit; 
-      const ed = Math.min(st + rowsPerPageLimit, masterReportList.length); 
-      const slice = masterReportList.slice(st, ed);
-      
+      const st = (reportCurrentPage - 1) * rowsPerPageLimit; const ed = Math.min(st + rowsPerPageLimit, masterReportList.length); const slice = masterReportList.slice(st, ed);
       slice.forEach(r => {
         tbody.innerHTML += `<tr><td data-label="เลขทะเบียน PID">${r.pid}</td><td data-label="ชื่อ - นามสกุล">${r.name}</td><td data-label="วันที่คัดกรอง">${r.date}</td><td data-label="น้ำหนัก (กก.)">${r.weight}</td><td data-label="ส่วนสูง (ซม.)">${r.height}</td><td data-label="รอบเอว (ซม.)">${r.waist}</td><td data-label="SYS (บน)" class="text-danger">${r.sbp}</td><td data-label="DIA (ล่าง)" class="text-danger">${r.dbp}</td><td data-label="BSL (น้ำตาล)" class="text-success">${r.bsl}</td><td data-label="พฤติกรรมสูบบุหรี่">${r.smoking}</td><td data-label="การดื่มสุรา">${r.alcohol}</td><td data-label="การออกกำลังกาย">${r.exercise}</td></tr>`;
       });
-      
       safetySetTextContent('labelReportPaginationInfo', `รายงานแถวที่ ${st+1} ถึง ${ed} จากทั้งหมด ${masterReportList.length} รายการ`); 
       compileSmartPaginationLinks(reportCurrentPage, masterReportList.length, 'paginationReportWrapper', 'shiftReportPage');
     }
 
     function executeExportReportToExcel() {
       if (masterReportList.length === 0) { Swal.fire({ icon: 'error', title: 'ไม่พบข้อมูล', text: 'ไม่มีข้อมูลรายงานสำหรับการส่งออกไฟล์' }); return; }
-      const worksheetData = [
-        ["เลขทะเบียน PID", "ชื่อ - นามสกุล", "วันที่คัดกรอง", "น้ำหนัก (กก.)", "ส่วนสูง (ซม.)", "รอบเอว (ซม.)", "SYS (บน)", "DIA (ล่าง)", "BSL (น้ำตาล)", "พฤติกรรมสูบบุหรี่", "การดื่มสุรา", "การออกกำลังกาย"]
-      ];
-      masterReportList.forEach(r => {
-        worksheetData.push([r.pid, r.name, r.date, r.weight, r.height, r.waist, r.sbp, r.dbp, r.bsl, r.smoking, r.alcohol, r.exercise]);
-      });
-      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "ทะเบียนรายงานคัดกรองเชิงรุก");
-      XLSX.writeFile(workbook, "รายงานทะเบียนคัดกรอง_Smart_NCD_Care_อนามัย.xlsx");
+      const worksheetData = [["เลขทะเบียน PID", "ชื่อ - นามสกุล", "วันที่คัดกรอง", "น้ำหนัก (กก.)", "ส่วนสูง (ซม.)", "รอบเอว (ซม.)", "SYS (บน)", "DIA (ล่าง)", "BSL (น้ำตาล)", "พฤติกรรมสูบบุหรี่", "การดื่มสุรา", "การออกกำลังกาย"]];
+      masterReportList.forEach(r => { worksheetData.push([r.pid, r.name, r.date, r.weight, r.height, r.waist, r.sbp, r.dbp, r.bsl, r.smoking, r.alcohol, r.exercise]); });
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData); const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "ทะเบียนรายงานคัดกรองเชิงรุก"); XLSX.writeFile(workbook, "รายงานทะเบียนคัดกรอง_Smart_NCD_Care_อนามัย.xlsx");
     }
 
     function executePrintReportPdfLandscape() { 
       const tbody = document.getElementById('reportTableBody');
       if (tbody && masterReportList.length > 0) {
         let fullHtml = '';
-        masterReportList.forEach(r => {
-          fullHtml += `<tr><td>${r.pid}</td><td>${r.name}</td><td>${r.date}</td><td>${r.weight}</td><td>${r.height}</td><td>${r.waist}</td><td class="text-danger">${r.sbp}</td><td class="text-danger">${r.dbp}</td><td class="text-success">${r.bsl}</td><td>${r.smoking}</td><td>${r.alcohol}</td><td>${r.exercise}</td></tr>`;
-        });
+        masterReportList.forEach(r => { fullHtml += `<tr><td>${r.pid}</td><td>${r.name}</td><td>${r.date}</td><td>${r.weight}</td><td>${r.height}</td><td>${r.waist}</td><td class="text-danger">${r.sbp}</td><td class="text-danger">${r.dbp}</td><td class="text-success">${r.bsl}</td><td>${r.smoking}</td><td>${r.alcohol}</td><td>${r.exercise}</td></tr>`; });
         tbody.innerHTML = fullHtml;
       }
-      setTimeout(() => {
-        window.print();
-        renderReportTable(); 
-      }, 500);
+      setTimeout(() => { window.print(); renderReportTable(); }, 500);
     }
 
     function executeSaveAdviceCardAsImage() {
-      const cardElement = document.getElementById('shareableAdviceCard');
-      const statusText = document.getElementById('rt-status-text').innerText;
-      if (statusText.includes("รอคีย์") || statusText.includes("กรอกตัวเลข")) {
-        Swal.fire({ icon: 'warning', title: 'ไม่สามารถบันทึกได้', text: 'กรุณากรอกข้อมูลสัญญาณชีพและประมวลผลให้เรียร็จสิ้นก่อนกดสร้างภาพแชร์ครับ' }); return;
-      }
-      
-      toggleLoaderDisplay(true);
-      const dateNow = new Date();
-      const thaiDateStr = dateNow.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+      const cardElement = document.getElementById('shareableAdviceCard'); const statusText = document.getElementById('rt-status-text').innerText;
+      if (statusText.includes("รอคีย์") || statusText.includes("กรอกตัวเลข")) { Swal.fire({ icon: 'warning', title: 'ไม่สามารถบันทึกได้', text: 'กรุณากรอกข้อมูลสัญญาณชีพและประมวลผลให้เรียร็จสิ้นก่อนกดสร้างภาพแชร์ครับ' }); return; }
+      toggleLoaderDisplay(true); const dateNow = new Date(); const thaiDateStr = dateNow.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
       safetySetTextContent('share-card-date', 'วันที่ตรวจประเมิน: ' + thaiDateStr);
-
       html2canvas(cardElement, { scale: 2, useCORS: true, backgroundColor: "#ffffff" }).then(canvas => {
         canvas.toBlob(blob => {
-          toggleLoaderDisplay(false);
-          const imgFile = new File([blob], `SmartNCDCare_${dateNow.getTime()}.png`, { type: 'image/png' });
-          
+          toggleLoaderDisplay(false); const imgFile = new File([blob], `SmartNCDCare_${dateNow.getTime()}.png`, { type: 'image/png' });
           if (navigator.canShare && navigator.canShare({ files: [imgFile] })) {
-            navigator.share({
-              files: [imgFile],
-              title: 'บัตรประเมินสุขภาพตนเองนิรนาม',
-              text: 'สรุปผลตรวจวิเคราะห์สัญญาณชีพเบื้องต้นจากระบบข้อมูล Smart NCD Care'
-            }).then(() => {
+            navigator.share({ files: [imgFile], title: 'บัตรประเมินสุขภาพตนเองนิรนาม', text: 'สรุปผลตรวจวิเคราะห์สัญญาณชีพเบื้องต้นจากระบบข้อมูล Smart NCD Care' }).then(() => {
               Swal.fire({ icon: 'success', title: 'ส่งข้อมูลสำเร็จ', text: 'ดำเนินการแชร์ข้อมูลสุขภาพเรียบร้อยแล้ว', timer: 1500, showConfirmButton: false });
-            }).catch(err => {
-              if (err.name !== 'AbortError') {
-                executeFallbackDownloadMechanism(canvas, dateNow);
-              }
-            });
-          } else {
-            executeFallbackDownloadMechanism(canvas, dateNow);
-          }
+            }).catch(err => { if (err.name !== 'AbortError') { executeFallbackDownloadMechanism(canvas, dateNow); } });
+          } else { executeFallbackDownloadMechanism(canvas, dateNow); }
         }, 'image/png');
       }).catch(err => { toggleLoaderDisplay(false); Swal.fire({ icon: 'error', title: 'ล้มเหลว', text: 'ล้มเหลวในการแปลงภาพ: ' + err.toString() }); });
     }
 
     function executeFallbackDownloadMechanism(canvas, dateNow) {
-      const imgBase64Uri = canvas.toDataURL("image/png");
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.download = `บัตรแนะนำสุขภาพ_SmartNCDCare_${dateNow.getTime()}.png`;
-      downloadAnchor.href = imgBase64Uri;
-      downloadAnchor.click();
-      
-      Swal.fire({
-        icon: 'success', 
-        title: 'ดาวน์โหลดภาพสำรองสำเร็จ',
-        text: 'เนื่องจากบราวเซอร์นี้ไม่รองรับการกดแชร์เปิดแอปตรงๆ ระบบจึงทำการเซฟภาพลงในอัลบั้มรูปภาพของเครื่องให้แทนโดยอัตโนมัติ อสม. สามารถเปิดแอป LINE หรือ Facebook แล้วแนบส่งรูปนี้เข้าห้องแชทได้ทันทีเช่นกันครับ (ปลอดภัยตามกฎหมาย PDPA)',
-        confirmButtonColor: '#0284c7'
-      });
+      const imgBase64Uri = canvas.toDataURL("image/png"); const downloadAnchor = document.createElement('a');
+      downloadAnchor.download = `บัตรแนะนำสุขภาพ_SmartNCDCare_${dateNow.getTime()}.png`; downloadAnchor.href = imgBase64Uri; downloadAnchor.click();
+      Swal.fire({ icon: 'success', title: 'ดาวน์โหลดภาพสำรองสำเร็จ', text: 'เนื่องจากบราวเซอร์นี้ไม่รองรับการกดแชร์เปิดแอปตรงๆ ระบบจึงทำการเซฟภาพลงในอัลบั้มรูปภาพของเครื่องให้แทนโดยอัตโนมัติ อสม. สามารถเปิดแอป LINE หรือ Facebook แล้วแนบส่งรูปนี้เข้าห้องแชทได้ทันทีเช่นกันครับ (ปลอดภัยตามกฎหมาย PDPA)', confirmButtonColor: '#0284c7' });
     }
 
     function executeExportTargetMgToExcel() {
       if (filteredTargetMgList.length === 0) { Swal.fire({ icon: 'error', title: 'ไม่พบข้อมูล' }); return; }
-      const worksheetData = [
-        ["ชื่อ - นามสกุลเป้าหมาย", "อายุ", "ที่อยู่ปัจจุบัน", "อสม. ผู้รับผิดชอบ", "สถานะถิ่นพำนักปัจจุบัน"]
-      ];
-      filteredTargetMgList.forEach(item => {
-        worksheetData.push([item.name, item.age + " ปี", item.address, item.vhv_name, item.status_area]);
-      });
-      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "ฐานข้อมูลทะเบียนเป้าหมายพื้นที่");
-      XLSX.writeFile(workbook, "ทะเบียนกลุ่มเป้าหมายประชากร_Smart_NCD_Care.xlsx");
+      const worksheetData = [["ชื่อ - นามสกุลเป้าหมาย", "อายุ", "ที่อยู่ปัจจุบัน", "อสม. ผู้รับผิดชอบ", "สถานะถิ่นพำนักปัจจุบัน"]];
+      filteredTargetMgList.forEach(item => { worksheetData.push([item.name, item.age + " ปี", item.address, item.vhv_name, item.status_area]); });
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData); const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "ฐานข้อมูลทะเบียนเป้าหมายพื้นที่"); XLSX.writeFile(workbook, "ทะเบียนกลุ่มเป้าหมายประชากร_Smart_NCD_Care.xlsx");
     }
 
     function executePrintTargetMgPdf() { 
       const tbody = document.getElementById('targetMgTableBody');
       if (tbody && filteredTargetMgList.length > 0) {
         let fullHtml = '';
-        filteredTargetMgList.forEach(item => {
-          const statusLabel = item.status_area !== 'ไม่อยู่ในพื้นที่' ? 'อยู่ในพื้นที่' : 'ไม่อยู่ในพื้นที่';
-          fullHtml += `<tr><td>${item.name}</td><td>${item.age} ปี</td><td class="small text-muted">${item.address}</td><td>${item.vhv_name}</td><td class="text-center print-hide">${statusLabel}</td></tr>`;
-        });
+        filteredTargetMgList.forEach(item => { const statusLabel = item.status_area !== 'ไม่อยู่ในพื้นที่' ? 'อยู่ในพื้นที่' : 'ไม่อยู่ในพื้นที่'; fullHtml += `<tr><td>${item.name}</td><td>${item.age} ปี</td><td class="small text-muted">${item.address}</td><td>${item.vhv_name}</td><td class="text-center print-hide">${statusLabel}</td></tr>`; });
         tbody.innerHTML = fullHtml;
       }
-      setTimeout(() => {
-        window.print();
-        renderTargetMgTable(); 
-      }, 500);
+      setTimeout(() => { window.print(); renderTargetMgTable(); }, 500);
     }
 
     function executeProcessingCsvUploadToServer() {
       const fileInput = document.getElementById('inputCsvTargetFile');
-      if (!fileInput || fileInput.files.length === 0) {
-        Swal.fire({ icon: 'warning', title: 'ยังไม่ได้เลือกไฟล์', text: 'กรุณาเลือกไฟล์ประชากรในรูปแบบนามสกุล .csv ก่อนกดปุ่มนำเข้าข้อมูลครับ' });
-        return;
-      }
+      if (!fileInput || fileInput.files.length === 0) { Swal.fire({ icon: 'warning', title: 'ยังไม่ได้เลือกไฟล์', text: 'กรุณาเลือกไฟล์ประชากรในรูปแบบนามสกุล .csv ก่อนกดปุ่มนำเข้าข้อมูลครับ' }); return; }
       const csvFile = fileInput.files[0]; const fileReader = new FileReader(); toggleLoaderDisplay(true);
       fileReader.onload = function(event) {
         const textRawContent = event.target.result;
-        callBackendApi('importCsvToDataSheet', { textRawContent: textRawContent })
-          .then(result => {
-            toggleLoaderDisplay(false);
-            if (result.success) {
-              fileInput.value = ""; 
-              Swal.fire({ icon: 'success', title: 'นำเข้าข้อมูลประชากรสำเร็จ!', text: `ระบบได้ทำการล้างข้อมูลชุดเก่า และเขียนทับข้อมูลชุดใหม่ลงชีท data เรียบร้อยแล้ว จำนวนทั้งหมด ${result.count} รายการ`, confirmButtonText: 'รับทราบ', confirmButtonColor: '#ea580c' });
-            } else { Swal.fire({ icon: 'error', title: 'การนำเข้าข้อมูลล้มเหลว', text: result.message }); }
-          });
+        callBackendApi('importCsvToDataSheet', { textRawContent: textRawContent }).then(result => {
+          toggleLoaderDisplay(false);
+          if (result.success) {
+            fileInput.value = ""; Swal.fire({ icon: 'success', title: 'นำเข้าข้อมูลประชากรสำเร็จ!', text: `ระบบได้ทำการล้างข้อมูลชุดเก่า และเขียนทับข้อมูลชุดใหม่ลงชีท data เรียบร้อยแล้ว จำนวนทั้งหมด ${result.count} รายการ`, confirmButtonText: 'รับทราบ', confirmButtonColor: '#ea580c' });
+          } else { Swal.fire({ icon: 'error', title: 'การนำเข้าข้อมูลล้มเหลว', text: result.message }); }
+        });
       };
       fileReader.readAsText(csvFile, "UTF-8");
     }
