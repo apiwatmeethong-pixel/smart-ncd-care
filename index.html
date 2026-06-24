@@ -2,6 +2,8 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
+  <!-- 🔥 บรรทัดนี้คือจุดสำคัญที่เพิ่มเข้ามา เพื่อบังคับให้สมาร์ทโฟนเปิดโหมดมือถือ ไม่ย่อจอคอมพิวเตอร์ -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Smart NCD Care System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -51,7 +53,7 @@
     .login-card { background: var(--glass-fill); backdrop-filter: blur(20px); border: 2px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: 24px; width: 100%; max-width: 520px; }
     .header-glass { background: rgba(255, 255, 255, 0.95); border-bottom: 2px solid var(--glass-border); z-index: 1050; }
     
-    /* โครงสร้างเมนูสำหรับหน้าจอ PC / Tablet */
+    /* โครงสร้างเมนูเค้าโครงสำหรับหน้าจอ PC / Tablet */
     .sidebar-glass { 
       background: rgba(255, 255, 255, 0.8); 
       border-right: 2px solid var(--glass-border); 
@@ -90,7 +92,7 @@
        🔥 CSS RESPONSIVE FOR SMARTPHONES (ย้ายเมนูไปไว้ด้านล่างจอ สไลด์ปัดซ้าย-ขวา)
        ==================================================================================== */
     @media (max-width: 767.98px) {
-      /* 1. แปลงโฉม Sidebar ข้างให้กลายเป็นแอปบาร์ยึดติดด้านล่างจอ (Bottom Navigation Bar) */
+      /* 1. เปลี่ยนจากเมนูด้านข้าง ให้กลายเป็นแถบเมนูด้านล่างจอ (Bottom Navigation Bar) */
       .sidebar-glass {
         position: fixed !important;
         top: auto !important;
@@ -109,7 +111,7 @@
         box-shadow: 0 -8px 30px rgba(15, 23, 42, 0.08) !important;
       }
       
-      /* จัดระเบียบลายเส้นเมนูให้เรียงเป็นแถวนอน และเปิดการใช้นิ้วปัดสไลด์ซ้าย-ขวาอย่างลื่นไหล */
+      /* จัดปุ่มเมนูเรียงแนวนอน และเลื่อนสไลด์ซ้ายขวาได้ */
       .sidebar-glass .nav {
         flex-direction: row !important;
         flex-wrap: nowrap !important;
@@ -118,7 +120,6 @@
         gap: 6px !important;
         -webkit-overflow-scrolling: touch;
       }
-      /* ซ่อนแถบ Scrollbar ประจำระบบปฏิบัติการออกเพื่อความสวยงามสะอาดตา */
       .sidebar-glass .nav::-webkit-scrollbar {
         display: none !important;
       }
@@ -127,7 +128,7 @@
         flex: 0 0 auto !important;
       }
       
-      /* ปรับดีไซน์ปุ่มเมนูย่อยให้เป็นแนวตั้ง (ไอคอนสุขภาพอยู่บน ตัวอักษรคำอธิบายอยู่ล่าง) */
+      /* ปรับดีไซน์ปุ่มเมนูย่อยให้กะทัดรัด ไอคอนอยู่บน ตัวหนังสืออยู่ล่าง */
       .sidebar-glass .nav-link {
         display: flex !important;
         flex-direction: column !important;
@@ -145,7 +146,7 @@
         margin-bottom: 2px !important;
       }
 
-      /* 2. คืนพื้นที่และจัดความกว้างหน้าหลักให้ขยายเต็ม 100% (แก้ปัญหาภาพโดนเบียดบีบแคบ) */
+      /* 2. ดันพื้นที่เนื้อหาหลักให้กว้างเต็มหน้าจอ 100% */
       .wrapper-layout {
         margin-top: 80px !important;
       }
@@ -154,21 +155,19 @@
         margin-left: 0 !important;
         padding-left: 8px !important;
         padding-right: 8px !important;
-        padding-bottom: 95px !important; /* เว้นระยะด้านล่างขึ้นมา เพื่อไม่ให้เมนูแอปบาร์บังปุ่มบันทึกข้อมูล */
+        padding-bottom: 95px !important; /* เว้นระยะท้ายฟอร์มไม่ให้เมนูด้านล่างบังปุ่มบันทึก */
       }
       
-      /* ซ่อนปุ่มแฮมเบอร์เกอร์สามขีดด้านบนซ้ายทิ้ง เนื่องจากย้ายเมนูลงล่างเสร็จสิ้นแล้ว */
       header .btn.d-md-none {
         display: none !important;
       }
 
-      /* ขยายอินพุตฟอร์มคัดกรองให้มองเห็นและพริ้นต์ข้อมูลในมือถือง่ายขึ้น */
       .form-control-custom {
         height: 55px !important;
         font-size: 20px !important;
       }
 
-      /* แปลงตารางรายงานเป็น Card Layout บนมือถืออัตโนมัติ */
+      /* แปลงตารางข้อมูลรายงานให้กลายร่างเป็น Card Layout แนวตั้งอัตโนมัติเมื่อเปิดในมือถือ */
       .mobile-card-table {
         background: transparent !important;
       }
@@ -864,7 +863,7 @@
           safetySetTextContent('stat-progress-percent', calculatedProgressPercent + '%');
 
           const tbody = document.getElementById('dashboardSummaryTableBody'); if (!tbody) return; tbody.innerHTML = '';
-          if(stats.listData.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">ยังไม่มีข้อมูลผลการคัดกรองเสร็จสิ้น</td></tr>'; return; }
+          if(stats.listData.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">ยังไม่มีข้อมูลผลการคัดกรองเสสิ้น</td></tr>'; return; }
           stats.listData.forEach(item => {
             let bClass = "bg-secondary";
             if (item.ncd_status.includes('เขียว') || item.ncd_status.includes('ปกติ')) bClass = "bg-success";
@@ -1087,7 +1086,7 @@
       if (sbp<60 || sbp>200 || dbp<30 || dbp>120 || bsl<40 || bsl>600) { Swal.fire({ icon: 'error', title: 'ตัวเลขคลาดเคลื่อน', text: 'ข้อมูลสัญญาณชีพผิดขอบเขตมาตรฐานสาธารณสุข โปรดตรวจทานอีกรอบครับ!' }); return; }
       
       const payload = {
-        id: document.getElementById('form_record_id').value, citizen_id: document.getElementById('form_pid').value, name: document.getElementById('form_name').value, age: parseInt(document.getElementById('form_age').value), gender: document.getElementById('form_gender').value, weight: parseFloat(wRaw), height: parseFloat(hRaw), bmi: parseFloat(document.getElementById('rt-bmi').innerText) || 0, waist: parseFloat(waistRaw), bp_sys: sbp, dbp_dia: dbp, bp_status: document.getElementById('rt-bp').innerText, fbs: bsl, fbs_status: document.getElementById('rt-bsl').innerText,
+        id: document.getElementById('form_record_id').value, citizen_id: document.getElementById('form_pid').value, name: document.getElementById('form_name').value, age: parseInt(document.getElementById('form_age').value), gender: document.getElementById('form_gender').value, weight: parseFloat(wRaw), height: parseFloat(hRaw), bmi: parseFloat(document.getElementById('rt-bmi').innerText) || 0, waist: parseFloat(waistRaw), bp_sys: sbp, bp_dia: dbp, bp_status: document.getElementById('rt-bp').innerText, fbs: bsl, fbs_status: document.getElementById('rt-bsl').innerText,
         smoking: document.getElementById('sm_yes').checked ? `สูบ (${document.getElementById('sel_freq_smoke').value})` : "ไม่สูบ", alcohol: document.getElementById('alc_yes').checked ? `ดื่ม (${document.getElementById('sel_freq_alc').value})` : "ไม่ดื่ม", exercise: document.getElementById('ex_ok').checked ? "เพียงพอ" : `ไม่เพียงพอ (${document.getElementById('sel_freq_ex').value})`, cvd_risk: document.getElementById('rt-cvd').innerText, ncd_status: document.getElementById('rt-status-text').innerText, operator: activeVhvSession.name
       };
       
@@ -1112,7 +1111,7 @@
       });
       
       tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge fs-5 px-3 py-2" style="background-color: #0284c7;">รอบเอว (ชาย)</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ไม่เกิน 90 เซนติเมตร (หรือ ไม่เกิน ส่วนสูง ÷ 2)</td><td data-label="ผลการวิเคราะห์" class="fs-4 text-success fw-bold">ปกติ</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">รอบเอวอยู่ในเกณฑ์ปลอดภัย ดัชนีรอบเอวสมส่วน ไม่มีความเสี่ยงภาวะอ้วนลงพุง</td></tr>`;
-      tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge fs-5 px-3 py-2" style="background-color: #b91c1c;">รอบเอว (ชาย)</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ตั้งแต่ 91 เซนติเมตร ขึ้นไป (หรือ เกินเกณฑ์ ส่วนสูง ÷ 2)</td><td data-label="ผลการวิเคราะห์" class="fs-4 text-danger fw-bold">อ้วนลงพุง</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">มีภาวะอ้วนลงพุง เสี่ยงต่อโรคแทรกซ้อนหลอดเลือดหัวใจ สมอง และเบาหวานรายใหม่</td></tr>`;
+      tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge fs-5 px-3 py-2" style="background-color: #b91c1c;">รอบเอว (ชาย)</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ตั้งแต่ 91 เซนติเมตร ขึ้นไป (หรือ เกินเกณฑ์ ส่วนสูง ÷ 2)</td><td class="fs-4 text-danger fw-bold">อ้วนลงพุง</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">มีภาวะอ้วนลงพุง เสี่ยงต่อโรคแทรกซ้อนหลอดเลือดหัวใจ สมอง และเบาหวานรายใหม่</td></tr>`;
       tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge fs-5 px-3 py-2" style="background-color: #ec4899;">รอบเอว (หญิง)</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ไม่เกิน 80 เซนติเมตร (หรือ ไม่เกิน ส่วนสูง ÷ 2)</td><td class="fs-4 text-success fw-bold">ปกติ</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">รอบเอวอยู่ในเกณฑ์ปลอดภัย ดัชนีรอบเอวสมส่วน ไม่มีความเสี่ยงภาวะอ้วนลงพุง</td></tr>`;
       tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge fs-5 px-3 py-2" style="background-color: #be185d;">รอบเอว (หญิง)</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ตั้งแต่ 81 เซนติเมตร ขึ้นไป (หรือ เกินเกณฑ์ ส่วนสูง ÷ 2)</td><td class="fs-4 text-danger fw-bold">อ้วนลงพุง</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">มีภาวะอ้วนลงพุง เสี่ยงต่อโรคแทรกซ้อนหลอดเลือดหัวใจ สมอง และเบาหวานรายใหม่</td></tr>`;
     }
