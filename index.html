@@ -82,9 +82,103 @@
     .bg-warning-light { background-color: #fef9c3; border: 2px dashed #facc15; }
     .table > :not(caption) > * > * { padding: 18px 14px !important; }
 
-    /* แก้ไขปัญหาปุ่มกดหน้ากระตุกเวลาคลิกในมือถือ */
     .page-link { border-radius: 8px !important; margin: 0 3px; border: 1px solid #dee2e6; color: #0284c7; }
     .page-item.active .page-link { background-color: #0284c7; border-color: #0284c7; }
+
+    /* ====================================================================================
+       🔥 CSS RESPONSIVE DESIGN FOR SMARTPHONES (แก้ปัญหาตารางเบียด/แสดงผลล้นจอในมือถือ)
+       ==================================================================================== */
+    @media (max-width: 767.98px) {
+      /* ปรับแต่งลิ้นชักเมนูด้านข้างไม่ให้ดันเนื้อหาหลักจนเบียดในมือถือ */
+      .sidebar-glass {
+        position: fixed;
+        top: 0;
+        left: -290px;
+        width: 285px;
+        height: 100vh;
+        z-index: 1060;
+        background: rgba(255, 255, 255, 0.98) !important;
+        padding-top: 95px;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 5px 0 25px rgba(15, 23, 42, 0.15);
+      }
+      .sidebar-glass.show {
+        left: 0;
+      }
+      
+      .wrapper-layout {
+        margin-top: 85px;
+      }
+      
+      .main-frame {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+      }
+
+      .form-control-custom {
+        height: 55px !important;
+        font-size: 20px !important;
+      }
+
+      /* 🚀 โครงสร้างกลไก Reflow เปลี่ยนตารางปกติให้กลายสภาพเป็นการ์ดแนวตั้งบนสมาร์ทโฟน */
+      .mobile-card-table {
+        background: transparent !important;
+      }
+      .mobile-card-table thead {
+        display: none !important; /* ซ่อนหัวตารางเหล็กหนาๆ ทิ้งไป */
+      }
+      .mobile-card-table tbody,
+      .mobile-card-table tr,
+      .mobile-card-table td {
+        display: block !important;
+        width: 100% !important;
+      }
+      .mobile-card-table tr {
+        background: #ffffff !important;
+        border: 2px solid #e2e8f0 !important;
+        border-radius: 18px !important;
+        padding: 16px !important;
+        margin-bottom: 16px !important;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04) !important;
+      }
+      .mobile-card-table td {
+        border: none !important;
+        padding: 10px 4px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        border-bottom: 1px dashed #e2e8f0 !important;
+        white-space: normal !important;
+        text-align: right !important;
+      }
+      .mobile-card-table td:last-child {
+        border-bottom: none !important;
+        justify-content: center !important;
+        padding-top: 14px !important;
+      }
+      
+      /* ดึงค่าหัวข้อคอลัมน์มาแสดงผลฝั่งซ้ายผ่าน Attribute data-label */
+      .mobile-card-table td::before {
+        content: attr(data-label);
+        font-weight: 700 !important;
+        color: #64748b !important;
+        font-size: 16px !important;
+        text-align: left !important;
+        margin-right: 15px;
+        flex-shrink: 0;
+      }
+      
+      /* ปรับแต่งปุ่มเปลี่ยนหน้า Pagination ในมือถือไม่ให้กระจัดกระจาย */
+      .pagination-lg .page-link {
+        padding: 8px 14px !important;
+        font-size: 16px !important;
+      }
+      
+      .card-container-panel {
+        padding: 12px !important;
+        border-radius: 16px !important;
+      }
+    }
 
     @media print {
       @page { size: A4 landscape; margin: 5mm; }
@@ -104,7 +198,7 @@
 </head>
 <body>
 
-  <div id="globalLoader" class="d-none text-center position-fixed top-50 start-50 translate-middle p-4 rounded-3 shadow" style="z-index: 9999; background: rgba(255, 255, 255, 0.95); min-width: 300px; border: 2px solid rgba(0,0,0,0.1);">
+  <div id="globalLoader" class="text-center position-fixed top-50 start-50 translate-middle p-4 rounded-3 shadow d-none" style="z-index: 9999; background: rgba(255, 255, 255, 0.95); min-width: 300px; border: 2px solid rgba(0,0,0,0.1);">
     <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem;"></div>
     <h3 class="mt-3 text-muted fw-bold">กำลังประมวลผลข้อมูล<br>โปรดรอสักครู่เดียว...</h3>
   </div>
@@ -232,7 +326,7 @@
 
               <div class="card card-container-panel p-4">
                 <h4 class="fw-bold text-dark mb-3"><i class="fa-solid fa-table-list text-primary me-2"></i>ตารางรายงานข้อมูลรายชื่อคัดกรองประจำปี</h4>
-                <div class="table-responsive"><table class="table table-bordered align-middle mb-0 text-nowrap"><thead class="table-light fs-5 font-weight-bold"><tr><th>ชื่อ - นามสกุล</th><th>สรุปสถานะกลุ่ม</th><th>แปลดัชนีมวลกาย (BMI)</th><th>แปลความดัน (HT)</th><th>แปลน้ำตาล (DM)</th><th>ประเมินหัวใจ (CVD)</th></tr></thead><tbody id="dashboardSummaryTableBody" class="fs-5 fw-bold text-dark"></tbody></table></div>
+                <div class="table-responsive"><table class="table table-bordered align-middle mb-0 text-nowrap mobile-card-table"><thead class="table-light fs-5 font-weight-bold"><tr><th>ชื่อ - นามสกุล</th><th>สรุปสถานะกลุ่ม</th><th>แปลดัชนีมวลกาย (BMI)</th><th>แปลความดัน (HT)</th><th>แปลน้ำตาล (DM)</th><th>ประเมินหัวใจ (CVD)</th></tr></thead><tbody id="dashboardSummaryTableBody" class="fs-5 fw-bold text-dark"></tbody></table></div>
               </div>
             </div>
 
@@ -254,7 +348,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card card-container-panel p-0 table-responsive"><table class="table table-hover align-middle mb-0 text-nowrap"><thead class="table-dark fs-4"><tr><th>ทะเบียน PID</th><th>ชื่อ - นามสกุล</th><th>อายุ</th><th>ที่อยู่ปัจจุบัน</th><th>ผลตรวจปีนี้</th><th class="text-center">กดคัดกรอง</th></tr></thead><tbody id="populationTableBody" class="fs-4 fw-bold"></tbody></table><div class="p-3 d-flex justify-content-between align-items-center bg-light border-top"><span class="fs-4 text-muted fw-bold" id="labelTablePaginationInfo">-</span><nav><ul class="pagination pagination-lg mb-0" id="paginationWrapper"></ul></nav></div></div>
+              <div class="card card-container-panel p-0 table-responsive"><table class="table table-hover align-middle mb-0 text-nowrap mobile-card-table"><thead class="table-dark fs-4"><tr><th>ทะเบียน PID</th><th>ชื่อ - นามสกุล</th><th>อายุ</th><th>ที่อยู่ปัจจุบัน</th><th>ผลตรวจปีนี้</th><th class="text-center">กดคัดกรอง</th></tr></thead><tbody id="populationTableBody" class="fs-4 fw-bold"></tbody></table><div class="p-3 d-flex justify-content-between align-items-center bg-light border-top flex-wrap gap-2"><span class="fs-4 text-muted fw-bold" id="labelTablePaginationInfo">-</span><nav><ul class="pagination pagination-lg mb-0" id="paginationWrapper"></ul></nav></div></div>
             </div>
 
             <div id="view-window-form" class="sub-view-panel d-none">
@@ -293,7 +387,7 @@
                 </div>
                 
                 <div class="col-xl-5">
-                  <div class="card card-container-panel p-4 sticky-top" style="top: 100px; z-index: 10;">
+                  <div class="card card-container-panel p-4 " id="rt-evaluation-sticky-box">
                     <h3 class="fw-black text-dark mb-3"><i class="fa-solid fa-square-poll-vertical text-primary me-2"></i>ผลคัดกรองสุขภาพ</h3>
                     <hr class="mt-0">
                     <div class="d-flex justify-content-between align-items-center mb-3 fs-4 fw-bold"><span>ดัชนีมวลกาย (BMI):</span><span id="rt-bmi" class="text-dark fs-3 bg-light px-2 rounded">-</span></div>
@@ -330,16 +424,16 @@
 
             <div id="view-window-rules" class="sub-view-panel d-none">
               <h2 class="fw-black text-dark m-0 pt-2">3. เกณฑ์ดัชนีสุขภาพและความรู้การแปรผล</h2>
-              <div class="card card-container-panel p-0 table-responsive mt-3"><table class="table table-bordered table-striped align-middle mb-0"><thead class="table-dark fs-5 text-white"><tr><th>ดัชนีชี้วัด</th><th>ช่วงระดับเกณฑ์</th><th>ผลการวิเคราะห์</th><th>คำพูดแนวทางบอกต่อประชาชน</th></tr></thead><tbody id="healthRulesTableBody" class="fs-5 text-dark fw-bold"></tbody></table></div>
+              <div class="card card-container-panel p-0 table-responsive mt-3"><table class="table table-bordered table-striped align-middle mb-0 mobile-card-table"><thead class="table-dark fs-5 text-white"><tr><th>ดัชนีชี้วัด</th><th>ช่วงระดับเกณฑ์</th><th>ผลการวิเคราะห์</th><th>คำพูดแนวทางบอกต่อประชาชน</th></tr></thead><tbody id="healthRulesTableBody" class="fs-5 text-dark fw-bold"></tbody></table></div>
             </div>
 
             <div id="view-window-perf" class="sub-view-panel d-none">
               <h2 class="fw-black text-dark m-0 pt-2">4. รายงานความคืบหน้าสรุปผลงานการคัดกรอง อสม.</h2>
-              <div class="card card-container-panel p-0 table-responsive mt-3"><table class="table table-bordered table-hover align-middle mb-0 text-nowrap"><thead class="table-dark fs-4 text-white"><tr><th>ชื่อ อสม.</th><th>หมู่ที่</th><th>เป้าหมายทั้งหมด</th><th>คัดกรองแล้ว</th><th>คงเหลือ</th><th>ร้อยละผลงาน</th></tr></thead><tbody id="vhvPerformanceTableBody" class="fs-4 fw-bold text-dark"></tbody></table><div class="p-3 d-flex justify-content-between align-items-center bg-light border-top"><span class="fs-4 text-muted fw-bold" id="labelPerfPaginationInfo">-</span><nav><ul class="pagination pagination-lg mb-0" id="paginationPerfWrapper"></ul></nav></div></div>
+              <div class="card card-container-panel p-0 table-responsive mt-3"><table class="table table-bordered table-hover align-middle mb-0 text-nowrap mobile-card-table"><thead class="table-dark fs-4 text-white"><tr><th>ชื่อ อสม.</th><th>หมู่ที่</th><th>เป้าหมายทั้งหมด</th><th>คัดกรองแล้ว</th><th>คงเหลือ</th><th>ร้อยละผลงาน</th></tr></thead><tbody id="vhvPerformanceTableBody" class="fs-4 fw-bold text-dark"></tbody></table><div class="p-3 d-flex justify-content-between align-items-center bg-light border-top flex-wrap gap-2"><span class="fs-4 text-muted fw-bold" id="labelPerfPaginationInfo">-</span><nav><ul class="pagination pagination-lg mb-0" id="paginationPerfWrapper"></ul></nav></div></div>
             </div>
 
             <div id="view-window-mgtgt" class="sub-view-panel d-none">
-              <div class="d-flex justify-content-between align-items-center pt-2 mb-2">
+              <div class="d-flex justify-content-between align-items-center pt-2 mb-2 flex-wrap gap-2">
                 <div>
                   <h2 class="fw-black text-dark m-0">5. แผงจัดการกลุ่มเป้าหมายประชากรในพื้นที่</h2>
                   <p class="text-muted fs-4 m-0">ระบุตำแหน่งถิ่นที่อยู่จริงของประชากรประจำปีงบประมาณ และบริหารรายงานทะเบียนฐานราก</p>
@@ -372,7 +466,7 @@
               </div>
 
               <div class="card card-container-panel p-0 table-responsive" id="printableTargetMgArea">
-                <table class="table table-hover align-middle mb-0 text-nowrap" id="reportTargetMgTableMain">
+                <table class="table table-hover align-middle mb-0 text-nowrap mobile-card-table" id="reportTargetMgTableMain">
                   <thead class="table-dark fs-4">
                     <tr>
                       <th>ชื่อ - นามสกุลเป้าหมาย</th>
@@ -384,7 +478,7 @@
                   </thead>
                   <tbody id="targetMgTableBody" class="fs-4 fw-bold text-dark"></tbody>
                 </table>
-                <div class="p-3 d-flex justify-content-between align-items-center bg-light border-top print-hide">
+                <div class="p-3 d-flex justify-content-between align-items-center bg-light border-top print-hide flex-wrap gap-2">
                   <span class="fs-4 text-muted fw-bold" id="labelTgtMgPaginationInfo">-</span>
                   <nav><ul class="pagination pagination-lg mb-0" id="paginationTgtMgWrapper"></ul></nav>
                 </div>
@@ -397,12 +491,12 @@
                 <h4 class="fw-bold text-dark mb-2">ตั้งค่าลิงก์โลโก้ประจำหน่วยงานสาธารณสุข</h4>
                 <div class="row g-2"><div class="col-md-9"><input type="url" id="inputAgencyLogoUrl" class="form-control form-control-lg fs-5" placeholder="วางลิงก์ URL รูปภาพโลโก้..."></div><div class="col-md-3"><button class="btn btn-info btn-lg fs-4 fw-bold w-100 text-white" onclick="executeSaveLogoConfig()">บันทึกโลโก้</button></div></div>
               </div>
-              <div class="d-flex justify-content-between align-items-center mb-3"><h4 class="fw-bold m-0">รายชื่อผู้ใช้งานระบบคัดกรองทั้งหมด</h4><button class="btn btn-success btn-lg fs-4 fw-bold rounded-pill px-4" onclick="openAddUserModal()">เพิ่มบัญชี อสม. ใหม่</button></div>
-              <div class="card card-container-panel p-0 table-responsive"><table class="table table-hover align-middle mb-0 text-nowrap"><thead class="table-dark fs-4"><tr><th>รหัสผู้ใช้</th><th>ชื่อผู้ใช้</th><th>รหัสผ่าน</th><th>สิทธิ์ระบบ</th><th>ชื่อ - นามสกุล</th><th>หมู่ที่</th><th class="text-center">จัดการคำสั่ง</th></tr></thead><tbody id="usersTableBody" class="fs-4 fw-bold text-dark"></tbody></table></div>
+              <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2"><h4 class="fw-bold m-0">รายชื่อผู้ใช้งานระบบคัดกรองทั้งหมด</h4><button class="btn btn-success btn-lg fs-4 fw-bold rounded-pill px-4" onclick="openAddUserModal()">เพิ่มบัญชี อสม. ใหม่</button></div>
+              <div class="card card-container-panel p-0 table-responsive"><table class="table table-hover align-middle mb-0 text-nowrap mobile-card-table"><thead class="table-dark fs-4"><tr><th>รหัสผู้ใช้</th><th>ชื่อผู้ใช้</th><th>รหัสผ่าน</th><th>สิทธิ์ระบบ</th><th>ชื่อ - นามสกุล</th><th>หมู่ที่</th><th class="text-center">จัดการคำสั่ง</th></tr></thead><tbody id="usersTableBody" class="fs-4 fw-bold text-dark"></tbody></table></div>
             </div>
 
             <div id="view-window-report" class="sub-view-panel d-none">
-              <div class="d-flex justify-content-between align-items-center pt-2 mb-3">
+              <div class="d-flex justify-content-between align-items-center pt-2 mb-3 flex-wrap gap-2">
                 <div>
                   <h2 class="fw-black text-dark m-0">7. คลังรายงานสรุปรายละเอียดผู้คัดกรอง NCDs</h2>
                   <p class="text-muted fs-4 m-0">ข้อมูลสัญญาณชีพและพฤติกรรมสุขภาพเชิงลึก ครอบคลุมชุดตัวชี้วัดสาธารณสุขทั้งหมด</p>
@@ -413,11 +507,11 @@
                 </div>
               </div>
               <div class="card card-container-panel p-0 table-responsive" id="printableReportDocumentArea">
-                <table class="table table-bordered table-striped align-middle mb-0 text-nowrap" id="reportTableMain">
+                <table class="table table-bordered table-striped align-middle mb-0 text-nowrap mobile-card-table" id="reportTableMain">
                   <thead class="table-dark fs-5 text-white"><tr><th>เลขทะเบียน PID</th><th>ชื่อ - นามสกุล</th><th>วันที่คัดกรอง</th><th>น้ำหนัก (กก.)</th><th>ส่วนสูง (ซม.)</th><th>รอบเอว (ซม.)</th><th>SYS (บน)</th><th>DIA (ล่าง)</th><th>BSL (น้ำตาล)</th><th>พฤติกรรมสูบบุหรี่</th><th>การดื่มสุรา</th><th>การออกกำลังกาย</th></tr></thead>
                   <tbody id="reportTableBody"><tr><td colspan="12" class="text-center text-muted py-4">กำลังจัดเตรียมโครงสร้างเอกสารรายงาน...</td></tr></tbody>
                 </table>
-                <div class="p-3 d-flex justify-content-between align-items-center bg-light border-top print-hide">
+                <div class="p-3 d-flex justify-content-between align-items-center bg-light border-top print-hide flex-wrap gap-2">
                   <span class="fs-4 text-muted fw-bold" id="labelReportPaginationInfo">-</span>
                   <nav><ul class="pagination pagination-lg mb-0" id="paginationReportWrapper"></ul></nav>
                 </div>
@@ -482,8 +576,6 @@
     let filteredTargetMgList = [];
     let masterReportList = [];
 
-    // --- ตัวแปรควบคุมหน้าปัจจุบัน (Global Persistent State) ---
-    // ระบบจะเก็บค่านี้ไว้ตลอดการใช้งาน และจะไม่รีเซ็ตกลับเป็น 1 เว้นแต่จะมีการค้นหาแบบเจาะจง
     let tableCurrentPage = 1;
     let perfCurrentPage = 1;
     let tgtMgCurrentPage = 1;
@@ -497,9 +589,7 @@
     let tableSearchDebounceTimeout;
     let targetMgSearchDebounceTimeout;
 
-    // 🚨 ตรงนี้ให้คุณนำ URL Web App ของเดิมที่คุณเคยใช้งานมาวางทับได้เลยครับ
     const API_URL = "https://script.google.com/macros/s/AKfycbymA_M4uMbNZiKWdCucLi_MWajv2mtgV5FnIxifvinUagoVvyumobD5ooOxeZ4HvtSU7Q/exec";
-    
 
     async function callBackendApi(actionName, dataPayload = {}) {
       try {
@@ -565,7 +655,6 @@
       const sidebar = document.getElementById('sidebarMenu');
       if (sidebar && sidebar.classList.contains('show')) { sidebar.classList.remove('show'); }
 
-      // ถอดการรีเซ็ตหน้าทิ้งไปเลย ปล่อยให้ฟังก์ชันจำค่าของตัวแปร CurrentPage แบบอัตโนมัติ
       if (targetView === 'dash') { fetchDashboardCountsFromServer(); }
       else if (targetView === 'list') { fetchPopulationListFromServer(); }
       else if (targetView === 'rules') { renderHealthRulesTable(); }
@@ -637,7 +726,6 @@
       document.getElementById('loginSection').classList.remove('d-none');
     }
 
-    // ฟังก์ชันสร้างปุ่มกดหน้า (แก้ไขบั๊กการคลิกแล้วเบราว์เซอร์กระตุก/รีโหลดหน้าด้วย href="javascript:void(0)")
     function compileSmartPaginationLinks(currentPage, totalItems, elementWrapperId, clickFunctionName) {
       const totalPages = Math.ceil(totalItems / rowsPerPageLimit) || 1;
       const wrapper = document.getElementById(elementWrapperId); if (!wrapper) return; 
@@ -666,7 +754,6 @@
       wrapper.appendChild(nextLi);
     }
 
-    // ฟังก์ชันเลื่อนหน้าข้อมูลอย่างปลอดภัย มีการตรวจสอบดักขอบเขตค่าเกินสูงสุด
     function shiftTablePage(num) { 
       const maxPage = Math.ceil(displayFilteredDataset.length / rowsPerPageLimit) || 1;
       tableCurrentPage = Math.max(1, Math.min(num, maxPage)); 
@@ -726,20 +813,19 @@
             else if (item.ncd_status.includes('เหลือง') || item.ncd_status.includes('เสี่ยง')) bClass = "bg-warning text-dark";
             else if (item.ncd_status.includes('แดง') || item.ncd_status.includes('สงสัย')) bClass = "bg-danger";
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${item.name}</td><td><span class="badge ${bClass} fs-6">${item.ncd_status}</span></td><td class="text-primary">${item.bmi_text}</td><td>${item.bp_status}</td><td>${item.fbs_status}</td><td>${item.cvd_risk}</td>`;
+            tr.innerHTML = `<td data-label="ชื่อ - นามสกุล">${item.name}</td><td data-label="สรุปสถานะกลุ่ม"><span class="badge ${bClass} fs-6">${item.ncd_status}</span></td><td data-label="แปลดัชนีมวลกาย" class="text-primary">${item.bmi_text}</td><td data-label="แปลความดัน (HT)">${item.bp_status}</td><td data-label="แปลน้ำตาล (DM)">${item.fbs_status}</td><td data-label="ประเมินหัวใจ (CVD)">${item.cvd_risk}</td>`;
             tbody.appendChild(tr);
           });
         });
     }
 
-    // เมนูที่ 2 
     function fetchPopulationListFromServer() {
       toggleLoaderDisplay(true);
       callBackendApi('getTargetPopulation', { vhvId: activeVhvSession.vhvId, role: activeVhvSession.role })
         .then(records => {
           toggleLoaderDisplay(false); 
           populationDataset = records; 
-          executeTableFilter(false); // เรียกให้กรองข้อมูลแต่ 'ไม่อนุญาต' ให้รีเซ็ตหน้า เพื่อให้โหลดกลับมาหน้าเดิม
+          executeTableFilter(false);
         });
     }
 
@@ -753,12 +839,10 @@
           return (r.name.toLowerCase().includes(q) || r.pid.toString().includes(q)) && (st === "" || r.last_screening_status.includes(st)); 
         });
         
-        // ถ้าเป็นการเรียกใช้เพราะมีการพิมพ์ค้นหาใหม่ ให้รีเซ็ตกลับเป็นหน้า 1 เสมอ
         if (isFromUserInput) {
           tableCurrentPage = 1; 
         }
         
-        // การตรวจสอบความปลอดภัยว่าหน้าปัจจุบันไม่ล้นจำนวนหน้าที่มีจริง
         const maxPage = Math.ceil(displayFilteredDataset.length / rowsPerPageLimit) || 1;
         tableCurrentPage = Math.max(1, Math.min(tableCurrentPage, maxPage));
         
@@ -766,6 +850,7 @@
       }, 300);
     }
 
+    // เมนูที่ 2: เพิ่มชุดข้อมูล data-label เพื่อทำ Mobile Cards
     function renderPopulationTableElements() {
       const tbody = document.getElementById('populationTableBody'); if (!tbody) return; tbody.innerHTML = '';
       if (displayFilteredDataset.length === 0) {
@@ -783,7 +868,7 @@
         else if (item.last_screening_status.includes('เหลือง') || item.last_screening_status.includes('เสี่ยง')) { bStyle = "bg-warning text-dark"; bLabel = `<i class="fa fa-edit"></i> แก้ไขข้อมูล`; bClass = "btn-warning text-dark"; }
         else if (item.last_screening_status.includes('แดง') || item.last_screening_status.includes('สงสัย')) { bStyle = "bg-danger"; bLabel = `<i class="fa fa-edit"></i> แก้ไขข้อมูล`; bClass = "btn-warning text-dark"; }
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${item.pid}</td><td class="fs-3">${item.name}</td><td>${item.age} ปี</td><td class="small text-muted">${item.address}</td><td><span class="badge ${bStyle} fs-5">${item.last_screening_status}</span></td><td class="text-center"><button class="btn ${bClass} btn-lg rounded-pill px-4" onclick="openScreeningFormWindow('${item.pid}')">${bLabel}</button></td>`;
+        tr.innerHTML = `<td data-label="ทะเบียน PID">${item.pid}</td><td data-label="ชื่อ - นามสกุล" class="fs-3 text-primary">${item.name}</td><td data-label="อายุ">${item.age} ปี</td><td data-label="ที่อยู่ปัจจุบัน" class="small text-muted">${item.address}</td><td data-label="ผลตรวจปีนี้"><span class="badge ${bStyle} fs-5">${item.last_screening_status}</span></td><td data-label="กดคัดกรอง" class="text-center w-100"><button class="btn ${bClass} btn-lg rounded-pill px-4 w-100" onclick="openScreeningFormWindow('${item.pid}')">${bLabel}</button></td>`;
         tbody.appendChild(tr);
       });
       safetySetTextContent('labelTablePaginationInfo', `แสดงรายการที่ ${st + 1} ถึง ${ed} จากทั้งหมด ${displayFilteredDataset.length} คน`);
@@ -965,17 +1050,17 @@
       
       masterHealthRules.forEach(r => { 
         if(['BMI','BP','FBS'].indexOf(r.category) !== -1) { 
-          tbody.innerHTML += `<tr><td><span class="badge bg-primary fs-5 px-3 py-2">${r.category}</span></td><td class="fs-4">ช่วงค่า: ${r.min_value} - ${r.max_value}</td><td class="fs-4 text-dark fw-bold">${r.result}</td><td class="small text-muted fs-5">${r.advice}</td></tr>`; 
+          tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge bg-primary fs-5 px-3 py-2">${r.category}</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ช่วงค่า: ${r.min_value} - ${r.max_value}</td><td data-label="ผลการวิเคราะห์" class="fs-4 text-dark fw-bold">${r.result}</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">${r.advice}</td></tr>`; 
         } 
       });
       
-      tbody.innerHTML += `<tr><td><span class="badge fs-5 px-3 py-2" style="background-color: #0284c7;">รอบเอว (ชาย)</span></td><td class="fs-4">ไม่เกิน 90 เซนติเมตร (หรือ ไม่เกิน ส่วนสูง ÷ 2)</td><td class="fs-4 text-success fw-bold">ปกติ</td><td class="small text-muted fs-5">รอบเอวอยู่ในเกณฑ์ปลอดภัย ดัชนีรอบเอวสมส่วน ไม่มีความเสี่ยงภาวะอ้วนลงพุง</td></tr>`;
-      tbody.innerHTML += `<tr><td><span class="badge fs-5 px-3 py-2" style="background-color: #b91c1c;">รอบเอว (ชาย)</span></td><td class="fs-4">ตั้งแต่ 91 เซนติเมตร ขึ้นไป (หรือ เกินเกณฑ์ ส่วนสูง ÷ 2)</td><td class="fs-4 text-danger fw-bold">อ้วนลงพุง</td><td class="small text-muted fs-5">มีภาวะอ้วนลงพุง เสี่ยงต่อโรคแทรกซ้อนหลอดเลือดหัวใจ สมอง และเบาหวานรายใหม่</td></tr>`;
-      tbody.innerHTML += `<tr><td><span class="badge fs-5 px-3 py-2" style="background-color: #ec4899;">รอบเอว (หญิง)</span></td><td class="fs-4">ไม่เกิน 80 เซนติเมตร (หรือ ไม่เกิน ส่วนสูง ÷ 2)</td><td class="fs-4 text-success fw-bold">ปกติ</td><td class="small text-muted fs-5">รอบเอวอยู่ในเกณฑ์ปลอดภัย ดัชนีรอบเอวสมส่วน ไม่มีความเสี่ยงภาวะอ้วนลงพุง</td></tr>`;
-      tbody.innerHTML += `<tr><td><span class="badge fs-5 px-3 py-2" style="background-color: #be185d;">รอบเอว (หญิง)</span></td><td class="fs-4">ตั้งแต่ 81 เซนติเมตร ขึ้นไป (หรือ เกินเกณฑ์ ส่วนสูง ÷ 2)</td><td class="fs-4 text-danger fw-bold">อ้วนลงพุง</td><td class="small text-muted fs-5">มีภาวะอ้วนลงพุง เสี่ยงต่อโรคแทรกซ้อนหลอดเลือดหัวใจ สมอง และเบาหวานรายใหม่</td></tr>`;
+      tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge fs-5 px-3 py-2" style="background-color: #0284c7;">รอบเอว (ชาย)</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ไม่เกิน 90 เซนติเมตร (หรือ ไม่เกิน ส่วนสูง ÷ 2)</td><td data-label="ผลการวิเคราะห์" class="fs-4 text-success fw-bold">ปกติ</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">รอบเอวอยู่ในเกณฑ์ปลอดภัย ดัชนีรอบเอวสมส่วน ไม่มีความเสี่ยงภาวะอ้วนลงพุง</td></tr>`;
+      tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge fs-5 px-3 py-2" style="background-color: #b91c1c;">รอบเอว (ชาย)</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ตั้งแต่ 91 เซนติเมตร ขึ้นไป (หรือ เกินเกณฑ์ ส่วนสูง ÷ 2)</td><td data-label="ผลการวิเคราะห์" class="fs-4 text-danger fw-bold">อ้วนลงพุง</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">มีภาวะอ้วนลงพุง เสี่ยงต่อโรคแทรกซ้อนหลอดเลือดหัวใจ สมอง และเบาหวานรายใหม่</td></tr>`;
+      tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge fs-5 px-3 py-2" style="background-color: #ec4899;">รอบเอว (หญิง)</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ไม่เกิน 80 เซนติเมตร (หรือ ไม่เกิน ส่วนสูง ÷ 2)</td><td class="fs-4 text-success fw-bold">ปกติ</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">รอบเอวอยู่ในเกณฑ์ปลอดภัย ดัชนีรอบเอวสมส่วน ไม่มีความเสี่ยงภาวะอ้วนลงพุง</td></tr>`;
+      tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge fs-5 px-3 py-2" style="background-color: #be185d;">รอบเอว (หญิง)</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ตั้งแต่ 81 เซนติเมตร ขึ้นไป (หรือ เกินเกณฑ์ ส่วนสูง ÷ 2)</td><td class="fs-4 text-danger fw-bold">อ้วนลงพุง</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">มีภาวะอ้วนลงพุง เสี่ยงต่อโรคแทรกซ้อนหลอดเลือดหัวใจ สมอง และเบาหวานรายใหม่</td></tr>`;
     }
 
-    // เมนูที่ 4
+    // เมนูที่ 4: เพิ่มชุดข้อมูล data-label เพื่อทำ Mobile Cards
     function fetchVhvPerformanceReportFromServer() { 
       toggleLoaderDisplay(true); 
       callBackendApi('getVhvPerformanceReport')
@@ -997,19 +1082,20 @@
       const ed = Math.min(st + rowsPerPageLimit, masterVhvPerformanceList.length); 
       const slice = masterVhvPerformanceList.slice(st, ed);
       
-      slice.forEach(item => { tbody.innerHTML += `<tr><td>${item.name}</td><td>หมู่ที่ ${item.moo}</td><td>${item.target} คน</td><td class="text-success">${item.done} คน</td><td class="text-danger">${item.pending} คน</td><td><div class="d-flex align-items-center gap-2"><div class="progress w-100" style="height:12px;"><div class="progress-bar bg-success" style="width:${item.percentage}%"></div></div><span>${item.percentage}%</span></div></td></tr>`; });
+      slice.forEach(item => { 
+        tbody.innerHTML += `<tr><td data-label="ชื่อ อสม.">${item.name}</td><td data-label="หมู่ที่">หมู่ที่ ${item.moo}</td><td data-label="เป้าหมายทั้งหมด">${item.target} คน</td><td data-label="คัดกรองแล้ว" class="text-success">${item.done} คน</td><td data-label="คงเหลือ" class="text-danger">${item.pending} คน</td><td data-label="ร้อยละผลงาน"><div class="d-flex align-items-center gap-2 w-100 justify-content-end justify-content-md-start"><div class="progress flex-grow-1 d-none d-md-flex" style="height:12px; min-width:100px;"><div class="progress-bar bg-success" style="width:${item.percentage}%"></div></div><span>${item.percentage}%</span></div></td></tr>`; 
+      });
       safetySetTextContent('labelPerfPaginationInfo', `รายงานแถวที่ ${st+1} ถึง ${ed} จากทั้งหมด ${masterVhvPerformanceList.length} อสม.`); 
       compileSmartPaginationLinks(perfCurrentPage, masterVhvPerformanceList.length, 'paginationPerfWrapper', 'shiftPerfPage');
     }
 
-    // เมนูที่ 5
     function fetchManagementTargetsFromServer() { 
       toggleLoaderDisplay(true); 
       callBackendApi('getTargetPopulation', { vhvId: 'ALL', role: 'admin' })
         .then(records => { 
           toggleLoaderDisplay(false); 
           masterTargetMgList = records; 
-          executeTargetMgTableFilter(false); // เรียกให้กรองข้อมูลแต่ 'ไม่อนุญาต' ให้รีเซ็ตหน้า
+          executeTargetMgTableFilter(false);
         }); 
     }
     
@@ -1027,7 +1113,6 @@
           return matchText && matchResidency;
         });
         
-        // ถ้าเป็นการเรียกใช้เพราะมีการพิมพ์ค้นหาใหม่ ให้รีเซ็ตกลับเป็นหน้า 1 เสมอ
         if (isFromUserInput) {
           tgtMgCurrentPage = 1; 
         }
@@ -1039,6 +1124,7 @@
       }, 300);
     }
 
+    // เมนูที่ 5: เพิ่มชุดข้อมูล data-label เพื่อทำ Mobile Cards
     function renderTargetMgTable() {
       const tbody = document.getElementById('targetMgTableBody'); if (!tbody) return; tbody.innerHTML = ''; if(filteredTargetMgList.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">ไม่พบประวัติ</td></tr>'; return; }
       
@@ -1048,7 +1134,7 @@
       
       slice.forEach(item => {
         const isChecked = item.status_area !== 'ไม่อยู่ในพื้นที่' ? 'checked' : ''; const statusLabel = item.status_area !== 'ไม่อยู่ในพื้นที่' ? '<span class="text-success fw-bold"><i class="fa fa-home"></i> อยู่ในพื้นที่</span>' : '<span class="text-danger fw-bold"><i class="fa fa-plane-departure"></i> ไม่อยู่ในพื้นที่</span>';
-        tbody.innerHTML += `<tr><td>${item.name}</td><td>${item.age} ปี</td><td class="small text-muted">${item.address}</td><td>${item.vhv_name}</td><td class="text-center print-hide"><div class="d-flex flex-column align-items-center gap-1"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" ${isChecked} onchange="toggleTargetLocationState('${item.pid}', this)"></div><div class="fs-6">${statusLabel}</div></div></td></tr>`;
+        tbody.innerHTML += `<tr><td data-label="ชื่อ - นามสกุลเป้าหมาย">${item.name}</td><td data-label="อายุ">${item.age} ปี</td><td data-label="ที่อยู่ปัจจุบัน" class="small text-muted">${item.address}</td><td data-label="อสม. ผู้รับผิดชอบ">${item.vhv_name}</td><td data-label="สถานะถิ่นพำนักปัจจุบัน" class="text-center print-hide"><div class="d-flex flex-row flex-md-column align-items-center justify-content-end justify-content-md-center gap-2 w-100"><div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" role="switch" ${isChecked} onchange="toggleTargetLocationState('${item.pid}', this)"></div><div class="fs-6">${statusLabel}</div></div></td></tr>`;
       });
       safetySetTextContent('labelTgtMgPaginationInfo', `แถวเป้าหมายที่ ${st+1} ถึง ${ed} จากทั้งหมด ${filteredTargetMgList.length} คน`); 
       compileSmartPaginationLinks(tgtMgCurrentPage, filteredTargetMgList.length, 'paginationTgtMgWrapper', 'shiftTgtMgPage');
@@ -1061,7 +1147,7 @@
           if(res.success) { 
             const idx = masterTargetMgList.findIndex(t => t.pid.toString() === pid.toString()); 
             if(idx !== -1) masterTargetMgList[idx].status_area = statusStr; 
-            executeTargetMgTableFilter(false); // เรียกประมวลผลอัปเดตตารางใหม่โดยไม่รีเซ็ตหน้า 1
+            executeTargetMgTableFilter(false);
           } 
         }); 
     }
@@ -1092,7 +1178,7 @@
               deleteBtn = `<span class="badge bg-light text-muted fs-6">ล็อกสิทธิ์การลบ</span>`;
               if (u.type === 'admin') { editBtn = `<span class="badge bg-light text-muted fs-6 me-2">ล็อกสิทธิ์จัดการ Admin</span>`; }
             }
-            tbody.innerHTML += `<tr><td>${u.user_id}</td><td>${u.user}</td><td><code>${u.pass}</code></td><td><span class="badge bg-secondary">${u.type}</span></td><td>${u.fullname}</td><td>หมู่ ${u.moo}</td><td class="text-center">${editBtn} ${deleteBtn}</td></tr>`;
+            tbody.innerHTML += `<tr><td data-label="รหัสผู้ใช้">${u.user_id}</td><td data-label="ชื่อผู้ใช้">${u.user}</td><td data-label="รหัสผ่าน"><code>${u.pass}</code></td><td data-label="สิทธิ์ระบบ"><span class="badge bg-secondary">${u.type}</span></td><td data-label="ชื่อ - นามสกุล">${u.fullname}</td><td data-label="หมู่ที่">หมู่ ${u.moo}</td><td data-label="จัดการคำสั่ง" class="text-center w-100">${editBtn} ${deleteBtn}</td></tr>`;
           });
         }); 
     }
@@ -1144,7 +1230,6 @@
       }
     }
 
-    // เมนูที่ 7
     function fetchScreeningReportDataFromServer() {
       toggleLoaderDisplay(true);
       callBackendApi('getAllScreeningReportData')
@@ -1159,6 +1244,7 @@
         });
     }
 
+    // เมนูที่ 7: เพิ่มชุดข้อมูล data-label เพื่อทำ Mobile Cards
     function renderReportTable() {
       const tbody = document.getElementById('reportTableBody'); if (!tbody) return; tbody.innerHTML = '';
       if (masterReportList.length === 0) { tbody.innerHTML = '<tr><td colspan="12" class="text-center text-muted py-4 fs-4">ยังไม่พบบันทึกประวัติการคัดกรอง NCDs ในระบบ</td></tr>'; return; }
@@ -1168,7 +1254,7 @@
       const slice = masterReportList.slice(st, ed);
       
       slice.forEach(r => {
-        tbody.innerHTML += `<tr><td>${r.pid}</td><td>${r.name}</td><td>${r.date}</td><td>${r.weight}</td><td>${r.height}</td><td>${r.waist}</td><td class="text-danger">${r.sbp}</td><td class="text-danger">${r.dbp}</td><td class="text-success">${r.bsl}</td><td>${r.smoking}</td><td>${r.alcohol}</td><td>${r.exercise}</td></tr>`;
+        tbody.innerHTML += `<tr><td data-label="เลขทะเบียน PID">${r.pid}</td><td data-label="ชื่อ - นามสกุล">${r.name}</td><td data-label="วันที่คัดกรอง">${r.date}</td><td data-label="น้ำหนัก (กก.)">${r.weight}</td><td data-label="ส่วนสูง (ซม.)">${r.height}</td><td data-label="รอบเอว (ซม.)">${r.waist}</td><td data-label="SYS (บน)" class="text-danger">${r.sbp}</td><td data-label="DIA (ล่าง)" class="text-danger">${r.dbp}</td><td data-label="BSL (น้ำตาล)" class="text-success">${r.bsl}</td><td data-label="พฤติกรรมสูบบุหรี่">${r.smoking}</td><td data-label="การดื่มสุรา">${r.alcohol}</td><td data-label="การออกกำลังกาย">${r.exercise}</td></tr>`;
       });
       
       safetySetTextContent('labelReportPaginationInfo', `รายงานแถวที่ ${st+1} ถึง ${ed} จากทั้งหมด ${masterReportList.length} รายการ`); 
@@ -1200,7 +1286,7 @@
       }
       setTimeout(() => {
         window.print();
-        renderReportTable(); // ฟื้นฟูหน้าจอให้กลับมาอยู่หน้าเดิม (ไม่รีเซ็ตไปหน้า 1) หลังจากพิมพ์เอกสารเสร็จ
+        renderReportTable(); 
       }, 500);
     }
 
@@ -1281,7 +1367,7 @@
       }
       setTimeout(() => {
         window.print();
-        renderTargetMgTable(); // คืนรูปกลับมาแบ่งหน้าแบบปกติหลังจากปิดกล่องพิมพ์ภาพ
+        renderTargetMgTable(); 
       }, 500);
     }
 
