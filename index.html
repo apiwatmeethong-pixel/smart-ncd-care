@@ -236,8 +236,8 @@
               <h2 class="fw-black text-dark m-0 pt-2">ตารางรายชื่อประชาชนในการดูแล</h2>
               <div class="card p-3 mb-4 mt-2 border-0 shadow-sm bg-white rounded-3">
                 <div class="row g-2">
-                  <div class="col-md-7"><label class="form-label fw-bold fs-4">🔍 พิมพ์ค้นหาเป้าหมาย</label><input type="text" id="inputSearchQuery" class="form-control form-control-lg fs-4 rounded-pill" placeholder="ค้นหาด้วยชื่อหรือรหัส PID..." onkeyup="executeTableFilter()"></div>
-                  <div class="col-md-5"><label class="form-label fw-bold fs-4">🎨 ตัวกรองสถานะกลุ่ม</label><select id="selectFilterStatus" class="form-select form-select-lg fs-4 rounded-pill" onchange="executeTableFilter()"><option value="">-- แสดงรายชื่อทั้งหมด --</option><option value="ปกติ">กลุ่มปกติ (สีเขียว)</option><option value="เสี่ยง">กลุ่มเสี่ยง (สีเหลือง)</option><option value="สงสัย">กลุ่มสงสัยป่วย (สีแดง)</option><option value="ยังไม่ได้คัดกรองปีนี้">ยังไม่ได้คัดกรองปีนี้</option></select></div>
+                  <div class="col-md-7"><label class="form-label fw-bold fs-4">🔍 พิมพ์ค้นหาเป้าหมาย</label><input type="text" id="inputSearchQuery" class="form-control form-control-lg fs-4 rounded-pill" placeholder="ค้นหาด้วยชื่อหรือรหัส PID..." onkeyup="executeTableFilter(false)"></div>
+                  <div class="col-md-5"><label class="form-label fw-bold fs-4">🎨 ตัวกรองสถานะกลุ่ม</label><select id="selectFilterStatus" class="form-select form-select-lg fs-4 rounded-pill" onchange="executeTableFilter(false)"><option value="">-- แสดงรายชื่อทั้งหมด --</option><option value="ปกติ">กลุ่มปกติ (สีเขียว)</option><option value="เสี่ยง">กลุ่มเสี่ยง (สีเหลือง)</option><option value="สงสัย">กลุ่มสงสัยป่วย (สีแดง)</option><option value="ยังไม่ได้คัดกรองปีนี้">ยังไม่ได้คัดกรองปีนี้</option></select></div>
                 </div>
               </div>
               <div class="card card-container-panel p-0 table-responsive"><table class="table table-hover align-middle mb-0 text-nowrap"><thead class="table-dark fs-4"><tr><th>ทะเบียน PID</th><th>ชื่อ - นามสกุล</th><th>อายุ</th><th>ที่อยู่ปัจจุบัน</th><th>ผลตรวจปีนี้</th><th class="text-center">กดคัดกรอง</th></tr></thead><tbody id="populationTableBody" class="fs-4 fw-bold"></tbody></table><div class="p-3 d-flex justify-content-between align-items-center bg-light border-top"><span class="fs-4 text-muted fw-bold" id="labelTablePaginationInfo">-</span><nav><ul class="pagination pagination-lg mb-0" id="paginationWrapper"></ul></nav></div></div>
@@ -344,11 +344,11 @@
                 <div class="row g-2">
                   <div class="col-md-7">
                     <label class="form-label fw-bold fs-4">🔍 ค้นหาตามรายชื่อเป้าหมาย</label>
-                    <input type="text" id="inputSearchTargetMg" class="form-control form-control-lg fs-4 rounded-pill" placeholder="พิมพ์ชื่อ-นามสกุลเป้าหมาย..." onkeyup="executeTargetMgTableFilter()">
+                    <input type="text" id="inputSearchTargetMg" class="form-control form-control-lg fs-4 rounded-pill" placeholder="พิมพ์ชื่อ-นามสกุลเป้าหมาย..." onkeyup="executeTargetMgTableFilter(false)">
                   </div>
                   <div class="col-md-5">
                     <label class="form-label fw-bold fs-4">🏡 ตัวกรองสถานะถิ่นพำนักปัจจุบัน</label>
-                    <select id="selectTargetMgStatus" class="form-select form-select-lg fs-4 rounded-pill" onchange="executeTargetMgTableFilter()">
+                    <select id="selectTargetMgStatus" class="form-select form-select-lg fs-4 rounded-pill" onchange="executeTargetMgTableFilter(false)">
                       <option value="">-- แสดงรายชื่อเป้าหมายทั้งหมด --</option>
                       <option value="อยู่ในพื้นที่">อาศัยอยู่ในพื้นที่ความรับผิดชอบ</option>
                       <option value="ไม่อยู่ในพื้นที่">ย้ายถิ่นฐาน / ไม่อยู่ในพื้นที่</option>
@@ -403,6 +403,10 @@
                   <thead class="table-dark fs-5 text-white"><tr><th>เลขทะเบียน PID</th><th>ชื่อ - นามสกุล</th><th>วันที่คัดกรอง</th><th>น้ำหนัก (กก.)</th><th>ส่วนสูง (ซม.)</th><th>รอบเอว (ซม.)</th><th>SYS (บน)</th><th>DIA (ล่าง)</th><th>BSL (น้ำตาล)</th><th>พฤติกรรมสูบบุหรี่</th><th>การดื่มสุรา</th><th>การออกกำลังกาย</th></tr></thead>
                   <tbody id="reportTableBody"><tr><td colspan="12" class="text-center text-muted py-4">กำลังจัดเตรียมโครงสร้างเอกสารรายงาน...</td></tr></tbody>
                 </table>
+                <div class="p-3 d-flex justify-content-between align-items-center bg-light border-top print-hide">
+                  <span class="fs-4 text-muted fw-bold" id="labelReportPaginationInfo">-</span>
+                  <nav><ul class="pagination pagination-lg mb-0" id="paginationReportWrapper"></ul></nav>
+                </div>
               </div>
             </div>
 
@@ -421,7 +425,7 @@
             </div>
 
           </div>
-          <footer class="mt-auto py-3 text-center text-muted fw-bold fs-5 border-top">&copy; 2569 ระบบข้อมูลสุขภาพคัดกรองเชิงรุก Ver.3.6 | Design & Developed by Apiwat Meethong</footer>
+          <footer class="mt-auto py-3 text-center text-muted fw-bold fs-5 border-top">&copy; 2569 ระบบข้อมูลสุขภาพคัดกรองเชิงรุก Ver.3.7 | Design & Developed by Apiwat Meethong</footer>
         </main>
       </div>
     </div>
@@ -462,10 +466,12 @@
     let masterVhvPerformanceList = [];
     let masterTargetMgList = [];
     let filteredTargetMgList = [];
+    let masterReportList = [];
 
     let tableCurrentPage = 1;
     let perfCurrentPage = 1;
     let tgtMgCurrentPage = 1;
+    let reportCurrentPage = 1;
     const rowsPerPageLimit = 10;
     
     let failedLoginAttemptsCount = 0;
@@ -474,10 +480,9 @@
     let tableSearchDebounceTimeout;
     let targetMgSearchDebounceTimeout;
 
-    // 🚨 สำคัญที่สุด: วางลิงก์ Web App URL ที่ได้จากการ Deploy Google Apps Script ลงในตัวแปรนี้เพื่อเชื่อมระบบหลังบ้าน
+    // 🚨 วางลิงก์ Web App URL ที่ลงท้ายด้วย /exec ของท่านที่บรรทัดนี้ได้เลยครับ
     const API_URL = "https://script.google.com/macros/s/AKfycbwhqO7NT-bNvsZf-VYndwYcDUBLMYBTuAb4vPWEQKhZXiYcv2l9Mvpe2ZD1eQDvC5Eyqg/exec";
 
-    // ฟังก์ชันศูนย์กลางจัดส่งชุดคำสั่งเชื่อมต่อระบบหลังบ้านผ่าน API (Bypass CORS Preflight via text/plain payload)
     async function callBackendApi(actionName, dataPayload = {}) {
       try {
         const fullPayload = { action: actionName, ...dataPayload };
@@ -543,12 +548,12 @@
       if (sidebar && sidebar.classList.contains('show')) { sidebar.classList.remove('show'); }
 
       if (targetView === 'dash') { fetchDashboardCountsFromServer(); }
-      else if (targetView === 'list') { fetchPopulationListFromServer(); }
+      else if (targetView === 'list') { fetchPopulationListFromServer(true); } // คงสถานะหน้าเดิม
       else if (targetView === 'rules') { renderHealthRulesTable(); }
-      else if (targetView === 'perf') { fetchVhvPerformanceReportFromServer(); }
-      else if (targetView === 'mgtgt') { fetchManagementTargetsFromServer(); }
+      else if (targetView === 'perf') { fetchVhvPerformanceReportFromServer(true); } // คงสถานะหน้าเดิม
+      else if (targetView === 'mgtgt') { fetchManagementTargetsFromServer(true); } // คงสถานะหน้าเดิม
       else if (targetView === 'mgusr') { fetchUserAccountsFromServer(); }
-      else if (targetView === 'report') { fetchScreeningReportDataFromServer(); } 
+      else if (targetView === 'report') { fetchScreeningReportDataFromServer(true); } // คงสถานะหน้าเดิม
     }
 
     function executeLogin(e) {
@@ -597,7 +602,7 @@
               document.getElementById('username').disabled = true;
               document.getElementById('password').disabled = true;
               document.querySelector('#loginForm button[type="submit"]').disabled = true;
-              Swal.fire({ icon: 'error', title: 'บัญชีระบบโดนล็อก', text: 'กรอกรหัสผ่านผิดเกินกำหนด 5 ครั้ง บัญชีถูกล็อกถาวรแล้วครับ' });
+              Swal.fire({ icon: 'error', title: 'บัญชีระบบโดนล็อก', text: 'กรอกรหัสผ่านผิดกำหนด 5 ครั้ง บัญชีถูกล็อกถาวรแล้วครับ' });
             } else {
               Swal.fire({ icon: 'error', title: 'รหัสผ่านไม่ถูกต้อง', text: response.message + ` (เหลือสิทธิ์พยายามอีก ${5 - failedLoginAttemptsCount} ครั้ง)` });
             }
@@ -617,20 +622,21 @@
       const totalPages = Math.ceil(totalItems / rowsPerPageLimit);
       const wrapper = document.getElementById(elementWrapperId); if (!wrapper) return; wrapper.innerHTML = ''; if (totalPages <= 1) return;
       const prevLi = document.createElement('li'); prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
-      prevLi.innerHTML = `<a class="page-link" onclick="${clickFunctionName}(${currentPage - 1})">ก่อนหน้า</a>`; wrapper.appendChild(prevLi);
+      prevLi.innerHTML = `<a class="page-link" style="cursor:pointer" onclick="${clickFunctionName}(${currentPage - 1})">ก่อนหน้า</a>`; wrapper.appendChild(prevLi);
       let startPage = Math.max(1, currentPage - 2); let endPage = Math.min(totalPages, startPage + 4);
       if (endPage - startPage < 4) { startPage = Math.max(1, endPage - 4); }
       for (let i = startPage; i <= endPage; i++) {
         const li = document.createElement('li'); li.className = `page-item ${currentPage === i ? 'active' : ''}`;
-        li.innerHTML = `<a class="page-link" onclick="${clickFunctionName}(${i})">${i}</a>`; wrapper.appendChild(li);
+        li.innerHTML = `<a class="page-link" style="cursor:pointer" onclick="${clickFunctionName}(${i})">${i}</a>`; wrapper.appendChild(li);
       }
       const nextLi = document.createElement('li'); nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
-      nextLi.innerHTML = `<a class="page-link" onclick="${clickFunctionName}(${currentPage + 1})">ถัดไป</a>`; wrapper.appendChild(nextLi);
+      nextLi.innerHTML = `<a class="page-link" style="cursor:pointer" onclick="${clickFunctionName}(${currentPage + 1})">ถัดไป</a>`; wrapper.appendChild(nextLi);
     }
 
     function shiftTablePage(num) { tableCurrentPage = num; renderPopulationTableElements(); }
     function shiftPerfPage(num) { perfCurrentPage = num; renderVhvPerformanceTable(); }
     function shiftTgtMgPage(num) { tgtMgCurrentPage = num; renderTargetMgTable(); }
+    function shiftReportPage(num) { reportCurrentPage = num; renderReportTable(); }
 
     function fetchDashboardCountsFromServer() {
       callBackendApi('getDashboardStats', { vhvId: activeVhvSession.vhvId, role: activeVhvSession.role })
@@ -673,16 +679,16 @@
         });
     }
 
-    function fetchPopulationListFromServer() {
+    function fetchPopulationListFromServer(keepPage) {
       toggleLoaderDisplay(true);
       callBackendApi('getTargetPopulation', { vhvId: activeVhvSession.vhvId, role: activeVhvSession.role })
         .then(records => {
-          toggleLoaderDisplay(false); populationDataset = records; displayFilteredDataset = [...populationDataset];
-          tableCurrentPage = 1; renderPopulationTableElements();
+          toggleLoaderDisplay(false); populationDataset = records; 
+          executeTableFilter(keepPage);
         });
     }
 
-    function executeTableFilter() {
+    function executeTableFilter(keepPage) {
       clearTimeout(tableSearchDebounceTimeout);
       tableSearchDebounceTimeout = setTimeout(() => {
         const q = document.getElementById('inputSearchQuery').value.toLowerCase(); 
@@ -690,7 +696,13 @@
         displayFilteredDataset = populationDataset.filter(r => { 
           return (r.name.toLowerCase().includes(q) || r.pid.toString().includes(q)) && (st === "" || r.last_screening_status.includes(st)); 
         });
-        tableCurrentPage = 1; 
+        
+        if (!keepPage) {
+          tableCurrentPage = 1; 
+        } else {
+          const maxPage = Math.ceil(displayFilteredDataset.length / rowsPerPageLimit);
+          if (tableCurrentPage > maxPage) tableCurrentPage = Math.max(1, maxPage);
+        }
         renderPopulationTableElements();
       }, 300);
     }
@@ -832,7 +844,7 @@
       } else if (sbp >= 120 || dbp >= 80 || bsl >= 100 || bmiVal >= 23 || cvdColor.includes('warning')) {
         tSt.innerText = "กลุ่มเสี่ยงโรคเรื้อรัง (สีเหลือง)"; 
         box.style.borderColor = "#ca8a04"; box.style.backgroundColor = "#fef9c3"; tSt.className = "fw-black my-2 fs-2 text-warning-dark";
-        tAd.innerHTML = `<strong>💡 คำแนะนำประเมินตนเอง:</strong> ร่างกายของท่านเริ่มส่งสัญญาณเตือนว่ามีความเสี่ยงต่อโรค NCDs แนะนำให้ปรับเปลี่ยนพฤทีพรรมในชีวิตประจำวัน โดยลดการบริโภคอาหารรสหวาน มัน เค็ม เพิ่มการรับประทานผักผลไม้ และออกกำลังกายหรือแกว่งแขนอย่างน้อยวันละ 30 นาที แล้วอีก 6 เดือนมาติดตามดูระดับตัวเลขสุขภาพร่วมกับ อสม. อีกครั้งนะครับ` + exTxt;
+        tAd.innerHTML = `<strong>💡 คำแนะนำประเมินตนเอง:</strong> ร่างกายของท่านเริ่มส่งสัญญาณเตือนว่ามีความเสี่ยงต่อโรค NCDs แนะนำให้ปรับเปลี่ยนพฤติกรรมในชีวิตประจำวัน โดยลดการบริโภคอาหารรสหวาน มัน เค็ม เพิ่มการรับประทานผักผลไม้ และออกกำลังกายหรือแกว่งแขนอย่างน้อยวันละ 30 นาที แล้วอีก 6 เดือนมาติดตามดูระดับตัวเลขสุขภาพร่วมกับ อสม. อีกครั้งนะครับ` + exTxt;
       } else if (w > 0 && h > 0) {
         tSt.innerText = "กลุ่มปกติ สุขภาพดี (สีเขียว)"; 
         box.style.borderColor = "#16a34a"; box.style.backgroundColor = "#dcfce7"; tSt.className = "fw-black my-2 fs-2 text-success";
@@ -879,7 +891,10 @@
       callBackendApi('saveNcdScreening', { payload: payload })
         .then(res => { 
           toggleLoaderDisplay(false); 
-          if (res.success) { Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', timer: 1500, showConfirmButton: false }); changeViewWindow('list'); } 
+          if (res.success) { 
+            Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', timer: 1500, showConfirmButton: false }); 
+            changeViewWindow('list'); // หน้าลิสต์จะรันโหลดแบบคงหน้าเก่าไว้ ไม่เด้งไปหน้า 1
+          } 
         });
     }
 
@@ -898,11 +913,17 @@
       tbody.innerHTML += `<tr><td><span class="badge fs-5 px-3 py-2" style="background-color: #be185d;">รอบเอว (หญิง)</span></td><td class="fs-4">ตั้งแต่ 81 เซนติเมตร ขึ้นไป (หรือ เกินเกณฑ์ ส่วนสูง ÷ 2)</td><td class="fs-4 text-danger fw-bold">อ้วนลงพุง</td><td class="small text-muted fs-5">มีภาวะอ้วนลงพุง เสี่ยงต่อโรคแทรกซ้อนหลอดเลือดหัวใจ สมอง และเบาหวานรายใหม่</td></tr>`;
     }
 
-    function fetchVhvPerformanceReportFromServer() { 
+    function fetchVhvPerformanceReportFromServer(keepPage) { 
       toggleLoaderDisplay(true); 
       callBackendApi('getVhvPerformanceReport')
         .then(data => { 
-          toggleLoaderDisplay(false); masterVhvPerformanceList = data; perfCurrentPage = 1; renderVhvPerformanceTable(); 
+          toggleLoaderDisplay(false); masterVhvPerformanceList = data; 
+          if (!keepPage) perfCurrentPage = 1; 
+          
+          const maxPage = Math.ceil(masterVhvPerformanceList.length / rowsPerPageLimit);
+          if (perfCurrentPage > maxPage) perfCurrentPage = Math.max(1, maxPage);
+          
+          renderVhvPerformanceTable(); 
         }); 
     }
     
@@ -913,15 +934,16 @@
       safetySetTextContent('labelPerfPaginationInfo', `รายงานแถวที่ ${st+1} ถึง ${ed} จากทั้งหมด ${masterVhvPerformanceList.length} อสม.`); compileSmartPaginationLinks(perfCurrentPage, masterVhvPerformanceList.length, 'paginationPerfWrapper', 'shiftPerfPage');
     }
 
-    function fetchManagementTargetsFromServer() { 
+    function fetchManagementTargetsFromServer(keepPage) { 
       toggleLoaderDisplay(true); 
       callBackendApi('getTargetPopulation', { vhvId: 'ALL', role: 'admin' })
         .then(records => { 
-          toggleLoaderDisplay(false); masterTargetMgList = records; filteredTargetMgList = [...masterTargetMgList]; tgtMgCurrentPage = 1; renderTargetMgTable(); 
+          toggleLoaderDisplay(false); masterTargetMgList = records; 
+          executeTargetMgTableFilter(keepPage); 
         }); 
     }
     
-    function executeTargetMgTableFilter() { 
+    function executeTargetMgTableFilter(keepPage) { 
       clearTimeout(targetMgSearchDebounceTimeout);
       targetMgSearchDebounceTimeout = setTimeout(() => {
         const q = document.getElementById('inputSearchTargetMg').value.toLowerCase(); 
@@ -934,7 +956,13 @@
           else if (residencyStatusFilter === "ไม่อยู่ในพื้นที่") { matchResidency = (r.status_area === "ไม่อยู่ในพื้นที่"); }
           return matchText && matchResidency;
         });
-        tgtMgCurrentPage = 1; 
+        
+        if (!keepPage) {
+          tgtMgCurrentPage = 1; 
+        } else {
+          const maxPage = Math.ceil(filteredTargetMgList.length / rowsPerPageLimit);
+          if (tgtMgCurrentPage > maxPage) tgtMgCurrentPage = Math.max(1, maxPage);
+        }
         renderTargetMgTable(); 
       }, 300);
     }
@@ -956,7 +984,7 @@
           if(res.success) { 
             const idx = masterTargetMgList.findIndex(t => t.pid.toString() === pid.toString()); 
             if(idx !== -1) masterTargetMgList[idx].status_area = statusStr; 
-            executeTargetMgTableFilter(); 
+            executeTargetMgTableFilter(true); // คงสถานะหน้าปัจจุบันไว้ ไม่เด้งกลับไปหน้า 1
           } 
         }); 
     }
@@ -1039,26 +1067,65 @@
       }
     }
 
-    function fetchScreeningReportDataFromServer() {
+    function fetchScreeningReportDataFromServer(keepPage) {
       toggleLoaderDisplay(true);
       callBackendApi('getAllScreeningReportData')
         .then(records => {
-          toggleLoaderDisplay(false); const tbody = document.getElementById('reportTableBody'); if (!tbody) return; tbody.innerHTML = '';
-          if (records.length === 0) { tbody.innerHTML = '<tr><td colspan="12" class="text-center text-muted py-4 fs-4">ยังไม่พบบันทึกประวัติการคัดกรอง NCDs ในระบบ</td></tr>'; return; }
-          records.forEach(r => {
-            tbody.innerHTML += `<tr><td>${r.pid}</td><td>${r.name}</td><td>${r.date}</td><td>${r.weight}</td><td>${r.height}</td><td>${r.waist}</td><td class="text-danger">${r.sbp}</td><td class="text-danger">${r.dbp}</td><td class="text-success">${r.bsl}</td><td>${r.smoking}</td><td>${r.alcohol}</td><td>${r.exercise}</td></tr>`;
-          });
+          toggleLoaderDisplay(false); masterReportList = records;
+          
+          if (!keepPage) reportCurrentPage = 1;
+          else {
+            const maxPage = Math.ceil(masterReportList.length / rowsPerPageLimit);
+            if (reportCurrentPage > maxPage) reportCurrentPage = Math.max(1, maxPage);
+          }
+          renderReportTable();
         });
     }
 
+    function renderReportTable() {
+      const tbody = document.getElementById('reportTableBody'); if (!tbody) return; tbody.innerHTML = '';
+      if (masterReportList.length === 0) { tbody.innerHTML = '<tr><td colspan="12" class="text-center text-muted py-4 fs-4">ยังไม่พบบันทึกประวัติการคัดกรอง NCDs ในระบบ</td></tr>'; return; }
+      
+      const st = (reportCurrentPage - 1) * rowsPerPageLimit; 
+      const ed = Math.min(st + rowsPerPageLimit, masterReportList.length); 
+      const slice = masterReportList.slice(st, ed);
+      
+      slice.forEach(r => {
+        tbody.innerHTML += `<tr><td>${r.pid}</td><td>${r.name}</td><td>${r.date}</td><td>${r.weight}</td><td>${r.height}</td><td>${r.waist}</td><td class="text-danger">${r.sbp}</td><td class="text-danger">${r.dbp}</td><td class="text-success">${r.bsl}</td><td>${r.smoking}</td><td>${r.alcohol}</td><td>${r.exercise}</td></tr>`;
+      });
+      
+      safetySetTextContent('labelReportPaginationInfo', `รายงานแถวที่ ${st+1} ถึง ${ed} จากทั้งหมด ${masterReportList.length} รายการ`); 
+      compileSmartPaginationLinks(reportCurrentPage, masterReportList.length, 'paginationReportWrapper', 'shiftReportPage');
+    }
+
     function executeExportReportToExcel() {
-      const table = document.getElementById('reportTableMain');
-      if (!table) { Swal.fire({ icon: 'error', title: 'ไม่พบตารางข้อมูล', text: 'ระบบไม่พบตารางรายงานสำหรับการส่งออกไฟล์' }); return; }
-      const workbook = XLSX.utils.table_to_book(table, { sheet: "ทะเบียนรายงานคัดกรองเชิงรุก" });
+      if (masterReportList.length === 0) { Swal.fire({ icon: 'error', title: 'ไม่พบข้อมูล', text: 'ไม่มีข้อมูลรายงานสำหรับการส่งออกไฟล์' }); return; }
+      const worksheetData = [
+        ["เลขทะเบียน PID", "ชื่อ - นามสกุล", "วันที่คัดกรอง", "น้ำหนัก (กก.)", "ส่วนสูง (ซม.)", "รอบเอว (ซม.)", "SYS (บน)", "DIA (ล่าง)", "BSL (น้ำตาล)", "พฤติกรรมสูบบุหรี่", "การดื่มสุรา", "การออกกำลังกาย"]
+      ];
+      masterReportList.forEach(r => {
+        worksheetData.push([r.pid, r.name, r.date, r.weight, r.height, r.waist, r.sbp, r.dbp, r.bsl, r.smoking, r.alcohol, r.exercise]);
+      });
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "ทะเบียนรายงานคัดกรองเชิงรุก");
       XLSX.writeFile(workbook, "รายงานทะเบียนคัดกรอง_Smart_NCD_Care_อนามัย.xlsx");
     }
 
-    function executePrintReportPdfLandscape() { window.print(); }
+    function executePrintReportPdfLandscape() { 
+      const tbody = document.getElementById('reportTableBody');
+      if (tbody && masterReportList.length > 0) {
+        let fullHtml = '';
+        masterReportList.forEach(r => {
+          fullHtml += `<tr><td>${r.pid}</td><td>${r.name}</td><td>${r.date}</td><td>${r.weight}</td><td>${r.height}</td><td>${r.waist}</td><td class="text-danger">${r.sbp}</td><td class="text-danger">${r.dbp}</td><td class="text-success">${r.bsl}</td><td>${r.smoking}</td><td>${r.alcohol}</td><td>${r.exercise}</td></tr>`;
+        });
+        tbody.innerHTML = fullHtml;
+      }
+      setTimeout(() => {
+        window.print();
+        renderReportTable(); // คืนรูปกลับมาแบ่งหน้าแบบปกติหลังจากปิดกล่องพิมพ์ภาพ
+      }, 500);
+    }
 
     function executeSaveAdviceCardAsImage() {
       const cardElement = document.getElementById('shareableAdviceCard');
@@ -1112,13 +1179,34 @@
     }
 
     function executeExportTargetMgToExcel() {
-      const targetTableElement = document.getElementById('reportTargetMgTableMain');
-      if (!targetTableElement) { Swal.fire({ icon: 'error', title: 'ไม่พบตารางข้อมูล' }); return; }
-      const workbook = XLSX.utils.table_to_book(targetTableElement, { sheet: "ฐานข้อมูลทะเบียนเป้าหมายพื้นที่" });
+      if (filteredTargetMgList.length === 0) { Swal.fire({ icon: 'error', title: 'ไม่พบข้อมูล' }); return; }
+      const worksheetData = [
+        ["ชื่อ - นามสกุลเป้าหมาย", "อายุ", "ที่อยู่ปัจจุบัน", "อสม. ผู้รับผิดชอบ", "สถานะถิ่นพำนักปัจจุบัน"]
+      ];
+      filteredTargetMgList.forEach(item => {
+        worksheetData.push([item.name, item.age + " ปี", item.address, item.vhv_name, item.status_area]);
+      });
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "ฐานข้อมูลทะเบียนเป้าหมายพื้นที่");
       XLSX.writeFile(workbook, "ทะเบียนกลุ่มเป้าหมายประชากร_Smart_NCD_Care.xlsx");
     }
 
-    function executePrintTargetMgPdf() { window.print(); }
+    function executePrintTargetMgPdf() { 
+      const tbody = document.getElementById('targetMgTableBody');
+      if (tbody && filteredTargetMgList.length > 0) {
+        let fullHtml = '';
+        filteredTargetMgList.forEach(item => {
+          const statusLabel = item.status_area !== 'ไม่อยู่ในพื้นที่' ? 'อยู่ในพื้นที่' : 'ไม่อยู่ในพื้นที่';
+          fullHtml += `<tr><td>${item.name}</td><td>${item.age} ปี</td><td class="small text-muted">${item.address}</td><td>${item.vhv_name}</td><td class="text-center print-hide">${statusLabel}</td></tr>`;
+        });
+        tbody.innerHTML = fullHtml;
+      }
+      setTimeout(() => {
+        window.print();
+        renderTargetMgTable(); // คืนรูปกลับมาแบ่งหน้าแบบปกติหลังจากปิดกล่องพิมพ์ภาพ
+      }, 500);
+    }
 
     function executeProcessingCsvUploadToServer() {
       const fileInput = document.getElementById('inputCsvTargetFile');
