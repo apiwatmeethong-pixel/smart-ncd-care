@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart NCD Care System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- บรรจุสไตล์จากระบบควบคุมภาพลักษณ์แบรนดิ้งและการพิมพ์ A4 แนวนอน (เดิมคือกราฟิกไฟล์ Style.html) -->
+  <style>
+    :root {
+      --app-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      --glass-fill: rgba(255, 255, 255, 0.9);
+      --glass-border: rgba(255, 255, 255, 0.6);
+      --glass-shadow: 0 10px 35px 0 rgba(15, 23, 42, 0.05);
+      --purple-clr: #7c3aed;
+      --orange-clr: #ea580c;
+      --dark-blue-clr: #1e3a8a;
+    }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: var(--app-gradient);
+      color: #1e293b;
+      min-height: 100vh;
+      font-size: 19px;
+    }
+
+    .text-purple { color: var(--purple-clr) !important; }
+    .text-orange { color: var(--orange-clr) !important; }
+    .text-dark-blue { color: var(--dark-blue-clr) !important; }
+    .btn-orange { background-color: var(--orange-clr) !important; border-color: var(--orange-clr) !important; }
+    .btn-orange:hover { background-color: #c2410c !important; }
+    
+    .bg-pastel-blue { background-color: #e0f2fe !important; border-left: 8px solid #0284c7; }
+    .bg-pastel-green { background-color: #dcfce7 !important; border-left: 8px solid #16a34a; }
+    .bg-pastel-yellow { background-color: #fef9c3 !important; border-left: 8px solid #ca8a04; }
+    .bg-pastel-pink { background-color: #fee2e2 !important; border-left: 8px solid #dc2626; }
+    
+    .text-warning-dark { color: #854d0e !important; }
+    .w-fit { width: fit-content; }
+    .text-secondary-muted { color: #475569 !important; font-weight: bold; }
+    .max-width-500 { max-width: 500px; }
+    
+    .style-pdpa-label { border-left: 4px solid #ea580c; padding-left: 6px; background-color: #fff7ed; text-align: left; }
+
+    .form-switch .form-check-input { width: 3.5em !important; height: 1.8em !important; cursor: pointer; }
+    .form-control-custom { height: 65px !important; font-size: 26px !important; border: 3px solid #94a3b8 !important; border-radius: 14px !important; }
+    .form-control-custom-file { border: 3px dashed #cbd5e0 !important; padding: 15px !important; border-radius: 15px !important; background: #f8fafc; }
+
+    .login-card { background: var(--glass-fill); backdrop-filter: blur(20px); border: 2px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: 24px; width: 100%; max-width: 520px; }
+    .header-glass { background: rgba(255, 255, 255, 0.95); border-bottom: 2px solid var(--glass-border); z-index: 1050; }
+    
+    .sidebar-glass { 
+      background: rgba(255, 255, 255, 0.8); 
+      border-right: 2px solid var(--glass-border); 
+      height: 100vh; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      padding-top: 95px; 
+      z-index: 1000; 
+      width: 270px;
+      max-height: 100vh;
+      overflow-y: auto; 
+    }
+    .sidebar-glass::-webkit-scrollbar { width: 5px; }
+    .sidebar-glass::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); border-radius: 10px; }
+
+    .card-container-panel { background: var(--glass-fill); border: 2px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: 20px; }
+    .stat-card { border: none; border-radius: 20px; position: relative; overflow: hidden; }
+
+    .sidebar-glass .nav-link { color: #334155; font-weight: 700; border-radius: 14px; padding: 12px 16px; cursor: pointer; }
+    .sidebar-glass .nav-link:hover { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    .sidebar-glass .nav-link.active { background: #3b82f6; color: #ffffff !important; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3); }
+
+    .wrapper-layout { margin-top: 90px; }
+    .main-frame { padding-top: 15px; min-height: calc(100vh - 90px); display: flex; flex-direction: column; }
+    .required::after { content: " *"; color: #ef4444; font-weight: bold; }
+    .fw-extrabold { font-weight: 800; }
+    .fw-black { font-weight: 900; }
+    .bg-warning-light { background-color: #fef9c3; border: 2px dashed #facc15; }
+    .table > :not(caption) > * > * { padding: 18px 14px !important; }
+
+    @media print {
+      @page { size: A4 landscape; margin: 5mm; }
+      body { background: #ffffff !important; color: #000000 !important; font-family: 'Sarabun', sans-serif !important; }
+      header, #sidebarMenu, .navbar, footer, .btn, p, h2, select, input, .print-hide, .sub-view-panel > :not(#printableReportDocumentArea):not(#printableTargetMgArea) { display: none !important; }
+      .wrapper-layout, .main-frame { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+      .card-container-panel { border: none !important; box-shadow: none !important; padding: 0 !important; }
+      table { width: 100% !important; border-collapse: collapse !important; }
+      table, th, td { border: 1px solid #000000 !important; }
+      #reportTableMain * { font-weight: normal !important; font-size: 11pt !important; line-height: 1.1 !important; }
+      #reportTableMain th { background-color: #e2e8f0 !important; font-weight: bold !important; text-align: center !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #reportTargetMgTableMain * { font-weight: normal !important; font-size: 12pt !important; }
+      #reportTargetMgTableMain th { background-color: #0f172a !important; color: #ffffff !important; font-weight: bold !important; text-align: center !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      th, td { padding: 3px 4px !important; white-space: normal !important; word-break: break-word !important; vertical-align: middle !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- กล่องประมวลผลส่วนกลาง (Global Loader) -->
+  <div id="globalLoader" class="d-none text-center position-fixed top-50 start-50 translate-middle p-4 rounded-3 shadow" style="z-index: 9999; background: rgba(255, 255, 255, 0.95); min-width: 300px; border: 2px solid rgba(0,0,0,0.1);">
+    <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem;"></div>
+    <h3 class="mt-3 text-muted fw-bold">กำลังประมวลผลข้อมูล<br>โปรดรอสักครู่เดียว...</h3>
+  </div>
+
+  <!-- ================= หน้าล็อกอินระบบ (Login Section) ================= -->
+  <div id="loginSection" class="d-flex align-items-center justify-content-center min-vh-100 container-glass-bg">
+    <div class="card login-card p-4 text-center">
+      <div class="mb-3">
+        <img id="loginDisplayLogo" src="https://cdn-icons-png.flaticon.com/512/822/822118.png" alt="Logo" class="img-fluid mb-2 rounded shadow-sm" style="max-height: 120px;">
+      </div>
+      <h2 class="fw-extrabold text-dark m-0">Smart NCD Care</h2>
+      <p class="text-muted fw-bold fs-4 mb-4">ระบบคัดกรองและบริหารจัดการความเสี่ยง NCDs</p>
+      
+      <form id="loginForm" onsubmit="executeLogin(event)">
+        <div class="mb-3 text-start">
+          <label class="form-label fw-bold fs-4 text-secondary">ชื่อผู้ใช้</label>
+          <input type="text" id="username" class="form-control form-control-lg text-center fw-bold fs-3" placeholder="กรอกเบอร์โทรศัพท์ผู้ใช้" required>
+        </div>
+        <div class="mb-4 text-start">
+          <label class="form-label fw-bold fs-4 text-secondary">รหัสผ่าน</label>
+          <div class="input-group">
+            <input type="password" id="password" class="form-control form-control-lg text-center fw-bold fs-3" placeholder="กรอกรหัสผ่านระบบ" required style="border-radius: 14px 0 0 14px !important;">
+            <button class="btn btn-outline-secondary" type="button" id="btnTogglePassword" style="border-radius: 0 14px 14px 0 !important; border: 3px solid #94a3b8; border-left: none; background-color:#fff;">
+              <i class="fa-solid fa-eye fs-4" id="eyeIcon"></i>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold fs-3 shadow">
+          <i class="fa-solid fa-arrow-right-to-bracket me-2"></i> เข้าสู่ระบบงานคัดกรอง
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= หน้าจอหลักหลังเข้าสู่ระบบ (Main Interface) ================= -->
+  <div id="mainInterface" class="d-none">
+    
+    <header class="navbar navbar-expand-lg header-glass fixed-top px-4 py-2 d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn d-md-none text-secondary p-0 me-2" onclick="toggleMobileSidebar()">
+          <i class="fa-solid fa-bars fs-2"></i>
+        </button>
+        <img id="menuHeaderLogo" src="" alt="Logo" class="rounded" style="height: 50px; width: 50px; object-fit: cover;">
+        <span class="fs-2 fw-black text-primary">Smart NCD Care</span>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <div class="text-end d-none d-sm-block">
+          <div id="sessionUserName" class="fw-extrabold text-dark fs-4">-</div>
+          <div id="sessionUserRole" class="text-muted fw-bold fs-5">-</div>
+        </div>
+        <button onclick="executeLogout()" class="btn btn-danger btn-lg rounded-pill px-4 py-2 fs-5 font-weight-bold">
+          <i class="fa-solid fa-power-off me-2"></i> ออกระบบ
+        </button>
+      </div>
+    </header>
+
+    <div class="container-fluid wrapper-layout">
+      <div class="row">
+        
+        <!-- แถบเมนูนำทางด้านข้าง -->
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 sidebar-glass d-md-block collapse">
+          <div class="position-sticky pt-2 px-1">
+            <ul class="nav flex-column gap-2">
+              <li class="nav-item">
+                <a class="nav-link active fs-4 py-2" id="btn-view-dash" onclick="changeViewWindow('dash')">
+                  <i class="fa-solid fa-chart-simple me-2 text-primary"></i> 1.สรุปสถิติ
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fs-4 py-2" id="btn-view-list" onclick="changeViewWindow('list')">
+                  <i class="fa-solid fa-stethoscope me-2 text-success"></i> 2. คัดกรอง
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fs-4 py-2" id="btn-view-rules" onclick="changeViewWindow('rules')">
+                  <i class="fa-solid fa-book-medical me-2 text-info"></i> 3. ดัชนีสุขภาพ
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fs-4 py-2" id="btn-view-perf" onclick="changeViewWindow('perf')">
+                  <i class="fa-solid fa-star me-2 text-warning"></i> 4. ผลงาน
+                </a>
+              </li>
+              <li class="nav-item admin-staff-only d-none">
+                <a class="nav-link fs-4 py-2" id="btn-view-mgtgt" onclick="changeViewWindow('mgtgt')">
+                  <i class="fa-solid fa-sliders me-2 text-danger"></i> 5. เป้าหมาย
+                </a>
+              </li>
+              <li class="nav-item admin-staff-only d-none">
+                <a class="nav-link fs-4 py-2" id="btn-view-mgusr" onclick="changeViewWindow('mgusr')">
+                  <i class="fa-solid fa-user-gear me-2 text-purple"></i> 6. จัดการผู้ใช้
+                </a>
+              </li>
+              <li class="nav-item admin-staff-only d-none">
+                <a class="nav-link fs-4 py-2" id="btn-view-report" onclick="changeViewWindow('report')">
+                  <i class="fa-solid fa-file-invoice text-dark-blue me-2"></i> 7. รายงาน
+                </a>
+              </li>
+              <li class="nav-item admin-only d-none">
+                <a class="nav-link fs-4 py-2" id="btn-view-upload" onclick="changeViewWindow('upload')">
+                  <i class="fa-solid fa-file-import text-orange me-2"></i> 8. อัปโหลดไฟล์ประชากร
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-frame">
+          <div id="windowViewManager">
+            
+            <!-- เมนูที่ 1: หน้าสรุปสถิติ -->
+            <div id="view-window-dash" class="sub-view-panel">
+              <h2 class="fw-black text-dark mb-1 pt-2">หน้าสรุปความเสี่ยงโรคไม่ติดต่อเรื้อรัง (NCDs)</h2>
+              <p class="text-muted fs-4 mb-4">ข้อมูลประมวลผลสะสมเฉพาะผู้รับบริการที่อยู่ในเขตพื้นที่ความรับผิดชอบ</p>
+              
+              <!-- แถวที่ 1: สถานะสีกลุ่มระดับเสี่ยง -->
+              <div class="row g-3 mb-3">
+                <div class="col-6 col-lg-3"><div class="card stat-card bg-pastel-blue p-2"><div class="card-body"><span class="text-muted fs-5 fw-bold">เป้าหมายในพื้นที่</span><h1 class="fw-black text-dark display-3 mt-2 mb-0" id="stat-total-count">0</h1></div></div></div>
+                <div class="col-6 col-lg-3"><div class="card stat-card bg-pastel-green p-2"><div class="card-body"><span class="text-success fs-5 fw-bold">กลุ่มปกติ (สีเขียว)</span><h1 class="fw-black text-dark display-3 mt-2 mb-0" id="stat-normal-count">0</h1></div></div></div>
+                <div class="col-6 col-lg-3"><div class="card stat-card bg-pastel-yellow p-2"><div class="card-body"><span class="text-warning-dark fs-5 fw-bold">กลุ่มเสี่ยง (สีเหลือง)</span><h1 class="fw-black text-dark display-3 mt-2 mb-0" id="stat-risk-count">0</h1></div></div></div>
+                <div class="col-6 col-lg-3"><div class="card stat-card bg-pastel-pink p-2"><div class="card-body"><span class="text-danger fs-5 fw-bold">กลุ่มสงสัยป่วย (สีแดง)</span><h1 class="fw-black text-dark display-3 mt-2 mb-0" id="stat-alert-count">0</h1></div></div></div>
+              </div>
+
+              <!-- แถวที่ 2: การ์ดชุดสถิติเสริมคัดกรองพฤติกรรม -->
+              <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3"><div class="card stat-card bg-white p-2 border shadow-sm"><div class="card-body"><span class="text-dark-blue fs-5 fw-bold"><i class="fa-solid fa-clipboard-user me-1"></i> 1.จำนวนคัดกรอง</span><h1 class="fw-black text-dark display-3 mt-2 mb-0" id="stat-screened-count">0</h1></div></div></div>
+                <div class="col-6 col-lg-3"><div class="card stat-card bg-white p-2 border shadow-sm"><div class="card-body"><span class="text-secondary fs-5 fw-bold"><i class="fa-solid fa-smoking me-1"></i> 2.จำนวนสูบบุหรี่</span><h1 class="fw-black text-dark display-3 mt-2 mb-0" id="stat-smoker-count">0</h1></div></div></div>
+                <div class="col-6 col-lg-3"><div class="card stat-card bg-white p-2 border shadow-sm"><div class="card-body"><span class="text-purple fs-5 fw-bold"><i class="fa-solid fa-wine-glass-crack me-1"></i> 3.จำนวนดื่มสุรา</span><h1 class="fw-black text-dark display-3 mt-2 mb-0" id="stat-drinker-count">0</h1></div></div></div>
+                <div class="col-6 col-lg-3"><div class="card stat-card bg-white p-2 border shadow-sm"><div class="card-body"><span class="text-orange fs-5 fw-bold"><i class="fa-solid fa-percent me-1"></i> 4.ร้อยละผลคัดกรอง</span><h1 class="fw-black text-dark display-3 mt-2 mb-0" id="stat-progress-percent">0%</h1></div></div></div>
+              </div>
+
+              <div class="card card-container-panel p-4">
+                <h4 class="fw-bold text-dark mb-3"><i class="fa-solid fa-table-list text-primary me-2"></i>ตารางรายงานข้อมูลรายชื่อคัดกรองประจำปี</h4>
+                <div class="table-responsive"><table class="table table-bordered align-middle mb-0 text-nowrap"><thead class="table-light fs-5 font-weight-bold"><tr><th>ชื่อ - นามสกุล</th><th>สรุปสถานะกลุ่ม</th><th>แปลดัชนีมวลกาย (BMI)</th><th>แปลความดัน (HT)</th><th>แปลน้ำตาล (DM)</th><th>ประเมินหัวใจ (CVD)</th></tr></thead><tbody id="dashboardSummaryTableBody" class="fs-5 fw-bold text-dark"></tbody></table></div>
+              </div>
+            </div>
+
+            <!-- เมนูที่ 2: คัดกรอง -->
+            <div id="view-window-list" class="sub-view-panel d-none">
+              <h2 class="fw-black text-dark m-0 pt-2">ตารางรายชื่อประชาชนในการดูแล</h2>
+              <div class="card p-3 mb-4 mt-2 border-0 shadow-sm bg-white rounded-3">
+                <div class="row g-2">
+                  <div class="col-md-7"><label class="form-label fw-bold fs-4">🔍 พิมพ์ค้นหาเป้าหมาย</label><input type="text" id="inputSearchQuery" class="form-control form-control-lg fs-4 rounded-pill" placeholder="ค้นหาด้วยชื่อหรือรหัส PID..." onkeyup="executeTableFilter()"></div>
+                  <div class="col-md-5"><label class="form-label fw-bold fs-4">🎨 ตัวกรองสถานะกลุ่ม</label><select id="selectFilterStatus" class="form-select form-select-lg fs-4 rounded-pill" onchange="executeTableFilter()"><option value="">-- แสดงรายชื่อทั้งหมด --</option><option value="ปกติ">กลุ่มปกติ (สีเขียว)</option><option value="เสี่ยง">กลุ่มเสี่ยง (สีเหลือง)</option><option value="สงสัย">กลุ่มสงสัยป่วย (สีแดง)</option><option value="ยังไม่ได้คัดกรองปีนี้">ยังไม่ได้คัดกรองปีนี้</option></select></div>
+                </div>
+              </div>
+              <div class="card card-container-panel p-0 table-responsive"><table class="table table-hover align-middle mb-0 text-nowrap"><thead class="table-dark fs-4"><tr><th>ทะเบียน PID</th><th>ชื่อ - นามสกุล</th><th>อายุ</th><th>ที่อยู่ปัจจุบัน</th><th>ผลตรวจปีนี้</th><th class="text-center">กดคัดกรอง</th></tr></thead><tbody id="populationTableBody" class="fs-4 fw-bold"></tbody></table><div class="p-3 d-flex justify-content-between align-items-center bg-light border-top"><span class="fs-4 text-muted fw-bold" id="labelTablePaginationInfo">-</span><nav><ul class="pagination pagination-lg mb-0" id="paginationWrapper"></ul></nav></div></div>
+            </div>
+
+            <!-- หน้าแบบฟอร์มบันทึกการคัดกรองโรค -->
+            <div id="view-window-form" class="sub-view-panel d-none">
+              <div class="pt-2 pb-2 mb-3 border-bottom d-flex align-items-center gap-3"><button class="btn btn-secondary btn-lg fs-4 px-4 py-2 rounded-pill" onclick="changeViewWindow('list')"><i class="fa fa-arrow-left me-2"></i>ย้อนกลับ</button><h2 class="fw-black text-dark m-0">แบบฟอร์มบันทึกการคัดกรองเชิงรุกประจำตัว อสม.</h2></div>
+              <div class="row g-3">
+                <div class="col-xl-7">
+                  <div class="card card-container-panel p-4">
+                    <form id="ncdForm" onsubmit="submitFormScreeningData(event)" novalidate>
+                      <input type="hidden" id="form_record_id"><input type="hidden" id="form_gender">
+                      <div class="row g-3 mb-4 bg-light p-3 rounded-3 fs-4">
+                        <div class="col-md-4"><strong>ทะเบียน PID:</strong> <input type="text" id="form_pid" class="form-control fs-4 fw-bold text-primary bg-white" readonly></div>
+                        <div class="col-md-5"><strong>ชื่อ-นามสกุล:</strong> <input type="text" id="form_name" class="form-control fs-4 fw-bold text-dark bg-white" readonly></div>
+                        <div class="col-md-3"><strong>อายุ (ปี):</strong> <input type="text" id="form_age" class="form-control fs-4 fw-bold text-dark bg-white" readonly></div>
+                        <div class="col-md-6 text-danger"><strong>ประวัติความดันเดิม:</strong> <span id="form_hist_ht">-</span></div>
+                        <div class="col-md-6 text-danger"><strong>ประวัติเบาหวานเดิม:</strong> <span id="form_hist_dm">-</span></div>
+                      </div>
+                      
+                      <h4 class="fw-bold text-primary border-start border-5 border-primary ps-2 mb-3">กรอกสัญญาณชีพประจำวัน</h4>
+                      <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-4"><label class="form-label required fw-bold fs-4">น้ำหนัก (กก.)</label><input type="number" step="0.1" id="in_weight" class="form-control form-control-custom calc-hook fs-2 text-center" inputmode="decimal" pattern="[0-9]*" required><span id="label_old_weight" class="d-block mt-1 fs-5 text-secondary-muted">-</span></div>
+                        <div class="col-6 col-md-4"><label class="form-label required fw-bold fs-4">ส่วนสูง (ซม.)</label><input type="number" step="0.1" id="in_height" class="form-control form-control-custom calc-hook fs-2 text-center" inputmode="decimal" pattern="[0-9]*" required><span id="label_old_height" class="d-block mt-1 fs-5 text-secondary-muted">-</span></div>
+                        <div class="col-6 col-md-4"><label class="form-label required fw-bold fs-4">รอบเอว (ซม.)</label><input type="number" step="0.1" id="in_waist" class="form-control form-control-custom calc-hook fs-2 text-center" inputmode="decimal" pattern="[0-9]*" required><span id="label_old_waist" class="d-block mt-1 fs-5 text-secondary-muted">-</span></div>
+                        <div class="col-6 col-md-4"><label class="form-label required fw-bold fs-4 text-danger">ความดันตัวบน (SYS)</label><input type="number" id="in_sbp" class="form-control form-control-custom calc-hook fs-2 text-center text-danger" inputmode="numeric" pattern="[0-9]*" required></div>
+                        <div class="col-6 col-md-4"><label class="form-label required fw-bold fs-4 text-danger">ความดันตัวล่าง (DIA)</label><input type="number" id="in_dbp" class="form-control form-control-custom calc-hook fs-2 text-center text-danger" inputmode="numeric" pattern="[0-9]*" required></div>
+                        <div class="col-6 col-md-4"><label class="form-label required fw-bold fs-4 text-success">น้ำตาลเจาะนิ้ว (BSL)</label><input type="number" id="in_bsl" class="form-control form-control-custom calc-hook fs-2 text-center text-success" inputmode="numeric" pattern="[0-9]*" required></div>
+                      </div>
+                      
+                      <div class="row g-3 mb-4">
+                        <div class="col-md-4"><label class="form-label fw-bold fs-4">การสูบบุหรี่</label><div class="btn-group w-100"><input type="radio" class="btn-check" name="rad_smoke" id="sm_no" value="ไม่สูบ" checked onchange="toggleBehaviorFreqPanel('smoke')"><label class="btn btn-outline-dark py-3 fs-4" for="sm_no">ไม่สูบ</label><input type="radio" class="btn-check" name="rad_smoke" id="sm_yes" value="สูบ" onchange="toggleBehaviorFreqPanel('smoke')"><label class="btn btn-outline-dark py-3 fs-4" for="sm_yes">สูบ</label></div><div id="panel_freq_smoke" class="mt-2 p-2 bg-warning-light rounded d-none"><select id="sel_freq_smoke" class="form-select form-select-lg fs-5 fw-bold"><option value="1-5 ม้วนต่อวัน">1-5 ม้วนต่อวัน</option><option value="6-10 ม้วนต่อวัน">6-10 ม้วนต่อวัน</option><option value="มากกว่า 10 ม้วนต่อวัน">มากกว่า 10 ม้วนต่อวัน</option></select></div></div>
+                        <div class="col-md-4"><label class="form-label fw-bold fs-4">การดื่มสุรา</label><div class="btn-group w-100"><input type="radio" class="btn-check" name="rad_alc" id="alc_no" value="ไม่ดื่ม" checked onchange="toggleBehaviorFreqPanel('alc')"><label class="btn btn-outline-dark py-3 fs-4" for="alc_no">ไม่ดื่ม</label><input type="radio" class="btn-check" name="rad_alc" id="alc_yes" value="ดื่ม" onchange="toggleBehaviorFreqPanel('alc')"><label class="btn btn-outline-dark py-3 fs-4" for="alc_yes">ดื่ม</label></div><div id="panel_freq_alc" class="mt-2 p-2 bg-warning-light rounded d-none"><select id="sel_freq_alc" class="form-select form-select-lg fs-5 fw-bold"><option value="1-2 ครั้งต่อสัปดาห์">1-2 ครั้งต่อสัปดาห์</option><option value="3-5 ครั้งต่อสัปดาห์">3-5 ครั้งต่อสัปดาห์</option><option value="ทุกวัน">ทุกวัน</option></select></div></div>
+                        <div class="col-md-4"><label class="form-label fw-bold fs-4">การออกกำลังกาย</label><div class="btn-group w-100"><input type="radio" class="btn-check" name="rad_ex" id="ex_ok" value="เพียงพอ" onchange="toggleBehaviorFreqPanel('ex')"><label class="btn btn-outline-dark py-3 fs-4" for="ex_ok">เพียงพอ</label><input type="radio" class="btn-check" name="rad_ex" id="ex_low" value="ไม่เพียงพอ" checked onchange="toggleBehaviorFreqPanel('ex')"><label class="btn btn-outline-dark py-3 fs-4" for="ex_low">ไม่เพียงพอ</label></div><div id="panel_freq_ex" class="mt-2 p-2 bg-warning-light rounded d-none"><select id="sel_freq_ex" class="form-select form-select-lg fs-5 fw-bold"><option value="1-2 ครั้งต่อสัปดาห์">1-2 ครั้งต่อสัปดาห์</option><option value="ไม่ได้ออกเลย">ไม่ได้ออกเลย</option></select></div></div>
+                      </div>
+                      <button type="submit" class="btn btn-success btn-lg w-100 py-3 fs-3 fw-bold shadow">บันทึกข้อมูลเข้าส่วนกลาง</button>
+                    </form>
+                  </div>
+                </div>
+                
+                <div class="col-xl-5">
+                  <div class="card card-container-panel p-4 sticky-top" style="top: 100px; z-index: 10;">
+                    <h3 class="fw-black text-dark mb-3"><i class="fa-solid fa-square-poll-vertical text-primary me-2"></i>ผลคัดกรองสุขภาพ</h3>
+                    <hr class="mt-0">
+                    <div class="d-flex justify-content-between align-items-center mb-3 fs-4 fw-bold"><span>ดัชนีมวลกาย (BMI):</span><span id="rt-bmi" class="text-dark fs-3 bg-light px-2 rounded">-</span></div>
+                    <div class="d-flex justify-content-between align-items-center mb-3 fs-4 fw-bold"><span>ความดันโลหิต (HT):</span><span id="rt-bp" class="badge fs-5 px-3 py-2 bg-secondary">รอกรอกตัวเลข</span></div>
+                    <div class="d-flex justify-content-between align-items-center mb-3 fs-4 fw-bold"><span>ระดับน้ำตาล (DM):</span><span id="rt-bsl" class="badge fs-5 px-3 py-2 bg-secondary">รอกรอกตัวเลข</span></div>
+                    <div class="d-flex justify-content-between align-items-center mb-4 fs-4 fw-bold"><span>โรคหัวใจ (CVD Risk):</span><span id="rt-cvd" class="badge fs-5 px-3 py-2 bg-secondary">รอกรอกตัวเลข</span></div>
+
+                    <div class="card p-3 border-2 text-center" id="rt-summary-box" style="background-color: #f8fafc;">
+                      <div id="shareableAdviceCard" class="p-3 bg-white rounded shadow-sm text-start" style="border: 2px solid #e2e8f0;">
+                        <div class="text-center border-bottom pb-2 mb-2">
+                          <h4 class="fw-black text-primary m-0"><i class="fa-solid fa-heart-pulse me-1"></i> บัตรประเมินสุขภาพตนเอง</h4>
+                          <small class="text-muted fw-bold" id="share-card-date">ระบบข้อมูลคัดกรองเชิงรุก</small>
+                        </div>
+                        <div class="row g-2 mb-3 text-center fs-5 fw-bold text-dark border-bottom pb-2">
+                          <div class="col-6 bg-light p-1 rounded">BMI: <span id="share-bmi" class="text-primary">-</span></div>
+                          <div class="col-6 bg-light p-1 rounded">ความดัน: <span id="share-bp" class="text-danger">-</span></div>
+                          <div class="col-6 bg-light p-1 rounded">น้ำตาล: <span id="share-bsl" class="text-success">-</span></div>
+                          <div class="col-6 bg-light p-1 rounded">โรคหัวใจ: <span id="share-cvd" class="text-purple">-</span></div>
+                        </div>
+                        <h3 class="fw-black my-2 text-center" id="rt-status-text">โปรดระบุค่าสัญญาณชีพก่อน</h3>
+                        <div class="p-3 rounded bg-light border mt-2"><p class="fs-4 fw-bold mb-0 text-dark" id="rt-advice-text">กรอกตัวเลขระบบจะแปรผลสรุปพร้อมคำพูดแนะนำให้ทันที</p></div>
+                        <div class="mt-3 text-center text-muted fw-bold style-pdpa-label" style="font-size:12px;">
+                          🛡️ บัตรข้อมูลสุขภาพนิรนาม ปลอดภัยตามกฎหมาย PDPA (ไม่ระบุตัวตน ชื่อ-นามสกุล หรือ PID)
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-info btn-lg text-white w-100 mt-3 py-2 fw-bold fs-4 rounded-pill shadow" onclick="executeSaveAdviceCardAsImage()">
+                        <i class="fa-solid fa-share-nodes me-2"></i> แชร์ภาพการ์ดสุขภาพ (LINE / โซเชียลแอป)
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- เมนูที่ 3: เกณฑ์ดัชนีสุขภาพ -->
+            <div id="view-window-rules" class="sub-view-panel d-none">
+              <h2 class="fw-black text-dark m-0 pt-2">3. เกณฑ์ดัชนีสุขภาพและความรู้การแปรผล</h2>
+              <div class="card card-container-panel p-0 table-responsive mt-3"><table class="table table-bordered table-striped align-middle mb-0"><thead class="table-dark fs-5 text-white"><tr><th>ดัชนีชี้วัด</th><th>ช่วงระดับเกณฑ์</th><th>ผลการวิเคราะห์</th><th>คำพูดแนวทางบอกต่อประชาชน</th></tr></thead><tbody id="healthRulesTableBody" class="fs-5 text-dark fw-bold"></tbody></table></div>
+            </div>
+
+            <!-- เมนูที่ 4: ผลงาน -->
+            <div id="view-window-perf" class="sub-view-panel d-none">
+              <h2 class="fw-black text-dark m-0 pt-2">4. รายงานความคืบหน้าสรุปผลงานการคัดกรอง อสม.</h2>
+              <div class="card card-container-panel p-0 table-responsive mt-3"><table class="table table-bordered table-hover align-middle mb-0 text-nowrap"><thead class="table-dark fs-4 text-white"><tr><th>ชื่อ อสม.</th><th>หมู่ที่</th><th>เป้าหมายทั้งหมด</th><th>คัดกรองแล้ว</th><th>คงเหลือ</th><th>ร้อยละผลงาน</th></tr></thead><tbody id="vhvPerformanceTableBody" class="fs-4 fw-bold text-dark"></tbody></table><div class="p-3 d-flex justify-content-between align-items-center bg-light border-top"><span class="fs-4 text-muted fw-bold" id="labelPerfPaginationInfo">-</span><nav><ul class="pagination pagination-lg mb-0" id="paginationPerfWrapper"></ul></nav></div></div>
+            </div>
+
+            <!-- เมนูที่ 5: เป้าหมาย -->
+            <div id="view-window-mgtgt" class="sub-view-panel d-none">
+              <div class="d-flex justify-content-between align-items-center pt-2 mb-2">
+                <div>
+                  <h2 class="fw-black text-dark m-0">5. แผงจัดการกลุ่มเป้าหมายประชากรในพื้นที่</h2>
+                  <p class="text-muted fs-4 m-0">ระบุตำแหน่งถิ่นที่อยู่จริงของประชากรประจำปีงบประมาณ และบริหารรายงานทะเบียนฐานราก</p>
+                </div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-success btn-lg fs-4 fw-bold rounded-pill px-4" onclick="executeExportTargetMgToExcel()">
+                    <i class="fa-solid fa-file-excel me-2"></i> ส่งออก Excel (.xlsx)
+                  </button>
+                  <button class="btn btn-primary btn-lg fs-4 fw-bold rounded-pill px-4" onclick="executePrintTargetMgPdf()">
+                    <i class="fa-solid fa-print me-2"></i> พิมพ์เอกสาร / PDF
+                  </button>
+                </div>
+              </div>
+              
+              <div class="card p-3 mb-3 bg-white border-0 shadow-sm rounded-3">
+                <div class="row g-2">
+                  <div class="col-md-7">
+                    <label class="form-label fw-bold fs-4">🔍 ค้นหาตามรายชื่อเป้าหมาย</label>
+                    <input type="text" id="inputSearchTargetMg" class="form-control form-control-lg fs-4 rounded-pill" placeholder="พิมพ์ชื่อ-นามสกุลเป้าหมาย..." onkeyup="executeTargetMgTableFilter()">
+                  </div>
+                  <div class="col-md-5">
+                    <label class="form-label fw-bold fs-4">🏡 ตัวกรองสถานะถิ่นพำนักปัจจุบัน</label>
+                    <select id="selectTargetMgStatus" class="form-select form-select-lg fs-4 rounded-pill" onchange="executeTargetMgTableFilter()">
+                      <option value="">-- แสดงรายชื่อเป้าหมายทั้งหมด --</option>
+                      <option value="อยู่ในพื้นที่">อาศัยอยู่ในพื้นที่ความรับผิดชอบ</option>
+                      <option value="ไม่อยู่ในพื้นที่">ย้ายถิ่นฐาน / ไม่อยู่ในพื้นที่</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card card-container-panel p-0 table-responsive" id="printableTargetMgArea">
+                <table class="table table-hover align-middle mb-0 text-nowrap" id="reportTargetMgTableMain">
+                  <thead class="table-dark fs-4">
+                    <tr>
+                      <th>ชื่อ - นามสกุลเป้าหมาย</th>
+                      <th>อายุ</th>
+                      <th>ที่อยู่ปัจจุบัน</th>
+                      <th>อสม. ผู้รับผิดชอบ</th>
+                      <th class="text-center print-hide">สถานะถิ่นพำนักปัจจุบัน</th>
+                    </tr>
+                  </thead>
+                  <tbody id="targetMgTableBody" class="fs-4 fw-bold text-dark"></tbody>
+                </table>
+                <div class="p-3 d-flex justify-content-between align-items-center bg-light border-top print-hide">
+                  <span class="fs-4 text-muted fw-bold" id="labelTgtMgPaginationInfo">-</span>
+                  <nav><ul class="pagination pagination-lg mb-0" id="paginationTgtMgWrapper"></ul></nav>
+                </div>
+              </div>
+            </div>
+
+            <!-- เมนูที่ 6: จัดการผู้ใช้ -->
+            <div id="view-window-mgusr" class="sub-view-panel d-none">
+              <h2 class="fw-black text-dark m-0 pt-2">6. แผงควบคุมสิทธิ์บัญชีรายชื่อ อสม. และระบบโลโก้</h2>
+              <div class="card p-4 mb-4 mt-2 card-container-panel">
+                <h4 class="fw-bold text-dark mb-2">ตั้งค่าลิงก์โลโก้ประจำหน่วยงานสาธารณสุข</h4>
+                <div class="row g-2"><div class="col-md-9"><input type="url" id="inputAgencyLogoUrl" class="form-control form-control-lg fs-5" placeholder="วางลิงก์ URL รูปภาพโลโก้..."></div><div class="col-md-3"><button class="btn btn-info btn-lg fs-4 fw-bold w-100 text-white" onclick="executeSaveLogoConfig()">บันทึกโลโก้</button></div></div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mb-3"><h4 class="fw-bold m-0">รายชื่อผู้ใช้งานระบบคัดกรองทั้งหมด</h4><button class="btn btn-success btn-lg fs-4 fw-bold rounded-pill px-4" onclick="openAddUserModal()">เพิ่มบัญชี อสม. ใหม่</button></div>
+              <div class="card card-container-panel p-0 table-responsive"><table class="table table-hover align-middle mb-0 text-nowrap"><thead class="table-dark fs-4"><tr><th>รหัสผู้ใช้</th><th>ชื่อผู้ใช้</th><th>รหัสผ่าน</th><th>สิทธิ์ระบบ</th><th>ชื่อ - นามสกุล</th><th>หมู่ที่</th><th class="text-center">จัดการคำสั่ง</th></tr></thead><tbody id="usersTableBody" class="fs-4 fw-bold text-dark"></tbody></table></div>
+            </div>
+
+            <!-- เมนูที่ 7: รายงาน -->
+            <div id="view-window-report" class="sub-view-panel d-none">
+              <div class="d-flex justify-content-between align-items-center pt-2 mb-3">
+                <div>
+                  <h2 class="fw-black text-dark m-0">7. คลังรายงานสรุปรายละเอียดผู้คัดกรอง NCDs</h2>
+                  <p class="text-muted fs-4 m-0">ข้อมูลสัญญาณชีพและพฤติกรรมสุขภาพเชิงลึก ครอบคลุมชุดตัวชี้วัดสาธารณสุขทั้งหมด</p>
+                </div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-success btn-lg fs-4 fw-bold rounded-pill px-4" onclick="executeExportReportToExcel()"><i class="fa-solid fa-file-excel me-2"></i> ส่งออกเป็นไฟล์ Excel (.xlsx)</button>
+                  <button class="btn btn-primary btn-lg fs-4 fw-bold rounded-pill px-4" onclick="executePrintReportPdfLandscape()"><i class="fa-solid fa-print me-2"></i> พิมพ์รายงาน PDF แนวนอน</button>
+                </div>
+              </div>
+              <div class="card card-container-panel p-0 table-responsive" id="printableReportDocumentArea">
+                <table class="table table-bordered table-striped align-middle mb-0 text-nowrap" id="reportTableMain">
+                  <thead class="table-dark fs-5 text-white"><tr><th>เลขทะเบียน PID</th><th>ชื่อ - นามสกุล</th><th>วันที่คัดกรอง</th><th>น้ำหนัก (กก.)</th><th>ส่วนสูง (ซม.)</th><th>รอบเอว (ซม.)</th><th>SYS (บน)</th><th>DIA (ล่าง)</th><th>BSL (น้ำตาล)</th><th>พฤติกรรมสูบบุหรี่</th><th>การดื่มสุรา</th><th>การออกกำลังกาย</th></tr></thead>
+                  <tbody id="reportTableBody"><tr><td colspan="12" class="text-center text-muted py-4">กำลังจัดเตรียมโครงสร้างเอกสารรายงาน...</td></tr></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- เมนูที่ 8: ศูนย์อัปเดตนำเข้าข้อมูล -->
+            <div id="view-window-upload" class="sub-view-panel d-none">
+              <h2 class="fw-black text-dark pt-2 m-0">8. ศูนย์นำเข้าข้อมูลประชากรเป้าหมายประจำปีงบประมาณ</h2>
+              <p class="text-muted fs-4 mb-4">บริการสำหรับผู้ดูแลระบบสูงสุดในการล้างข้อมูลประชากรเก่า และเขียนทับด้วยข้อมูลระเบียนราษฎร์ชุดใหม่ผ่านไฟล์รูปแบบ CSV</p>
+              <div class="card card-container-panel p-5 text-center bg-white border-2" style="border-style: dashed !important; border-color: #94a3b8 !important;">
+                <div class="mb-3"><i class="fa-solid fa-file-csv text-orange fa-5x animate-pulse"></i></div>
+                <h3 class="fw-bold text-dark mb-2">เลือกไฟล์รายชื่อประชากร (.csv)</h3>
+                <p class="text-muted fs-5 mb-4">โครงสร้างแถวคอลัมน์ของไฟล์ CSV ต้องเรียงลำดับหัวข้อให้ตรงตามมาตรฐานฐานข้อมูลชีท data ปัจจุบันเท่านั้น</p>
+                <div class="max-width-500 mx-auto">
+                  <input type="file" id="inputCsvTargetFile" class="form-control form-control-custom-file form-control-lg fs-4 mb-4" accept=".csv">
+                  <button class="btn btn-orange btn-lg w-100 py-3 fs-3 fw-bold text-white rounded-pill shadow" onclick="executeProcessingCsvUploadToServer()"><i class="fa-solid fa-upload me-2"></i> เริ่มทำงานนำเข้าข้อมูล (ทับข้อมูลเดิมทั้งหมด)</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <footer class="mt-auto py-3 text-center text-muted fw-bold fs-5 border-top">&copy; 2569 ระบบข้อมูลสุขภาพคัดกรองเชิงรุก Ver.3.5 | Design & Developed by Apiwat Meethong</footer>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- กล่องโมดอลจัดการเจ้าหน้าที่ อสม. -->
+  <div class="modal fade" id="userManagementModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content card-container-panel p-3">
+        <div class="modal-header border-0"><h3 class="modal-title fw-black text-dark" id="userModalTitle">-</h3><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <form id="userActionForm" onsubmit="executeSaveUserForm(event)">
+            <input type="hidden" id="modal_user_id">
+            <div class="row g-3">
+              <div class="col-md-6"><label class="form-label fw-bold fs-5">ชื่อผู้ใช้ (เบอร์โทร)</label><input type="text" id="modal_user" class="form-control form-control-lg fs-4 fw-bold" required></div>
+              <div class="col-md-6"><label class="form-label fw-bold fs-5">รหัสผ่าน</label><input type="text" id="modal_pass" class="form-control form-control-lg fs-4 fw-bold" required></div>
+              <div class="col-md-6"><label class="form-label fw-bold fs-5">ชื่อ-นามสกุลจริง</label><input type="text" id="modal_fullname" class="form-control form-control-lg fs-4 fw-bold" required></div>
+              <div class="col-md-6"><label class="form-label fw-bold fs-5">สิทธิ์ระบบ</label><select id="modal_type" class="form-select form-select-lg fs-4 fw-bold"><option value="user">user (อสม.)</option><option value="staff">staff (สตาฟฟ์)</option><option value="admin">admin (แอดมิน)</option></select></div>
+              <div class="col-md-6"><label class="form-label fw-bold fs-5">หมู่ที่</label><input type="number" id="modal_moo" class="form-control form-control-lg fs-4 fw-bold" required></div>
+              <div class="col-md-6"><label class="form-label fw-bold fs-5">เลขประจำตัว PID อสม.</label><input type="text" id="modal_pid_อสม" class="form-control form-control-lg fs-4 fw-bold" required></div>
+            </div>
+            <div class="text-end mt-4 border-top pt-3"><button type="button" class="btn btn-secondary btn-lg fs-4 me-2" data-bs-dismiss="modal">ยกเลิก</button><button type="submit" class="btn btn-primary btn-lg fs-4 fw-bold px-4">บันทึกข้อมูล</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- ================= ระบบจัดการสคริปต์กลไกฝั่งหน้าบ้าน (เดิมคือกราฟิก JavaScript.html) ================= -->
+  <script>
+    let activeVhvSession = { name: '', role: '', vhvId: '', logo: '' };
+    let masterHealthRules = []; 
+    let populationDataset = [];
+    let displayFilteredDataset = [];
+    let masterVhvPerformanceList = [];
+    let masterTargetMgList = [];
+    let filteredTargetMgList = [];
+
+    let tableCurrentPage = 1;
+    let perfCurrentPage = 1;
+    let tgtMgCurrentPage = 1;
+    const rowsPerPageLimit = 10;
+    
+    let failedLoginAttemptsCount = 0;
+    let bootstrapUserModalInstance;
+
+    let tableSearchDebounceTimeout;
+    let targetMgSearchDebounceTimeout;
+
+    // 🚨 สำคัญที่สุด: วางลิงก์ Web App URL ที่ได้จากการ Deploy Google Apps Script ลงในตัวแปรนี้เพื่อเชื่อมระบบหลังบ้าน
+    const API_URL = "https://script.google.com/macros/s/AKfycbzZsHcAq7SVLmzOF03U5obCZ9_gDHOkOdNp-OYOEvPy9_WEPaOqnyJ_CpHcbLb51ZN2ng/exec";
+
+    // ฟังก์ชันศูนย์กลางจัดส่งชุดคำสั่งเชื่อมต่อระบบหลังบ้านผ่าน API (Bypass CORS Preflight via text/plain payload)
+    async function callBackendApi(actionName, dataPayload = {}) {
+      try {
+        const fullPayload = { action: actionName, ...dataPayload };
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          mode: 'cors',
+          body: JSON.stringify(fullPayload)
+        });
+        return await response.json();
+      } catch (error) {
+        toggleLoaderDisplay(false);
+        Swal.fire({ icon: 'error', title: 'การเชื่อมต่อผิดพลาด', text: 'ไม่สามารถเปิดการเชื่อมต่อติดต่อฐานข้อมูล API หลังบ้านได้: ' + error.message });
+        throw error;
+      }
+    }
+
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('sidebarMenu');
+      if (sidebar) sidebar.classList.toggle('show');
+    }
+
+    function toggleLoaderDisplay(isShowing) {
+      const loader = document.getElementById('globalLoader');
+      if (!loader) return;
+      if (isShowing) { loader.classList.remove('d-none'); } 
+      else { loader.classList.add('d-none'); }
+    }
+
+    function safetySetInputValue(id, val) { const el = document.getElementById(id); if (el) { el.value = val; } }
+    function safetySetTextContent(id, txt) { const el = document.getElementById(id); if (el) { el.innerText = txt; } }
+
+    window.addEventListener('load', function() {
+      const modalEl = document.getElementById('userManagementModal');
+      if (modalEl) bootstrapUserModalInstance = new bootstrap.Modal(modalEl);
+      
+      callBackendApi('getAgencyLogoUrl').then(res => {
+        if (res.success) {
+          const img = document.getElementById('loginDisplayLogo'); if (img) img.src = res.logoUrl;
+        }
+      });
+    });
+
+    const btnToggle = document.getElementById('btnTogglePassword');
+    if (btnToggle) {
+      btnToggle.addEventListener('click', function() {
+        const pwd = document.getElementById('password'); const eye = document.getElementById('eyeIcon');
+        if (!pwd || !eye) return;
+        if (pwd.type === 'password') { pwd.type = 'text'; eye.className = 'fa-solid fa-eye-slash fs-4'; }
+        else { pwd.type = 'password'; eye.className = 'fa-solid fa-eye fs-4'; }
+      });
+    }
+
+    function changeViewWindow(targetView) {
+      document.querySelectorAll('.sub-view-panel').forEach(view => view.classList.add('d-none'));
+      document.querySelectorAll('#sidebarMenu .nav-link').forEach(link => link.classList.remove('active'));
+      
+      const targetEl = document.getElementById(`view-window-${targetView}`);
+      if (targetEl) targetEl.classList.remove('d-none');
+      const menuBtn = document.getElementById(`btn-view-${targetView}`);
+      if (menuBtn) menuBtn.classList.add('active');
+      
+      const sidebar = document.getElementById('sidebarMenu');
+      if (sidebar && sidebar.classList.contains('show')) { sidebar.classList.remove('show'); }
+
+      if (targetView === 'dash') { fetchDashboardCountsFromServer(); }
+      else if (targetView === 'list') { fetchPopulationListFromServer(); }
+      else if (targetView === 'rules') { renderHealthRulesTable(); }
+      else if (targetView === 'perf') { fetchVhvPerformanceReportFromServer(); }
+      else if (targetView === 'mgtgt') { fetchManagementTargetsFromServer(); }
+      else if (targetView === 'mgusr') { fetchUserAccountsFromServer(); }
+      else if (targetView === 'report') { fetchScreeningReportDataFromServer(); } 
+    }
+
+    function executeLogin(e) {
+      e.preventDefault();
+      if (failedLoginAttemptsCount >= 5) {
+        Swal.fire({ icon: 'error', title: 'ระบบระงับชั่วคราว', text: 'กรอกรหัสผ่านผิดเกิน 5 ครั้ง บัญชีโดนระงับความปลอดภัยอัตโนมัติ' });
+        return;
+      }
+
+      toggleLoaderDisplay(true);
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value.trim();
+
+      callBackendApi('checkLogin', { username: u, password: p })
+        .then(response => {
+          toggleLoaderDisplay(false);
+          if (response.success) {
+            failedLoginAttemptsCount = 0;
+            activeVhvSession = { name: response.name, role: response.role, vhvId: response.vhvId, logo: response.logo };
+            masterHealthRules = response.rules;
+            
+            safetySetTextContent('sessionUserName', `คุณ ${response.name}`);
+            safetySetTextContent('sessionUserRole', `สิทธิ์บัญชี: ${response.role} (รหัส อสม: ${response.vhvId})`);
+            
+            const headerLogo = document.getElementById('menuHeaderLogo'); if (headerLogo) headerLogo.src = response.logo;
+            safetySetInputValue('inputAgencyLogoUrl', response.logo);
+
+            if (response.role === 'admin') {
+              document.querySelectorAll('.admin-staff-only').forEach(el => el.classList.remove('d-none'));
+              document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('d-none')); 
+            } else if (response.role === 'staff') {
+              document.querySelectorAll('.admin-staff-only').forEach(el => el.classList.remove('d-none'));
+              document.querySelectorAll('.admin-only').forEach(el => el.classList.add('d-none')); 
+            } else {
+              document.querySelectorAll('.admin-staff-only').forEach(el => el.classList.add('d-none'));
+              document.querySelectorAll('.admin-only').forEach(el => el.classList.add('d-none'));
+            }
+            
+            document.getElementById('loginSection').classList.add('d-none');
+            document.getElementById('mainInterface').classList.remove('d-none');
+            Swal.fire({ icon: 'success', title: 'ยินดีต้อนรับเข้าใช้งาน', text: `เจ้าหน้าที่ระบบ: ${response.name}`, timer: 1500, showConfirmButton: false });
+            changeViewWindow('dash');
+          } else {
+            failedLoginAttemptsCount++;
+            if (failedLoginAttemptsCount >= 5) {
+              document.getElementById('username').disabled = true;
+              document.getElementById('password').disabled = true;
+              document.querySelector('#loginForm button[type="submit"]').disabled = true;
+              Swal.fire({ icon: 'error', title: 'บัญชีระบบโดนล็อก', text: 'กรอกรหัสผ่านผิดกำหนด 5 ครั้ง บัญชีถูกล็อกถาวรแล้วครับ' });
+            } else {
+              Swal.fire({ icon: 'error', title: 'รหัสผ่านไม่ถูกต้อง', text: response.message + ` (เหลือสิทธิ์พยายามอีก ${5 - failedLoginAttemptsCount} ครั้ง)` });
+            }
+          }
+        })
+        .catch(err => { toggleLoaderDisplay(false); });
+    }
+
+    function executeLogout() {
+      activeVhvSession = { name: '', role: '', vhvId: '', logo: '' };
+      document.getElementById('loginForm').reset();
+      document.getElementById('mainInterface').classList.add('d-none');
+      document.getElementById('loginSection').classList.remove('d-none');
+    }
+
+    function compileSmartPaginationLinks(currentPage, totalItems, elementWrapperId, clickFunctionName) {
+      const totalPages = Math.ceil(totalItems / rowsPerPageLimit);
+      const wrapper = document.getElementById(elementWrapperId); if (!wrapper) return; wrapper.innerHTML = ''; if (totalPages <= 1) return;
+      const prevLi = document.createElement('li'); prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+      prevLi.innerHTML = `<a class="page-link" onclick="${clickFunctionName}(${currentPage - 1})">ก่อนหน้า</a>`; wrapper.appendChild(prevLi);
+      let startPage = Math.max(1, currentPage - 2); let endPage = Math.min(totalPages, startPage + 4);
+      if (endPage - startPage < 4) { startPage = Math.max(1, endPage - 4); }
+      for (let i = startPage; i <= endPage; i++) {
+        const li = document.createElement('li'); li.className = `page-item ${currentPage === i ? 'active' : ''}`;
+        li.innerHTML = `<a class="page-link" onclick="${clickFunctionName}(${i})">${i}</a>`; wrapper.appendChild(li);
+      }
+      const nextLi = document.createElement('li'); nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+      nextLi.innerHTML = `<a class="page-link" onclick="${clickFunctionName}(${currentPage + 1})">ถัดไป</a>`; wrapper.appendChild(nextLi);
+    }
+
+    function shiftTablePage(num) { tableCurrentPage = num; renderPopulationTableElements(); }
+    function shiftPerfPage(num) { perfCurrentPage = num; renderVhvPerformanceTable(); }
+    function shiftTgtMgPage(num) { tgtMgCurrentPage = num; renderTargetMgTable(); }
+
+    function fetchDashboardCountsFromServer() {
+      callBackendApi('getDashboardStats', { vhvId: activeVhvSession.vhvId, role: activeVhvSession.role })
+        .then(stats => {
+          safetySetTextContent('stat-total-count', stats.assigned); 
+          safetySetTextContent('stat-normal-count', stats.normal);
+          safetySetTextContent('stat-risk-count', stats.risk); 
+          safetySetTextContent('stat-alert-count', stats.alert);
+          
+          let screenedCount = stats.listData ? stats.listData.length : 0;
+          let totalSmokerCount = 0;
+          let totalDrinkerCount = 0;
+          
+          if (stats.listData) {
+            stats.listData.forEach(item => {
+              if (item.smoking && item.smoking.includes('สูบ') && !item.smoking.includes('ไม่สูบ')) totalSmokerCount++;
+              if (item.alcohol && item.alcohol.includes('ดื่ม') && !item.alcohol.includes('ไม่ดื่ม')) totalDrinkerCount++;
+            });
+          }
+          
+          let totalTargetNum = parseInt(stats.assigned) || 1;
+          let calculatedProgressPercent = ((screenedCount / totalTargetNum) * 100).toFixed(1);
+          
+          safetySetTextContent('stat-screened-count', screenedCount);
+          safetySetTextContent('stat-smoker-count', totalSmokerCount);
+          safetySetTextContent('stat-drinker-count', totalDrinkerCount);
+          safetySetTextContent('stat-progress-percent', calculatedProgressPercent + '%');
+
+          const tbody = document.getElementById('dashboardSummaryTableBody'); if (!tbody) return; tbody.innerHTML = '';
+          if(stats.listData.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">ยังไม่มีข้อมูลผลการคัดกรองเสร็จสิ้น</td></tr>'; return; }
+          stats.listData.forEach(item => {
+            let bClass = "bg-secondary";
+            if (item.ncd_status.includes('เขียว') || item.ncd_status.includes('ปกติ')) bClass = "bg-success";
+            else if (item.ncd_status.includes('เหลือง') || item.ncd_status.includes('เสี่ยง')) bClass = "bg-warning text-dark";
+            else if (item.ncd_status.includes('แดง') || item.ncd_status.includes('สงสัย')) bClass = "bg-danger";
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${item.name}</td><td><span class="badge ${bClass} fs-6">${item.ncd_status}</span></td><td class="text-primary">${item.bmi_text}</td><td>${item.bp_status}</td><td>${item.fbs_status}</td><td>${item.cvd_risk}</td>`;
+            tbody.appendChild(tr);
+          });
+        });
+    }
+
+    function fetchPopulationListFromServer() {
+      toggleLoaderDisplay(true);
+      callBackendApi('getTargetPopulation', { vhvId: activeVhvSession.vhvId, role: activeVhvSession.role })
+        .then(records => {
+          toggleLoaderDisplay(false); populationDataset = records; displayFilteredDataset = [...populationDataset];
+          tableCurrentPage = 1; renderPopulationTableElements();
+        });
+    }
+
+    function executeTableFilter() {
+      clearTimeout(tableSearchDebounceTimeout);
+      tableSearchDebounceTimeout = setTimeout(() => {
+        const q = document.getElementById('inputSearchQuery').value.toLowerCase(); 
+        const st = document.getElementById('selectFilterStatus').value;
+        displayFilteredDataset = populationDataset.filter(r => { 
+          return (r.name.toLowerCase().includes(q) || r.pid.toString().includes(q)) && (st === "" || r.last_screening_status.includes(st)); 
+        });
+        tableCurrentPage = 1; 
+        renderPopulationTableElements();
+      }, 300);
+    }
+
+    function renderPopulationTableElements() {
+      const tbody = document.getElementById('populationTableBody'); if (!tbody) return; tbody.innerHTML = '';
+      if (displayFilteredDataset.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-3 text-muted fs-4">ไม่พบรายชื่อประชากร</td></tr>';
+        safetySetTextContent('labelTablePaginationInfo', 'แสดงข้อมูล 0 รายการ');
+        const pWrapper = document.getElementById('paginationWrapper'); if (pWrapper) pWrapper.innerHTML = ''; return;
+      }
+      const st = (tableCurrentPage - 1) * rowsPerPageLimit; const ed = Math.min(st + rowsPerPageLimit, displayFilteredDataset.length); const slice = displayFilteredDataset.slice(st, ed);
+      slice.forEach(item => {
+        let bStyle = "bg-secondary"; let bLabel = `<i class="fa fa-stethoscope"></i> เริ่มคัดกรอง`; let bClass = "btn-primary";
+        if (item.last_screening_status.includes('เขียว') || item.last_screening_status.includes('ปกติ')) { bStyle = "bg-success"; bLabel = `<i class="fa fa-edit"></i> แก้ไขข้อมูล`; bClass = "btn-warning text-dark"; }
+        else if (item.last_screening_status.includes('เหลือง') || item.last_screening_status.includes('เสี่ยง')) { bStyle = "bg-warning text-dark"; bLabel = `<i class="fa fa-edit"></i> แก้ไขข้อมูล`; bClass = "btn-warning text-dark"; }
+        else if (item.last_screening_status.includes('แดง') || item.last_screening_status.includes('สงสัย')) { bStyle = "bg-danger"; bLabel = `<i class="fa fa-edit"></i> แก้ไขข้อมูล`; bClass = "btn-warning text-dark"; }
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${item.pid}</td><td class="fs-3">${item.name}</td><td>${item.age} ปี</td><td class="small text-muted">${item.address}</td><td><span class="badge ${bStyle} fs-5">${item.last_screening_status}</span></td><td class="text-center"><button class="btn ${bClass} btn-lg rounded-pill px-4" onclick="openScreeningFormWindow('${item.pid}')">${bLabel}</button></td>`;
+        tbody.appendChild(tr);
+      });
+      safetySetTextContent('labelTablePaginationInfo', `แสดงรายการที่ ${st + 1} ถึง ${ed} จากทั้งหมด ${displayFilteredDataset.length} คน`);
+      compileSmartPaginationLinks(tableCurrentPage, displayFilteredDataset.length, 'paginationWrapper', 'shiftTablePage');
+    }
+
+    function openScreeningFormWindow(pid) {
+      const citizen = populationDataset.find(c => c.pid.toString() === pid.toString()); if (!citizen) return;
+      const form = document.getElementById('ncdForm'); if (form) form.reset(); changeViewWindow('form');
+      safetySetInputValue('form_pid', citizen.pid); safetySetInputValue('form_name', citizen.name); safetySetInputValue('form_age', citizen.age); safetySetInputValue('form_gender', citizen.gender);
+      safetySetTextContent('form_hist_ht', citizen.history_ht); safetySetTextContent('form_hist_dm', citizen.history_dm);
+      
+      safetySetTextContent('label_old_weight', `(ค่าตรวจเดิม: ${citizen.old_weight} กก.)`); 
+      safetySetTextContent('label_old_height', `(ค่าตรวจเดิม: ${citizen.old_height} ซม.)`); 
+      safetySetTextContent('label_old_waist', `(ค่าตรวจเดิม: ${citizen.old_waist} ซม.)`);
+      
+      const inWeightField = document.getElementById('in_weight');
+      const inHeightField = document.getElementById('in_height');
+      const inWaistField = document.getElementById('in_waist');
+      if (inWeightField) inWeightField.placeholder = "0.0";
+      if (inWaistField) inWaistField.placeholder = "0.0";
+      if (inHeightField) inHeightField.placeholder = "0.0";
+
+      if (citizen.screen_id && citizen.screen_id !== "") {
+        safetySetInputValue('form_record_id', citizen.screen_id); 
+        safetySetInputValue('in_weight', citizen.screen_weight); 
+        safetySetInputValue('in_height', citizen.screen_height); 
+        safetySetInputValue('in_waist', citizen.screen_waist); 
+        safetySetInputValue('in_sbp', citizen.screen_sbp); 
+        safetySetInputValue('in_dbp', citizen.screen_dbp); 
+        safetySetInputValue('in_bsl', citizen.screen_bsl);
+        const sInput = document.getElementById(citizen.screen_smoking.includes("สูบ") ? 'sm_yes' : 'sm_no'); if (sInput) sInput.checked = true;
+        const aInput = document.getElementById(citizen.screen_alcohol.includes("ดื่ม") ? 'alc_yes' : 'alc_no'); if (aInput) aInput.checked = true;
+        const eInput = document.getElementById(citizen.screen_exercise.includes("ไม่เพียงพอ") ? 'ex_low' : 'ex_ok'); if (eInput) eInput.checked = true;
+      } else { 
+        safetySetInputValue('form_record_id', ""); 
+        safetySetInputValue('in_weight', "");
+        safetySetInputValue('in_waist', "");
+        safetySetInputValue('in_height', citizen.old_height || ""); 
+      }
+      toggleBehaviorFreqPanel('smoke'); toggleBehaviorFreqPanel('alc'); toggleBehaviorFreqPanel('ex');
+      attachRealtimeClinicalCalculationListeners(); runClinicalEvaluationEngine();
+    }
+
+    function attachRealtimeClinicalCalculationListeners() {
+      document.querySelectorAll('.calc-hook').forEach(el => { 
+        el.removeEventListener('input', runClinicalEvaluationEngine); 
+        el.addEventListener('input', runClinicalEvaluationEngine); 
+      });
+      document.querySelectorAll('input[type="radio"]').forEach(el => {
+        el.removeEventListener('change', runClinicalEvaluationEngine); 
+        el.addEventListener('change', runClinicalEvaluationEngine);
+      });
+    }
+
+    function runClinicalEvaluationEngine() {
+      const wEl = document.getElementById('in_weight'); const hEl = document.getElementById('in_height'); const sbpEl = document.getElementById('in_sbp'); const dbpEl = document.getElementById('in_dbp'); const bslEl = document.getElementById('in_bsl'); const waistEl = document.getElementById('in_waist');
+      const ageEl = document.getElementById('form_age'); const genderEl = document.getElementById('form_gender');
+      if (!wEl || !hEl || !sbpEl || !dbpEl || !bslEl || !waistEl) return;
+      
+      const w = parseFloat(wEl.value) || 0; const h = parseFloat(hEl.value) || 0; const sbp = parseInt(sbpEl.value) || 0; const dbp = parseInt(dbpEl.value) || 0; const bsl = parseInt(bslEl.value) || 0; const waist = parseFloat(waistEl.value) || 0;
+      const age = parseInt(ageEl ? ageEl.value : 0) || 0; const gender = (genderEl ? genderEl.value : 'ชาย');
+
+      let bmiVal = 0; let bmiDisp = "-"; let bRule = null;
+      if (w > 0 && h > 0) { 
+        bmiVal = w / Math.pow(h / 100, 2); bmiDisp = bmiVal.toFixed(2); 
+        bRule = masterHealthRules.find(r => r.category==='BMI' && bmiVal>=parseFloat(r.min_value) && bmiVal<=parseFloat(r.max_value)); 
+      }
+      const bmiTextString = bmiDisp + (bRule ? ` (${bRule.result})` : '');
+      safetySetTextContent('rt-bmi', bmiTextString); safetySetTextContent('share-bmi', bmiTextString);
+
+      let bpStat = "รอกรอกตัวเลข"; let bpColor = "bg-secondary";
+      if (sbp > 0 || dbp > 0) {
+        if (sbp >= 180 || dbp >= 110) { bpStat = "สูงวิกฤต (Stage 3)"; bpColor = "bg-danger"; }
+        else if (sbp >= 160 || dbp >= 100) { bpStat = "สูงอันตราย (Stage 2)"; bpColor = "bg-danger"; }
+        else if (sbp >= 140 || dbp >= 90) { bpStat = "ความดันโลหิตสูง (Stage 1)"; bpColor = "bg-warning text-dark"; }
+        else if (sbp >= 120 || dbp >= 80) { bpStat = "ค่อนข้างสูง (Pre-HT)"; bpColor = "bg-warning text-dark"; }
+        else { bpStat = "ปกติ (Normal)"; bpColor = "bg-success"; }
+      }
+      safetySetTextContent('rt-bp', bpStat); safetySetTextContent('share-bp', bpStat);
+      const bpBadge = document.getElementById('rt-bp'); if (bpBadge) bpBadge.className = `badge fs-5 px-3 py-2 ${bpColor}`;
+
+      let dmStat = "รอกรอกตัวเลข"; let dmColor = "bg-secondary"; let dmRule = masterHealthRules.find(r => r.category==='FBS' && bsl>=parseFloat(r.min_value) && bsl<=parseFloat(r.max_value));
+      if (bsl > 0) { if(dmRule){ dmStat = dmRule.risk_level; dmColor = dmRule.color==='success'?'bg-success':(dmRule.color==='warning'?'bg-warning text-dark':'bg-danger'); }}
+      safetySetTextContent('rt-bsl', dmStat); safetySetTextContent('share-bsl', dmStat);
+      const dmBadge = document.getElementById('rt-bsl'); if (dmBadge) dmBadge.className = `badge fs-5 px-3 py-2 ${dmColor}`;
+
+      let cvdStat = "รอกรอกตัวเลข"; let cvdColor = "bg-secondary"; const cvdBadge = document.getElementById('rt-cvd');
+      if (age >= 35 && sbp > 0) {
+        let isSmoker = document.getElementById('sm_yes') && document.getElementById('sm_yes').checked;
+        let isDM = (bsl >= 126); let isObese = ((waist > 0 && h > 0 ? waist/h : 0) >= 0.5);
+        let cvdPoints = 0;
+        if (gender === 'ชาย' || gender === 'Male') { if (age >= 65) cvdPoints += 4; else if (age >= 55) cvdPoints += 3; else if (age >= 45) cvdPoints += 2; else cvdPoints += 1; } 
+        else { if (age >= 65) cvdPoints += 3; else if (age >= 55) cvdPoints += 2; else if (age >= 45) cvdPoints += 1; }
+        if (isSmoker) cvdPoints += 2; if (isDM) cvdPoints += 3; if (isObese) cvdPoints += 1;
+        if (sbp >= 180) cvdPoints += 4; else if (sbp >= 160) cvdPoints += 3; else if (sbp >= 140) cvdPoints += 2; else if (sbp >= 120) cvdPoints += 1;
+
+        if (cvdPoints >= 10) { cvdStat = "เสี่ยงสูงมาก (>=30%)"; cvdColor = "bg-danger"; }
+        else if (cvdPoints >= 8) { cvdStat = "เสี่ยงสูง (20-<30%)"; cvdColor = "bg-danger"; }
+        else if (cvdPoints >= 6) { cvdStat = "เสี่ยงปานกลาง (10-<20%)"; cvdColor = "bg-warning text-dark"; }
+        else { cvdStat = "เสี่ยงน้อย (<10%)"; cvdColor = "bg-success"; }
+        safetySetTextContent('rt-cvd', cvdStat); safetySetTextContent('share-cvd', cvdStat);
+        if (cvdBadge) cvdBadge.className = `badge fs-5 px-3 py-2 ${cvdColor}`;
+      } else {
+        cvdStat = age < 35 && sbp > 0 ? "เสี่ยงน้อย (<35 ปี)" : "รอกรอกตัวเลข";
+        cvdColor = age < 35 && sbp > 0 ? "bg-success" : "bg-secondary";
+        safetySetTextContent('rt-cvd', cvdStat); safetySetTextContent('share-cvd', cvdStat);
+        if (cvdBadge) cvdBadge.className = `badge fs-5 px-3 py-2 ${cvdColor}`;
+      }
+
+      let exTxt = ""; 
+      if (h > 0 && waist > 0) { const maxW = h / 2; exTxt += waist > maxW ? `<br>⚠️ <strong>ดัชนีรอบเอว:</strong> เกินเกณฑ์แนะนำ (เกณฑ์สูงสุดของท่านคือ ${maxW.toFixed(1)} ซม.) มีภาวะอ้วนลงพุง` : `<br>✅ <strong>ดัชนีรอบเอว:</strong> อยู่ในเกณฑ์ปลอดภัย (ไม่เกิน ${maxW.toFixed(1)} ซม.)`; }
+
+      const box = document.getElementById('rt-summary-box'); const tSt = document.getElementById('rt-status-text'); const tAd = document.getElementById('rt-advice-text'); if (!box || !tSt || !tAd) return;
+
+      if (sbp >= 140 || dbp >= 90 || bsl >= 126 || bpColor === 'bg-danger' || dmColor === 'bg-danger') {
+        tSt.innerText = "กลุ่มสงสัยป่วยรายใหม่ (สีแดง)"; 
+        tAd.innerHTML = `<strong>💡 คำแนะนำประเมินตนเอง:</strong> ผลตรวจสัญญาณชีพของท่านวันนี้สูงกว่าเกณฑ์ปกติ แนะนำให้ท่านงดกิจกรรมที่ใช้แรงหนัก หลีกเลี่ยงอาหารรสเค็มจัดหรือหวานจัดชั่วคราว และขอเชิญท่านเข้าพบเจ้าหน้าที่สาธารณสุข ณ อนามัย ภายในสัปดาห์นี้ เพื่อตรวจยืนยันความถูกต้องและรับคำแนะนำอย่างเหมาะสมต่อไปครับ` + exTxt;
+        box.style.borderColor = "#dc2626"; box.style.backgroundColor = "#fee2e2"; tSt.className = "fw-black my-2 fs-2 text-danger";
+      } else if (sbp >= 120 || dbp >= 80 || bsl >= 100 || bmiVal >= 23 || cvdColor.includes('warning')) {
+        tSt.innerText = "กลุ่มเสี่ยงโรคเรื้อรัง (สีเหลือง)"; 
+        box.style.borderColor = "#ca8a04"; box.style.backgroundColor = "#fef9c3"; tSt.className = "fw-black my-2 fs-2 text-warning-dark";
+        tAd.innerHTML = `<strong>💡 คำแนะนำประเมินตนเอง:</strong> ร่างกายของท่านเริ่มส่งสัญญาณเตือนว่ามีความเสี่ยงต่อโรค NCDs แนะนำให้ปรับเปลี่ยนพฤติกรรมในชีวิตประจำวัน โดยลดการบริโภคอาหารรสหวาน มัน เค็ม เพิ่มการรับประทานผักผลไม้ และออกกำลังกายหรือแกว่งแขนอย่างน้อยวันละ 30 นาที แล้วอีก 6 เดือนมาติดตามดูระดับตัวเลขสุขภาพร่วมกับ อสม. อีกครั้งนะครับ` + exTxt;
+      } else if (w > 0 && h > 0) {
+        tSt.innerText = "กลุ่มปกติ สุขภาพดี (สีเขียว)"; 
+        box.style.borderColor = "#16a34a"; box.style.backgroundColor = "#dcfce7"; tSt.className = "fw-black my-2 fs-2 text-success";
+        tAd.innerHTML = `<strong>💡 คำแนะนำประเมินตนเอง:</strong> ยินดีด้วยครับ ผลการตรวจร่างกายโดยรวมของท่านอยู่ในเกณฑ์ปกติและสุขภาพแข็งแรงดีเยี่ยม ขอให้ท่านรักษาวินัยในการเลือกรับประทานอาหารที่มีประโยชน์และออกกำลังกายอย่างสม่ำเสมอแบบนี้ต่อไป และร่วมตรวจประเมินสุขภาพประจำปีกับ อสม. อีกครั้งในปีหน้านะครับ` + exTxt;
+      } else { 
+        tSt.innerText = "ระบบรอคีย์ข้อมูล"; tAd.innerText = "กรอกตัวเลขเพื่อคำนวณผล"; 
+        box.style.borderColor = "#cbd5e0"; box.style.backgroundColor = "#f8f9fa"; tSt.className = "text-muted fs-4"; 
+      }
+    }
+
+    function toggleBehaviorFreqPanel(cat) {
+      const smYes = document.getElementById('sm_yes'); const alcYes = document.getElementById('alc_yes'); const exLow = document.getElementById('ex_low');
+      if (cat === 'smoke' && smYes) document.getElementById('panel_freq_smoke').classList.toggle('d-none', !smYes.checked);
+      else if (cat === 'alc' && alcYes) document.getElementById('panel_freq_alc').classList.toggle('d-none', !alcYes.checked);
+      else if (cat === 'ex' && exLow) document.getElementById('panel_freq_ex').classList.toggle('d-none', !exLow.checked);
+    }
+
+    function submitFormScreeningData(e) {
+      e.preventDefault(); 
+      const form = document.getElementById('ncdForm'); 
+      
+      const wRaw = document.getElementById('in_weight').value;
+      const hRaw = document.getElementById('in_height').value;
+      const waistRaw = document.getElementById('in_waist').value;
+      const sbpRaw = document.getElementById('in_sbp').value;
+      const dbpRaw = document.getElementById('in_dbp').value;
+      const bslRaw = document.getElementById('in_bsl').value;
+
+      if (wRaw === "" || hRaw === "" || waistRaw === "" || sbpRaw === "" || dbpRaw === "" || bslRaw === "") {
+        Swal.fire({ icon: 'error', title: 'ไม่สามารถบันทึกข้อมูลได้', text: 'ขออภัยด้วยครับ บังคับว่าหากกรอกข้อมูลไม่ครบทุกช่องสัญญาณชีพ ระบบจะไม่ยินยอมให้ทำการบันทึกข้อมูลเด็ดขาด โปรดตรวจทานช่องที่ว่างอยู่ครับ!' });
+        if (form) form.classList.add('was-validated');
+        return;
+      }
+
+      const sbp = parseInt(sbpRaw); const dbp = parseInt(dbpRaw); const bsl = parseInt(bslRaw);
+      if (sbp<60 || sbp>200 || dbp<30 || dbp>120 || bsl<40 || bsl>600) { Swal.fire({ icon: 'error', title: 'ตัวเลขคลาดเคลื่อน', text: 'ข้อมูลสัญญาณชีพผิดขอบเขตมาตรฐานสาธารณสุข โปรดตรวจทานอีกรอบครับ!' }); return; }
+      
+      const payload = {
+        id: document.getElementById('form_record_id').value, citizen_id: document.getElementById('form_pid').value, name: document.getElementById('form_name').value, age: parseInt(document.getElementById('form_age').value), gender: document.getElementById('form_gender').value, weight: parseFloat(wRaw), height: parseFloat(hRaw), bmi: parseFloat(document.getElementById('rt-bmi').innerText) || 0, waist: parseFloat(waistRaw), bp_sys: sbp, bp_dia: dbp, bp_status: document.getElementById('rt-bp').innerText, fbs: bsl, fbs_status: document.getElementById('rt-bsl').innerText,
+        smoking: document.getElementById('sm_yes').checked ? `สูบ (${document.getElementById('sel_freq_smoke').value})` : "ไม่สูบ", alcohol: document.getElementById('alc_yes').checked ? `ดื่ม (${document.getElementById('sel_freq_alc').value})` : "ไม่ดื่ม", exercise: document.getElementById('ex_ok').checked ? "เพียงพอ" : `ไม่เพียงพอ (${document.getElementById('sel_freq_ex').value})`, cvd_risk: document.getElementById('rt-cvd').innerText, ncd_status: document.getElementById('rt-status-text').innerText, operator: activeVhvSession.name
+      };
+      
+      toggleLoaderDisplay(true); 
+      callBackendApi('saveNcdScreening', { payload: payload })
+        .then(res => { 
+          toggleLoaderDisplay(false); 
+          if (res.success) { Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', timer: 1500, showConfirmButton: false }); changeViewWindow('list'); } 
+        });
+    }
+
+    function renderHealthRulesTable() {
+      const tbody = document.getElementById('healthRulesTableBody'); if (!tbody) return; tbody.innerHTML = '';
+      
+      masterHealthRules.forEach(r => { 
+        if(['BMI','BP','FBS'].indexOf(r.category) !== -1) { 
+          tbody.innerHTML += `<tr><td><span class="badge bg-primary fs-5 px-3 py-2">${r.category}</span></td><td class="fs-4">ช่วงค่า: ${r.min_value} - ${r.max_value}</td><td class="fs-4 text-dark fw-bold">${r.result}</td><td class="small text-muted fs-5">${r.advice}</td></tr>`; 
+        } 
+      });
+      
+      tbody.innerHTML += `<tr><td><span class="badge fs-5 px-3 py-2" style="background-color: #0284c7;">รอบเอว (ชาย)</span></td><td class="fs-4">ไม่เกิน 90 เซนติเมตร (หรือ ไม่เกิน ส่วนสูง ÷ 2)</td><td class="fs-4 text-success fw-bold">ปกติ</td><td class="small text-muted fs-5">รอบเอวอยู่ในเกณฑ์ปลอดภัย ดัชนีรอบเอวสมส่วน ไม่มีความเสี่ยงภาวะอ้วนลงพุง</td></tr>`;
+      tbody.innerHTML += `<tr><td><span class="badge fs-5 px-3 py-2" style="background-color: #b91c1c;">รอบเอว (ชาย)</span></td><td class="fs-4">ตั้งแต่ 91 เซนติเมตร ขึ้นไป (หรือ เกินเกณฑ์ ส่วนสูง ÷ 2)</td><td class="fs-4 text-danger fw-bold">อ้วนลงพุง</td><td class="small text-muted fs-5">มีภาวะอ้วนลงพุง เสี่ยงต่อโรคแทรกซ้อนหลอดเลือดหัวใจ สมอง และเบาหวานรายใหม่</td></tr>`;
+      tbody.innerHTML += `<tr><td><span class="badge fs-5 px-3 py-2" style="background-color: #ec4899;">รอบเอว (หญิง)</span></td><td class="fs-4">ไม่เกิน 80 เซนติเมตร (หรือ ไม่เกิน ส่วนสูง ÷ 2)</td><td class="fs-4 text-success fw-bold">ปกติ</td><td class="small text-muted fs-5">รอบเอวอยู่ในเกณฑ์ปลอดภัย ดัชนีรอบเอวสมส่วน ไม่มีความเสี่ยงภาวะอ้วนลงพุง</td></tr>`;
+      tbody.innerHTML += `<tr><td><span class="badge fs-5 px-3 py-2" style="background-color: #be185d;">รอบเอว (หญิง)</span></td><td class="fs-4">ตั้งแต่ 81 เซนติเมตร ขึ้นไป (หรือ เกินเกณฑ์ ส่วนสูง ÷ 2)</td><td class="fs-4 text-danger fw-bold">อ้วนลงพุง</td><td class="small text-muted fs-5">มีภาวะอ้วนลงพุง เสี่ยงต่อโรคแทรกซ้อนหลอดเลือดหัวใจ สมอง และเบาหวานรายใหม่</td></tr>`;
+    }
+
+    function fetchVhvPerformanceReportFromServer() { 
+      toggleLoaderDisplay(true); 
+      callBackendApi('getVhvPerformanceReport')
+        .then(data => { 
+          toggleLoaderDisplay(false); masterVhvPerformanceList = data; perfCurrentPage = 1; renderVhvPerformanceTable(); 
+        }); 
+    }
+    
+    function renderVhvPerformanceTable() {
+      const tbody = document.getElementById('vhvPerformanceTableBody'); if (!tbody) return; tbody.innerHTML = ''; if(masterVhvPerformanceList.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="text-center">ไม่พบรายงาน</td></tr>'; return; }
+      const st = (perfCurrentPage - 1) * rowsPerPageLimit; const ed = Math.min(st + rowsPerPageLimit, masterVhvPerformanceList.length); const slice = masterVhvPerformanceList.slice(st, ed);
+      slice.forEach(item => { tbody.innerHTML += `<tr><td>${item.name}</td><td>หมู่ที่ ${item.moo}</td><td>${item.target} คน</td><td class="text-success">${item.done} คน</td><td class="text-danger">${item.pending} คน</td><td><div class="d-flex align-items-center gap-2"><div class="progress w-100" style="height:12px;"><div class="progress-bar bg-success" style="width:${item.percentage}%"></div></div><span>${item.percentage}%</span></div></td></tr>`; });
+      safetySetTextContent('labelPerfPaginationInfo', `รายงานแถวที่ ${st+1} ถึง ${ed} จากทั้งหมด ${masterVhvPerformanceList.length} อสม.`); compileSmartPaginationLinks(perfCurrentPage, masterVhvPerformanceList.length, 'paginationPerfWrapper', 'shiftPerfPage');
+    }
+
+    function fetchManagementTargetsFromServer() { 
+      toggleLoaderDisplay(true); 
+      callBackendApi('getTargetPopulation', { vhvId: 'ALL', role: 'admin' })
+        .then(records => { 
+          toggleLoaderDisplay(false); masterTargetMgList = records; filteredTargetMgList = [...masterTargetMgList]; tgtMgCurrentPage = 1; renderTargetMgTable(); 
+        }); 
+    }
+    
+    function executeTargetMgTableFilter() { 
+      clearTimeout(targetMgSearchDebounceTimeout);
+      targetMgSearchDebounceTimeout = setTimeout(() => {
+        const q = document.getElementById('inputSearchTargetMg').value.toLowerCase(); 
+        const residencyStatusFilter = document.getElementById('selectTargetMgStatus') ? document.getElementById('selectTargetMgStatus').value : '';
+        
+        filteredTargetMgList = masterTargetMgList.filter(r => {
+          const matchText = r.name.toLowerCase().includes(q);
+          let matchResidency = true;
+          if (residencyStatusFilter === "อยู่ในพื้นที่") { matchResidency = (r.status_area !== "ไม่อยู่ในพื้นที่"); } 
+          else if (residencyStatusFilter === "ไม่อยู่ในพื้นที่") { matchResidency = (r.status_area === "ไม่อยู่ในพื้นที่"); }
+          return matchText && matchResidency;
+        });
+        tgtMgCurrentPage = 1; 
+        renderTargetMgTable(); 
+      }, 300);
+    }
+
+    function renderTargetMgTable() {
+      const tbody = document.getElementById('targetMgTableBody'); if (!tbody) return; tbody.innerHTML = ''; if(filteredTargetMgList.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">ไม่พบประวัติ</td></tr>'; return; }
+      const st = (tgtMgCurrentPage - 1) * rowsPerPageLimit; const ed = Math.min(st + rowsPerPageLimit, filteredTargetMgList.length); const slice = filteredTargetMgList.slice(st, ed);
+      slice.forEach(item => {
+        const isChecked = item.status_area !== 'ไม่อยู่ในพื้นที่' ? 'checked' : ''; const statusLabel = item.status_area !== 'ไม่อยู่ในพื้นที่' ? '<span class="text-success fw-bold"><i class="fa fa-home"></i> อยู่ในพื้นที่</span>' : '<span class="text-danger fw-bold"><i class="fa fa-plane-departure"></i> ไม่อยู่ในพื้นที่</span>';
+        tbody.innerHTML += `<tr><td>${item.name}</td><td>${item.age} ปี</td><td class="small text-muted">${item.address}</td><td>${item.vhv_name}</td><td class="text-center print-hide"><div class="d-flex flex-column align-items-center gap-1"><div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" ${isChecked} onchange="toggleTargetLocationState('${item.pid}', this)"></div><div class="fs-6">${statusLabel}</div></div></td></tr>`;
+      });
+      safetySetTextContent('labelTgtMgPaginationInfo', `แถวเป้าหมายที่ ${st+1} ถึง ${ed} จากทั้งหมด ${filteredTargetMgList.length} คน`); compileSmartPaginationLinks(tgtMgCurrentPage, filteredTargetMgList.length, 'paginationTgtMgWrapper', 'shiftTgtMgPage');
+    }
+
+    function toggleTargetLocationState(pid, el) { 
+      const statusStr = el.checked ? 'อยู่ในพื้นที่' : 'ไม่อยู่ในพื้นที่'; 
+      callBackendApi('updateTargetAreaStatus', { pid: pid, statusStr: statusStr })
+        .then(res => { 
+          if(res.success) { 
+            const idx = masterTargetMgList.findIndex(t => t.pid.toString() === pid.toString()); 
+            if(idx !== -1) masterTargetMgList[idx].status_area = statusStr; 
+            executeTargetMgTableFilter(); 
+          } 
+        }); 
+    }
+    
+    function executeSaveLogoConfig() { 
+      const url = document.getElementById('inputAgencyLogoUrl').value.trim(); 
+      toggleLoaderDisplay(true); 
+      callBackendApi('saveAgencyLogoUrl', { url: url })
+        .then(res => { 
+          toggleLoaderDisplay(false); 
+          if(res.success) { 
+            const img = document.getElementById('menuHeaderLogo'); if (img) img.src = url; 
+            Swal.fire({ icon: 'success', title: 'อัปเดตโลโก้สำเร็จ' }); 
+          } 
+        }); 
+    }
+
+    function fetchUserAccountsFromServer() {
+      toggleLoaderDisplay(true);
+      callBackendApi('processUserDatabaseAction', { actionType: 'READ', payload: {}, role: activeVhvSession.role })
+        .then(users => {
+          toggleLoaderDisplay(false);
+          const tbody = document.getElementById('usersTableBody'); if (!tbody) return; tbody.innerHTML = '';
+          users.forEach(u => {
+            let editBtn = `<button class="btn btn-sm btn-warning fw-bold fs-6 rounded-pill px-3 me-2" onclick="openEditUserModal(${JSON.stringify(u).replace(/"/g, '&quot;')})"><i class="fa-solid fa-user-pen"></i> แก้ไข</button>`;
+            let deleteBtn = `<button class="btn btn-sm btn-danger fw-bold fs-6 rounded-pill px-3" onclick="executeUserCrudAction('DELETE', ${u.user_id})"><i class="fa fa-trash"></i> ลบ</button>`;
+            if(activeVhvSession.role === 'staff') {
+              deleteBtn = `<span class="badge bg-light text-muted fs-6">ล็อกสิทธิ์การลบ</span>`;
+              if (u.type === 'admin') { editBtn = `<span class="badge bg-light text-muted fs-6 me-2">ล็อกสิทธิ์จัดการ Admin</span>`; }
+            }
+            tbody.innerHTML += `<tr><td>${u.user_id}</td><td>${u.user}</td><td><code>${u.pass}</code></td><td><span class="badge bg-secondary">${u.type}</span></td><td>${u.fullname}</td><td>หมู่ ${u.moo}</td><td class="text-center">${editBtn} ${deleteBtn}</td></tr>`;
+          });
+        }); 
+    }
+
+    function openAddUserModal() {
+      const form = document.getElementById('userActionForm'); if (form) form.reset();
+      safetySetInputValue('modal_user_id', ""); safetySetTextContent('userModalTitle', "เพิ่มบัญชีรายชื่อ อสม. คณะทำงานใหม่");
+      const typeSelect = document.getElementById('modal_type');
+      if (typeSelect) {
+        if (activeVhvSession.role === 'staff') { typeSelect.value = 'user'; typeSelect.disabled = true; } 
+        else { typeSelect.disabled = false; }
+      }
+      if (bootstrapUserModalInstance) bootstrapUserModalInstance.show();
+    }
+
+    function openEditUserModal(uObj) {
+      safetySetInputValue('modal_user_id', uObj.user_id); safetySetInputValue('modal_user', uObj.user); safetySetInputValue('modal_pass', uObj.pass); safetySetInputValue('modal_fullname', uObj.fullname); safetySetInputValue('modal_type', uObj.type); safetySetInputValue('modal_moo', uObj.moo); safetySetInputValue('modal_pid_อสม', uObj['PID อสม.']);
+      safetySetTextContent('userModalTitle', "แก้ไขข้อมูลระเบียบบัญชี อสม.");
+      const typeSelect = document.getElementById('modal_type'); if (typeSelect) { typeSelect.disabled = (activeVhvSession.role === 'staff'); }
+      if (bootstrapUserModalInstance) bootstrapUserModalInstance.show();
+    }
+
+    function executeSaveUserForm(e) {
+      e.preventDefault(); const uid = document.getElementById('modal_user_id').value; const act = uid === "" ? 'CREATE' : 'UPDATE';
+      const payload = {
+        user_id: uid, user: document.getElementById('modal_user').value.trim(), pass: document.getElementById('modal_pass').value.trim(), fullname: document.getElementById('modal_fullname').value.trim(), type: document.getElementById('modal_type').value, moo: parseInt(document.getElementById('modal_moo').value), 'PID อสม.': document.getElementById('modal_pid_อสม').value.trim(), community: 'ชุมชนโทกหัวช้าง'
+      };
+      toggleLoaderDisplay(true);
+      callBackendApi('processUserDatabaseAction', { actionType: act, payload: payload, role: activeVhvSession.role })
+        .then(res => {
+          toggleLoaderDisplay(false);
+          if(res.success) { if (bootstrapUserModalInstance) bootstrapUserModalInstance.hide(); fetchUserAccountsFromServer(); Swal.fire({ icon: 'success', title: 'ดำเนินการสำเร็จ', timer: 1200, showConfirmButton:false }); } 
+          else { Swal.fire({ icon: 'error', title: 'ไม่สามารถทำรายการได้', text: res.message }); }
+        }); 
+    }
+
+    function executeUserCrudAction(action, userId) {
+      if(action === 'DELETE') {
+        Swal.fire({ title: 'ยืนยันการลบระเบียบบัญชีนี้?', text: "เมื่อยืนยันแล้ว บัญชี อสม. ดังกล่าวจะไม่สามารถเข้าสู่ระบบได้อีกต่อไป!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'ลบข้อมูล' }).then((result) => {
+          if (result.isConfirmed) {
+            toggleLoaderDisplay(true);
+            callBackendApi('processUserDatabaseAction', { actionType: 'DELETE', payload: { user_id: userId }, role: activeVhvSession.role })
+              .then(res => {
+                toggleLoaderDisplay(false); if(res.success) { fetchUserAccountsFromServer(); Swal.fire('ถูกลบแล้ว!', '', 'success'); } 
+                else { Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res.message }); }
+              }); 
+          }
+        });
+      }
+    }
+
+    function fetchScreeningReportDataFromServer() {
+      toggleLoaderDisplay(true);
+      callBackendApi('getAllScreeningReportData')
+        .then(records => {
+          toggleLoaderDisplay(false); const tbody = document.getElementById('reportTableBody'); if (!tbody) return; tbody.innerHTML = '';
+          if (records.length === 0) { tbody.innerHTML = '<tr><td colspan="12" class="text-center text-muted py-4 fs-4">ยังไม่พบบันทึกประวัติการคัดกรอง NCDs ในระบบ</td></tr>'; return; }
+          records.forEach(r => {
+            tbody.innerHTML += `<tr><td>${r.pid}</td><td>${r.name}</td><td>${r.date}</td><td>${r.weight}</td><td>${r.height}</td><td>${r.waist}</td><td class="text-danger">${r.sbp}</td><td class="text-danger">${r.dbp}</td><td class="text-success">${r.bsl}</td><td>${r.smoking}</td><td>${r.alcohol}</td><td>${r.exercise}</td></tr>`;
+          });
+        });
+    }
+
+    function executeExportReportToExcel() {
+      const table = document.getElementById('reportTableMain');
+      if (!table) { Swal.fire({ icon: 'error', title: 'ไม่พบตารางข้อมูล', text: 'ระบบไม่พบตารางรายงานสำหรับการส่งออกไฟล์' }); return; }
+      const workbook = XLSX.utils.table_to_book(table, { sheet: "ทะเบียนรายงานคัดกรองเชิงรุก" });
+      XLSX.writeFile(workbook, "รายงานทะเบียนคัดกรอง_Smart_NCD_Care_อนามัย.xlsx");
+    }
+
+    function executePrintReportPdfLandscape() { window.print(); }
+
+    function executeSaveAdviceCardAsImage() {
+      const cardElement = document.getElementById('shareableAdviceCard');
+      const statusText = document.getElementById('rt-status-text').innerText;
+      if (statusText.includes("รอคีย์") || statusText.includes("กรอกตัวเลข")) {
+        Swal.fire({ icon: 'warning', title: 'ไม่สามารถบันทึกได้', text: 'กรุณากรอกข้อมูลสัญญาณชีพและประมวลผลให้เรียร็จสิ้นก่อนกดสร้างภาพแชร์ครับ' }); return;
+      }
+      
+      toggleLoaderDisplay(true);
+      const dateNow = new Date();
+      const thaiDateStr = dateNow.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+      safetySetTextContent('share-card-date', 'วันที่ตรวจประเมิน: ' + thaiDateStr);
+
+      html2canvas(cardElement, { scale: 2, useCORS: true, backgroundColor: "#ffffff" }).then(canvas => {
+        canvas.toBlob(blob => {
+          toggleLoaderDisplay(false);
+          const imgFile = new File([blob], `SmartNCDCare_${dateNow.getTime()}.png`, { type: 'image/png' });
+          
+          if (navigator.canShare && navigator.canShare({ files: [imgFile] })) {
+            navigator.share({
+              files: [imgFile],
+              title: 'บัตรประเมินสุขภาพตนเองนิรนาม',
+              text: 'สรุปผลตรวจวิเคราะห์สัญญาณชีพเบื้องต้นจากระบบข้อมูล Smart NCD Care'
+            }).then(() => {
+              Swal.fire({ icon: 'success', title: 'ส่งข้อมูลสำเร็จ', text: 'ดำเนินการแชร์ข้อมูลสุขภาพเรียบร้อยแล้ว', timer: 1500, showConfirmButton: false });
+            }).catch(err => {
+              if (err.name !== 'AbortError') {
+                executeFallbackDownloadMechanism(canvas, dateNow);
+              }
+            });
+          } else {
+            executeFallbackDownloadMechanism(canvas, dateNow);
+          }
+        }, 'image/png');
+      }).catch(err => { toggleLoaderDisplay(false); Swal.fire({ icon: 'error', title: 'ล้มเหลว', text: 'ล้มเหลวในการแปลงภาพ: ' + err.toString() }); });
+    }
+
+    function executeFallbackDownloadMechanism(canvas, dateNow) {
+      const imgBase64Uri = canvas.toDataURL("image/png");
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.download = `บัตรแนะนำสุขภาพ_SmartNCDCare_${dateNow.getTime()}.png`;
+      downloadAnchor.href = imgBase64Uri;
+      downloadAnchor.click();
+      
+      Swal.fire({
+        icon: 'success', 
+        title: 'ดาวน์โหลดภาพสำรองสำเร็จ',
+        text: 'เนื่องจากบราวเซอร์นี้ไม่รองรับการกดแชร์เปิดแอปตรงๆ ระบบจึงทำการเซฟภาพลงในอัลบั้มรูปภาพของเครื่องให้แทนโดยอัตโนมัติ อสม. สามารถเปิดแอป LINE หรือ Facebook แล้วแนบส่งรูปนี้เข้าห้องแชทได้ทันทีเช่นกันครับ (ปลอดภัยตามกฎหมาย PDPA)',
+        confirmButtonColor: '#0284c7'
+      });
+    }
+
+    function executeExportTargetMgToExcel() {
+      const targetTableElement = document.getElementById('reportTargetMgTableMain');
+      if (!targetTableElement) { Swal.fire({ icon: 'error', title: 'ไม่พบตารางข้อมูล' }); return; }
+      const workbook = XLSX.utils.table_to_book(targetTableElement, { sheet: "ฐานข้อมูลทะเบียนเป้าหมายพื้นที่" });
+      XLSX.writeFile(workbook, "ทะเบียนกลุ่มเป้าหมายประชากร_Smart_NCD_Care.xlsx");
+    }
+
+    function executePrintTargetMgPdf() { window.print(); }
+
+    function executeProcessingCsvUploadToServer() {
+      const fileInput = document.getElementById('inputCsvTargetFile');
+      if (!fileInput || fileInput.files.length === 0) {
+        Swal.fire({ icon: 'warning', title: 'ยังไม่ได้เลือกไฟล์', text: 'กรุณาเลือกไฟล์ประชากรในรูปแบบนามสกุล .csv ก่อนกดปุ่มนำเข้าข้อมูลครับ' });
+        return;
+      }
+      const csvFile = fileInput.files[0]; const fileReader = new FileReader(); toggleLoaderDisplay(true);
+      fileReader.onload = function(event) {
+        const textRawContent = event.target.result;
+        callBackendApi('importCsvToDataSheet', { textRawContent: textRawContent })
+          .then(result => {
+            toggleLoaderDisplay(false);
+            if (result.success) {
+              fileInput.value = ""; 
+              Swal.fire({ icon: 'success', title: 'นำเข้าข้อมูลประชากรสำเร็จ!', text: `ระบบได้ทำการล้างข้อมูลชุดเก่า และเขียนทับข้อมูลชุดใหม่ลงชีท data เรียบร้อยแล้ว จำนวนทั้งหมด ${result.count} รายการ`, confirmButtonText: 'รับทราบ', confirmButtonColor: '#ea580c' });
+            } else { Swal.fire({ icon: 'error', title: 'การนำเข้าข้อมูลล้มเหลว', text: result.message }); }
+          });
+      };
+      fileReader.readAsText(csvFile, "UTF-8");
+    }
+  </script>
+</body>
+</html>
