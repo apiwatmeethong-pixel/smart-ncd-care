@@ -51,6 +51,7 @@
     .login-card { background: var(--glass-fill); backdrop-filter: blur(20px); border: 2px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: 24px; width: 100%; max-width: 520px; }
     .header-glass { background: rgba(255, 255, 255, 0.95); border-bottom: 2px solid var(--glass-border); z-index: 1050; }
     
+    /* โครงสร้างเมนูสำหรับหน้าจอ PC / Tablet */
     .sidebar-glass { 
       background: rgba(255, 255, 255, 0.8); 
       border-right: 2px solid var(--glass-border); 
@@ -86,46 +87,93 @@
     .page-item.active .page-link { background-color: #0284c7; border-color: #0284c7; }
 
     /* ====================================================================================
-       🔥 CSS RESPONSIVE DESIGN FOR SMARTPHONES (แก้ปัญหาตารางเบียด/แสดงผลล้นจอในมือถือ)
+       🔥 CSS RESPONSIVE FOR SMARTPHONES (ย้ายเมนูไปไว้ด้านล่างจอ สไลด์ปัดซ้าย-ขวา)
        ==================================================================================== */
     @media (max-width: 767.98px) {
-      /* ปรับแต่งลิ้นชักเมนูด้านข้างไม่ให้ดันเนื้อหาหลักจนเบียดในมือถือ */
+      /* 1. แปลงโฉม Sidebar ข้างให้กลายเป็นแอปบาร์ยึดติดด้านล่างจอ (Bottom Navigation Bar) */
       .sidebar-glass {
-        position: fixed;
-        top: 0;
-        left: -290px;
-        width: 285px;
-        height: 100vh;
-        z-index: 1060;
-        background: rgba(255, 255, 255, 0.98) !important;
-        padding-top: 95px;
-        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 5px 0 25px rgba(15, 23, 42, 0.15);
-      }
-      .sidebar-glass.show {
-        left: 0;
-      }
-      
-      .wrapper-layout {
-        margin-top: 85px;
+        position: fixed !important;
+        top: auto !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: 80px !important;
+        padding-top: 0 !important;
+        border-right: none !important;
+        border-top: 2px solid var(--glass-border) !important;
+        background: rgba(255, 255, 255, 0.96) !important;
+        backdrop-filter: blur(15px) !important;
+        z-index: 1060 !important;
+        overflow-y: hidden !important;
+        box-shadow: 0 -8px 30px rgba(15, 23, 42, 0.08) !important;
       }
       
-      .main-frame {
-        padding-left: 5px !important;
-        padding-right: 5px !important;
+      /* จัดระเบียบลายเส้นเมนูให้เรียงเป็นแถวนอน และเปิดการใช้นิ้วปัดสไลด์ซ้าย-ขวาอย่างลื่นไหล */
+      .sidebar-glass .nav {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        padding: 8px 10px !important;
+        gap: 6px !important;
+        -webkit-overflow-scrolling: touch;
+      }
+      /* ซ่อนแถบ Scrollbar ประจำระบบปฏิบัติการออกเพื่อความสวยงามสะอาดตา */
+      .sidebar-glass .nav::-webkit-scrollbar {
+        display: none !important;
+      }
+      
+      .sidebar-glass .nav-item {
+        flex: 0 0 auto !important;
+      }
+      
+      /* ปรับดีไซน์ปุ่มเมนูย่อยให้เป็นแนวตั้ง (ไอคอนสุขภาพอยู่บน ตัวอักษรคำอธิบายอยู่ล่าง) */
+      .sidebar-glass .nav-link {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 13px !important;
+        padding: 6px 14px !important;
+        border-radius: 12px !important;
+        min-width: 80px !important;
+        text-align: center !important;
+      }
+      .sidebar-glass .nav-link i {
+        font-size: 18px !important;
+        margin-right: 0 !important;
+        margin-bottom: 2px !important;
       }
 
+      /* 2. คืนพื้นที่และจัดความกว้างหน้าหลักให้ขยายเต็ม 100% (แก้ปัญหาภาพโดนเบียดบีบแคบ) */
+      .wrapper-layout {
+        margin-top: 80px !important;
+      }
+      .main-frame {
+        width: 100% !important;
+        margin-left: 0 !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+        padding-bottom: 95px !important; /* เว้นระยะด้านล่างขึ้นมา เพื่อไม่ให้เมนูแอปบาร์บังปุ่มบันทึกข้อมูล */
+      }
+      
+      /* ซ่อนปุ่มแฮมเบอร์เกอร์สามขีดด้านบนซ้ายทิ้ง เนื่องจากย้ายเมนูลงล่างเสร็จสิ้นแล้ว */
+      header .btn.d-md-none {
+        display: none !important;
+      }
+
+      /* ขยายอินพุตฟอร์มคัดกรองให้มองเห็นและพริ้นต์ข้อมูลในมือถือง่ายขึ้น */
       .form-control-custom {
         height: 55px !important;
         font-size: 20px !important;
       }
 
-      /* 🚀 โครงสร้างกลไก Reflow เปลี่ยนตารางปกติให้กลายสภาพเป็นการ์ดแนวตั้งบนสมาร์ทโฟน */
+      /* แปลงตารางรายงานเป็น Card Layout บนมือถืออัตโนมัติ */
       .mobile-card-table {
         background: transparent !important;
       }
       .mobile-card-table thead {
-        display: none !important; /* ซ่อนหัวตารางเหล็กหนาๆ ทิ้งไป */
+        display: none !important;
       }
       .mobile-card-table tbody,
       .mobile-card-table tr,
@@ -137,13 +185,13 @@
         background: #ffffff !important;
         border: 2px solid #e2e8f0 !important;
         border-radius: 18px !important;
-        padding: 16px !important;
-        margin-bottom: 16px !important;
+        padding: 14px !important;
+        margin-bottom: 14px !important;
         box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04) !important;
       }
       .mobile-card-table td {
         border: none !important;
-        padding: 10px 4px !important;
+        padding: 8px 4px !important;
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
@@ -154,26 +202,22 @@
       .mobile-card-table td:last-child {
         border-bottom: none !important;
         justify-content: center !important;
-        padding-top: 14px !important;
+        padding-top: 12px !important;
       }
-      
-      /* ดึงค่าหัวข้อคอลัมน์มาแสดงผลฝั่งซ้ายผ่าน Attribute data-label */
       .mobile-card-table td::before {
         content: attr(data-label);
         font-weight: 700 !important;
         color: #64748b !important;
-        font-size: 16px !important;
+        font-size: 15px !important;
         text-align: left !important;
         margin-right: 15px;
         flex-shrink: 0;
       }
       
-      /* ปรับแต่งปุ่มเปลี่ยนหน้า Pagination ในมือถือไม่ให้กระจัดกระจาย */
       .pagination-lg .page-link {
         padding: 8px 14px !important;
         font-size: 16px !important;
       }
-      
       .card-container-panel {
         padding: 12px !important;
         border-radius: 16px !important;
@@ -203,6 +247,7 @@
     <h3 class="mt-3 text-muted fw-bold">กำลังประมวลผลข้อมูล<br>โปรดรอสักครู่เดียว...</h3>
   </div>
 
+  <!-- หน้าล็อกอินระบบ (Login Section) -->
   <div id="loginSection" class="d-flex align-items-center justify-content-center min-vh-100 container-glass-bg">
     <div class="card login-card p-4 text-center">
       <div class="mb-3">
@@ -232,6 +277,7 @@
     </div>
   </div>
 
+  <!-- หน้าจอหลักหลังเข้าสู่ระบบ (Main Interface) -->
   <div id="mainInterface" class="d-none">
     
     <header class="navbar navbar-expand-lg header-glass fixed-top px-4 py-2 d-flex justify-content-between align-items-center">
@@ -256,47 +302,48 @@
     <div class="container-fluid wrapper-layout">
       <div class="row">
         
-        <nav id="sidebarMenu" class="col-md-3 col-lg-2 sidebar-glass d-md-block collapse">
+        <!-- แถบเมนูนำทางด้านข้าง (PC) / แถบสไลด์แนวนอนด้านล่าง (Mobile) -->
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 sidebar-glass d-block">
           <div class="position-sticky pt-2 px-1">
             <ul class="nav flex-column gap-2">
               <li class="nav-item">
                 <a class="nav-link active fs-4 py-2" id="btn-view-dash" onclick="changeViewWindow('dash')">
-                  <i class="fa-solid fa-chart-simple me-2 text-primary"></i> 1.สรุปสถิติ
+                  <i class="fa-solid fa-chart-simple me-2 text-primary"></i>1.สรุปสถิติ
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link fs-4 py-2" id="btn-view-list" onclick="changeViewWindow('list')">
-                  <i class="fa-solid fa-stethoscope me-2 text-success"></i> 2. คัดกรอง
+                  <i class="fa-solid fa-stethoscope me-2 text-success"></i>2.คัดกรอง
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link fs-4 py-2" id="btn-view-rules" onclick="changeViewWindow('rules')">
-                  <i class="fa-solid fa-book-medical me-2 text-info"></i> 3. ดัชนีสุขภาพ
+                  <i class="fa-solid fa-book-medical me-2 text-info"></i>3.ดัชนีสุขภาพ
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link fs-4 py-2" id="btn-view-perf" onclick="changeViewWindow('perf')">
-                  <i class="fa-solid fa-star me-2 text-warning"></i> 4. ผลงาน
+                  <i class="fa-solid fa-star me-2 text-warning"></i>4.ผลงาน
                 </a>
               </li>
               <li class="nav-item admin-staff-only d-none">
                 <a class="nav-link fs-4 py-2" id="btn-view-mgtgt" onclick="changeViewWindow('mgtgt')">
-                  <i class="fa-solid fa-sliders me-2 text-danger"></i> 5. เป้าหมาย
+                  <i class="fa-solid fa-sliders me-2 text-danger"></i>5.เป้าหมาย
                 </a>
               </li>
               <li class="nav-item admin-staff-only d-none">
                 <a class="nav-link fs-4 py-2" id="btn-view-mgusr" onclick="changeViewWindow('mgusr')">
-                  <i class="fa-solid fa-user-gear me-2 text-purple"></i> 6. จัดการผู้ใช้
+                  <i class="fa-solid fa-user-gear me-2 text-purple"></i>6.จัดการผู้ใช้
                 </a>
               </li>
               <li class="nav-item admin-staff-only d-none">
                 <a class="nav-link fs-4 py-2" id="btn-view-report" onclick="changeViewWindow('report')">
-                  <i class="fa-solid fa-file-invoice text-dark-blue me-2"></i> 7. รายงาน
+                  <i class="fa-solid fa-file-invoice text-dark-blue me-2"></i>7.รายงาน
                 </a>
               </li>
               <li class="nav-item admin-only d-none">
                 <a class="nav-link fs-4 py-2" id="btn-view-upload" onclick="changeViewWindow('upload')">
-                  <i class="fa-solid fa-file-import text-orange me-2"></i> 8. อัปโหลดไฟล์ประชากร
+                  <i class="fa-solid fa-file-import text-orange me-2"></i>8.อัปโหลด
                 </a>
               </li>
             </ul>
@@ -306,6 +353,7 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-frame">
           <div id="windowViewManager">
             
+            <!-- เมนูที่ 1: หน้าสรุปสถิติ -->
             <div id="view-window-dash" class="sub-view-panel">
               <h2 class="fw-black text-dark mb-1 pt-2">หน้าสรุปความเสี่ยงโรคไม่ติดต่อเรื้อรัง (NCDs)</h2>
               <p class="text-muted fs-4 mb-4">ข้อมูลประมวลผลสะสมเฉพาะผู้รับบริการที่อยู่ในเขตพื้นที่ความรับผิดชอบ</p>
@@ -330,6 +378,7 @@
               </div>
             </div>
 
+            <!-- เมนูที่ 2: คัดกรอง -->
             <div id="view-window-list" class="sub-view-panel d-none">
               <h2 class="fw-black text-dark m-0 pt-2">ตารางรายชื่อประชาชนในการดูแล</h2>
               <div class="card p-3 mb-4 mt-2 border-0 shadow-sm bg-white rounded-3">
@@ -351,6 +400,7 @@
               <div class="card card-container-panel p-0 table-responsive"><table class="table table-hover align-middle mb-0 text-nowrap mobile-card-table"><thead class="table-dark fs-4"><tr><th>ทะเบียน PID</th><th>ชื่อ - นามสกุล</th><th>อายุ</th><th>ที่อยู่ปัจจุบัน</th><th>ผลตรวจปีนี้</th><th class="text-center">กดคัดกรอง</th></tr></thead><tbody id="populationTableBody" class="fs-4 fw-bold"></tbody></table><div class="p-3 d-flex justify-content-between align-items-center bg-light border-top flex-wrap gap-2"><span class="fs-4 text-muted fw-bold" id="labelTablePaginationInfo">-</span><nav><ul class="pagination pagination-lg mb-0" id="paginationWrapper"></ul></nav></div></div>
             </div>
 
+            <!-- หน้าแบบฟอร์มบันทึกการคัดกรองโรค -->
             <div id="view-window-form" class="sub-view-panel d-none">
               <div class="pt-2 pb-2 mb-3 border-bottom d-flex align-items-center gap-3"><button class="btn btn-secondary btn-lg fs-4 px-4 py-2 rounded-pill" onclick="changeViewWindow('list')"><i class="fa fa-arrow-left me-2"></i>ย้อนกลับ</button><h2 class="fw-black text-dark m-0">แบบฟอร์มบันทึกการคัดกรองเชิงรุกประจำตัว อสม.</h2></div>
               <div class="row g-3">
@@ -387,7 +437,7 @@
                 </div>
                 
                 <div class="col-xl-5">
-                  <div class="card card-container-panel p-4 " id="rt-evaluation-sticky-box">
+                  <div class="card card-container-panel p-4" id="rt-evaluation-sticky-box">
                     <h3 class="fw-black text-dark mb-3"><i class="fa-solid fa-square-poll-vertical text-primary me-2"></i>ผลคัดกรองสุขภาพ</h3>
                     <hr class="mt-0">
                     <div class="d-flex justify-content-between align-items-center mb-3 fs-4 fw-bold"><span>ดัชนีมวลกาย (BMI):</span><span id="rt-bmi" class="text-dark fs-3 bg-light px-2 rounded">-</span></div>
@@ -422,16 +472,19 @@
               </div>
             </div>
 
+            <!-- เมนูที่ 3: เกณฑ์ดัชนีสุขภาพ -->
             <div id="view-window-rules" class="sub-view-panel d-none">
               <h2 class="fw-black text-dark m-0 pt-2">3. เกณฑ์ดัชนีสุขภาพและความรู้การแปรผล</h2>
               <div class="card card-container-panel p-0 table-responsive mt-3"><table class="table table-bordered table-striped align-middle mb-0 mobile-card-table"><thead class="table-dark fs-5 text-white"><tr><th>ดัชนีชี้วัด</th><th>ช่วงระดับเกณฑ์</th><th>ผลการวิเคราะห์</th><th>คำพูดแนวทางบอกต่อประชาชน</th></tr></thead><tbody id="healthRulesTableBody" class="fs-5 text-dark fw-bold"></tbody></table></div>
             </div>
 
+            <!-- เมนูที่ 4: ผลงาน -->
             <div id="view-window-perf" class="sub-view-panel d-none">
               <h2 class="fw-black text-dark m-0 pt-2">4. รายงานความคืบหน้าสรุปผลงานการคัดกรอง อสม.</h2>
               <div class="card card-container-panel p-0 table-responsive mt-3"><table class="table table-bordered table-hover align-middle mb-0 text-nowrap mobile-card-table"><thead class="table-dark fs-4 text-white"><tr><th>ชื่อ อสม.</th><th>หมู่ที่</th><th>เป้าหมายทั้งหมด</th><th>คัดกรองแล้ว</th><th>คงเหลือ</th><th>ร้อยละผลงาน</th></tr></thead><tbody id="vhvPerformanceTableBody" class="fs-4 fw-bold text-dark"></tbody></table><div class="p-3 d-flex justify-content-between align-items-center bg-light border-top flex-wrap gap-2"><span class="fs-4 text-muted fw-bold" id="labelPerfPaginationInfo">-</span><nav><ul class="pagination pagination-lg mb-0" id="paginationPerfWrapper"></ul></nav></div></div>
             </div>
 
+            <!-- เมนูที่ 5: เป้าหมาย -->
             <div id="view-window-mgtgt" class="sub-view-panel d-none">
               <div class="d-flex justify-content-between align-items-center pt-2 mb-2 flex-wrap gap-2">
                 <div>
@@ -485,6 +538,7 @@
               </div>
             </div>
 
+            <!-- เมนูที่ 6: จัดการผู้ใช้ -->
             <div id="view-window-mgusr" class="sub-view-panel d-none">
               <h2 class="fw-black text-dark m-0 pt-2">6. แผงควบคุมสิทธิ์บัญชีรายชื่อ อสม. และระบบโลโก้</h2>
               <div class="card p-4 mb-4 mt-2 card-container-panel">
@@ -495,6 +549,7 @@
               <div class="card card-container-panel p-0 table-responsive"><table class="table table-hover align-middle mb-0 text-nowrap mobile-card-table"><thead class="table-dark fs-4"><tr><th>รหัสผู้ใช้</th><th>ชื่อผู้ใช้</th><th>รหัสผ่าน</th><th>สิทธิ์ระบบ</th><th>ชื่อ - นามสกุล</th><th>หมู่ที่</th><th class="text-center">จัดการคำสั่ง</th></tr></thead><tbody id="usersTableBody" class="fs-4 fw-bold text-dark"></tbody></table></div>
             </div>
 
+            <!-- เมนูที่ 7: รายงาน -->
             <div id="view-window-report" class="sub-view-panel d-none">
               <div class="d-flex justify-content-between align-items-center pt-2 mb-3 flex-wrap gap-2">
                 <div>
@@ -518,6 +573,7 @@
               </div>
             </div>
 
+            <!-- เมนูที่ 8: ศูนย์อัปเดตนำเข้าข้อมูล -->
             <div id="view-window-upload" class="sub-view-panel d-none">
               <h2 class="fw-black text-dark pt-2 m-0">8. ศูนย์นำเข้าข้อมูลประชากรเป้าหมายประจำปีงบประมาณ</h2>
               <p class="text-muted fs-4 mb-4">บริการสำหรับผู้ดูแลระบบสูงสุดในการล้างข้อมูลประชากรเก่า และเขียนทับด้วยข้อมูลระเบียนราษฎร์ชุดใหม่ผ่านไฟล์รูปแบบ CSV</p>
@@ -533,12 +589,13 @@
             </div>
 
           </div>
-          <footer class="mt-auto py-3 text-center text-muted fw-bold fs-5 border-top">&copy; 2569 ระบบข้อมูลสุขภาพคัดกรองเชิงรุก Ver.3.8 | Design & Developed by Apiwat Meethong</footer>
+          <footer class="mt-auto py-3 text-center text-muted fw-bold fs-5 border-top">&copy; 2569 ระบบข้อมูลสุขภาพคัดกรองเชิงรุก Ver.3.9 | Design & Developed by Apiwat Meethong</footer>
         </main>
       </div>
     </div>
   </div>
 
+  <!-- กล่องโมดอลจัดการเจ้าหน้าที่ อสม. -->
   <div class="modal fade" id="userManagementModal" data-bs-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content card-container-panel p-3">
@@ -589,6 +646,7 @@
     let tableSearchDebounceTimeout;
     let targetMgSearchDebounceTimeout;
 
+    // 🚨 นำ URL Web App ของเดิมที่คุณเคยใช้งานมาวางทับได้เลยครับ
     const API_URL = "https://script.google.com/macros/s/AKfycbymA_M4uMbNZiKWdCucLi_MWajv2mtgV5FnIxifvinUagoVvyumobD5ooOxeZ4HvtSU7Q/exec";
 
     async function callBackendApi(actionName, dataPayload = {}) {
@@ -850,7 +908,6 @@
       }, 300);
     }
 
-    // เมนูที่ 2: เพิ่มชุดข้อมูล data-label เพื่อทำ Mobile Cards
     function renderPopulationTableElements() {
       const tbody = document.getElementById('populationTableBody'); if (!tbody) return; tbody.innerHTML = '';
       if (displayFilteredDataset.length === 0) {
@@ -1030,7 +1087,7 @@
       if (sbp<60 || sbp>200 || dbp<30 || dbp>120 || bsl<40 || bsl>600) { Swal.fire({ icon: 'error', title: 'ตัวเลขคลาดเคลื่อน', text: 'ข้อมูลสัญญาณชีพผิดขอบเขตมาตรฐานสาธารณสุข โปรดตรวจทานอีกรอบครับ!' }); return; }
       
       const payload = {
-        id: document.getElementById('form_record_id').value, citizen_id: document.getElementById('form_pid').value, name: document.getElementById('form_name').value, age: parseInt(document.getElementById('form_age').value), gender: document.getElementById('form_gender').value, weight: parseFloat(wRaw), height: parseFloat(hRaw), bmi: parseFloat(document.getElementById('rt-bmi').innerText) || 0, waist: parseFloat(waistRaw), bp_sys: sbp, bp_dia: dbp, bp_status: document.getElementById('rt-bp').innerText, fbs: bsl, fbs_status: document.getElementById('rt-bsl').innerText,
+        id: document.getElementById('form_record_id').value, citizen_id: document.getElementById('form_pid').value, name: document.getElementById('form_name').value, age: parseInt(document.getElementById('form_age').value), gender: document.getElementById('form_gender').value, weight: parseFloat(wRaw), height: parseFloat(hRaw), bmi: parseFloat(document.getElementById('rt-bmi').innerText) || 0, waist: parseFloat(waistRaw), bp_sys: sbp, dbp_dia: dbp, bp_status: document.getElementById('rt-bp').innerText, fbs: bsl, fbs_status: document.getElementById('rt-bsl').innerText,
         smoking: document.getElementById('sm_yes').checked ? `สูบ (${document.getElementById('sel_freq_smoke').value})` : "ไม่สูบ", alcohol: document.getElementById('alc_yes').checked ? `ดื่ม (${document.getElementById('sel_freq_alc').value})` : "ไม่ดื่ม", exercise: document.getElementById('ex_ok').checked ? "เพียงพอ" : `ไม่เพียงพอ (${document.getElementById('sel_freq_ex').value})`, cvd_risk: document.getElementById('rt-cvd').innerText, ncd_status: document.getElementById('rt-status-text').innerText, operator: activeVhvSession.name
       };
       
@@ -1060,7 +1117,6 @@
       tbody.innerHTML += `<tr><td data-label="ดัชนีชี้วัด"><span class="badge fs-5 px-3 py-2" style="background-color: #be185d;">รอบเอว (หญิง)</span></td><td data-label="ช่วงระดับเกณฑ์" class="fs-4">ตั้งแต่ 81 เซนติเมตร ขึ้นไป (หรือ เกินเกณฑ์ ส่วนสูง ÷ 2)</td><td class="fs-4 text-danger fw-bold">อ้วนลงพุง</td><td data-label="แนวทางบอกต่อ" class="small text-muted fs-5">มีภาวะอ้วนลงพุง เสี่ยงต่อโรคแทรกซ้อนหลอดเลือดหัวใจ สมอง และเบาหวานรายใหม่</td></tr>`;
     }
 
-    // เมนูที่ 4: เพิ่มชุดข้อมูล data-label เพื่อทำ Mobile Cards
     function fetchVhvPerformanceReportFromServer() { 
       toggleLoaderDisplay(true); 
       callBackendApi('getVhvPerformanceReport')
@@ -1124,7 +1180,6 @@
       }, 300);
     }
 
-    // เมนูที่ 5: เพิ่มชุดข้อมูล data-label เพื่อทำ Mobile Cards
     function renderTargetMgTable() {
       const tbody = document.getElementById('targetMgTableBody'); if (!tbody) return; tbody.innerHTML = ''; if(filteredTargetMgList.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">ไม่พบประวัติ</td></tr>'; return; }
       
@@ -1244,7 +1299,6 @@
         });
     }
 
-    // เมนูที่ 7: เพิ่มชุดข้อมูล data-label เพื่อทำ Mobile Cards
     function renderReportTable() {
       const tbody = document.getElementById('reportTableBody'); if (!tbody) return; tbody.innerHTML = '';
       if (masterReportList.length === 0) { tbody.innerHTML = '<tr><td colspan="12" class="text-center text-muted py-4 fs-4">ยังไม่พบบันทึกประวัติการคัดกรอง NCDs ในระบบ</td></tr>'; return; }
