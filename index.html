@@ -1338,6 +1338,33 @@
         }
       });
     }
+    // 📌 🔥 ฟังก์ชันส่งคำสั่งล้างรายชื่อประชากรเป้าหมายในพื้นที่ออกทั้งหมด (ชีท data)
+function executeClearTargetDatabaseAction() {
+  Swal.fire({
+    title: 'ยืนยันการล้างรายชื่อเป้าหมาย?',
+    text: "🚨 คำเตือนขั้นเด็ดขาด: คำสั่งนี้จะล้างรายชื่อประชากรทั้งหมดออกจากระบบ (ชีท data) ทันที! อสม. จะไม่เห็นรายชื่อประชาชนใดๆ ในระบบจนกว่าท่านจะนำเข้าไฟล์ CSV ชุดใหม่เข้าไปทดแทน!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc2626',
+    cancelButtonColor: '#64748b',
+    confirmButtonText: 'ใช่, ฉันต้องการล้างรายชื่อทั้งหมด',
+    cancelButtonText: 'ยกเลิก'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      toggleLoaderDisplay(true);
+      callBackendApi('clearTargetPopulationDatabase')
+        .then(res => {
+          toggleLoaderDisplay(false);
+          if(res.success) {
+            Swal.fire({ icon: 'success', title: 'ล้างข้อมูลเป้าหมายสำเร็จ', text: 'รายชื่อประชากรในชีท data ถูกปรับล้างเป็นค่าว่างเรียบร้อยแล้วครับ' });
+          } else {
+            Swal.fire({ icon: 'error', title: 'ทำรายการไม่สำเร็จ', text: res.message });
+          }
+        })
+        .catch(err => { toggleLoaderDisplay(false); });
+    }
+  });
+}
   </script>
 </body>
 </html>
