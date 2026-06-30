@@ -503,20 +503,33 @@
                   </div>
                 </div>
 
-                <!-- ฝั่งปุ่มรีเซ็ตล้างฐานข้อมูลฟอร์มคัดกรอง -->
-                <div class="col-lg-5">
-                  <div class="card card-container-panel p-4 h-100 text-center bg-white border border-danger d-flex flex-column justify-content-center">
-                    <div class="my-3"><i class="fa-solid fa-database text-danger fa-4x animate-pulse"></i></div>
-                    <h4 class="fw-bold text-danger mb-2">ล้างฐานข้อมูลประวัติการคัดกรอง</h4>
-                    <p class="text-muted fs-5 mb-4">ล้างประวัติการกรอกสัญญาณชีพ (น้ำหนัก, ส่วนสูง, รอบเอว, ความดัน, น้ำตาล) และผลแปรผลคัดกรอง NCDs ของประชากรทั้งหมดออก เพื่อเริ่มต้นเก็บข้อมูลใหม่ในรอบปีงบประมาณถัดไป</p>
-                    
-                    <div class="mt-4">
-                      <button class="btn btn-danger btn-lg w-100 py-3 fs-4 fw-bold rounded-pill shadow" onclick="executeClearScreeningDatabaseAction()">
-                        <i class="fa-solid fa-trash-can me-2"></i> รีเซ็ตฐานข้อมูลคัดกรองเป็นว่างเปล่า
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <!-- ฝั่งปุ่มรีเซ็ตล้างฐานข้อมูลระบบ (Danger Zone) -->
+<div class="col-lg-5">
+  <div class="card card-container-panel p-4 h-100 bg-white border border-danger d-flex flex-column justify-content-between">
+    <div>
+      <h4 class="fw-bold text-danger mb-3"><i class="fa-solid fa-triangle-exclamation me-2"></i>โซนอันตราย (Danger Zone)</h4>
+      <p class="text-muted small mb-4">คำสั่งสำหรับล้างทำความสะอาดระบบเพื่อขึ้นรอบปีงบประมาณใหม่ โปรดใช้งานด้วยความระมัดระวังสูงสุด</p>
+    </div>
+    
+    <!-- ส่วนที่ 1: ล้างข้อมูลคัดกรอง (ของเดิม) -->
+    <div class="p-3 border rounded border-danger-subtle mb-3 text-center bg-light">
+      <h5 class="fw-bold text-dark fs-5 mb-1">1. ล้างฐานข้อมูลประวัติคัดกรอง</h5>
+      <p class="text-muted small mb-2">ล้างค่าสัญญาณชีพ น้ำหนัก ความดัน น้ำตาล (แต่ยังคงรายชื่อประชากรเดิมเอาไว้)</p>
+      <button class="btn btn-danger btn-sm w-100 py-2 fw-bold rounded-pill shadow-sm" onclick="executeClearScreeningDatabaseAction()">
+        <i class="fa-solid fa-trash-can me-1"></i> ล้างข้อมูลประวัติสัญญาณชีพ
+      </button>
+    </div>
+
+    <!-- ส่วนที่ 2: ล้างรายชื่อประชากรเป้าหมาย ชีท data (เพิ่มใหม่ตามคำขอ) -->
+    <div class="p-3 border rounded border-danger-subtle text-center bg-light">
+      <h5 class="fw-bold text-dark fs-5 mb-1">2. ล้างฐานข้อมูลประชากรเป้าหมาย</h5>
+      <p class="text-muted small mb-2">ล้างรายชื่อประชากรทั้งหมดในพื้นที่ในชีท data (เพื่อเตรียมนำเข้า CSV ชุดใหม่ให้คลีน 100%)</p>
+      <button class="btn btn-danger btn-sm w-100 py-2 fw-bold rounded-pill shadow-sm" onclick="executeClearTargetDatabaseAction()">
+        <i class="fa-solid fa-users-slash me-1"></i> ล้างรายชื่อเป้าหมาย (ชีท data)
+      </button>
+    </div>
+  </div>
+</div>
               </div>
             </div>
 
