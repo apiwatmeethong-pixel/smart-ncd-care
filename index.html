@@ -286,7 +286,7 @@
               <li class="nav-item admin-staff-only d-none"><a class="nav-link fs-4 py-2" id="btn-view-mgtgt" onclick="changeViewWindow('mgtgt')"><i class="fa-solid fa-sliders me-2 text-danger"></i>5.เป้าหมาย</a></li>
               <li class="nav-item admin-staff-only d-none"><a class="nav-link fs-4 py-2" id="btn-view-mgusr" onclick="changeViewWindow('mgusr')"><i class="fa-solid fa-user-gear me-2 text-purple"></i>6.จัดการผู้ใช้</a></li>
               <li class="nav-item admin-staff-only d-none"><a class="nav-link fs-4 py-2" id="btn-view-report" onclick="changeViewWindow('report')"><i class="fa-solid fa-file-invoice text-dark-blue me-2"></i>7.รายงาน</a></li>
-              <li class="nav-item admin-only d-none"><a class="nav-link fs-4 py-2" id="btn-view-upload" onclick="changeViewWindow('upload')"><i class="fa-solid fa-file-import text-orange me-2"></i>8.อัปโหลด</a></li>
+              <li class="nav-item admin-only d-none"><a class="nav-link fs-4 py-2" id="btn-view-upload" onclick="changeViewWindow('upload')"><i class="fa-solid fa-file-import text-orange me-2"></i>8.ศูนย์แอดมิน</a></li>
             </ul>
           </div>
         </nav>
@@ -470,16 +470,52 @@
               </div>
             </div>
 
+            <!-- 🔥 เมนูที่ 8: ศูนย์จัดการฐานข้อมูลแอดมินสูงสุด (เพิ่มปุ่มรีเซ็ต และสลับโหมดนำเข้า CSV) -->
             <div id="view-window-upload" class="sub-view-panel d-none">
-              <h2 class="fw-black text-dark pt-2 m-0">8. ศูนย์นำเข้าข้อมูลประชากรเป้าหมายประจำปีงบประมาณ</h2>
-              <p class="text-muted fs-4 mb-4">บริการสำหรับผู้ดูแลระบบสูงสุดในการล้างข้อมูลประชากรเก่า และเขียนทับด้วยข้อมูลระเบียนราษฎร์ชุดใหม่ผ่านไฟล์รูปแบบ CSV</p>
-              <div class="card card-container-panel p-5 text-center bg-white border-2" style="border-style: dashed !important; border-color: #94a3b8 !important;">
-                <div class="mb-3"><i class="fa-solid fa-file-csv text-orange fa-5x animate-pulse"></i></div>
-                <h3 class="fw-bold text-dark mb-2">เลือกไฟล์รายชื่อประชากร (.csv)</h3>
-                <p class="text-muted fs-5 mb-4">โครงสร้างแถวคอลัมน์ของไฟล์ CSV ต้องเรียงลำดับหัวข้อให้ตรงตามมาตรฐานฐานข้อมูลชีท data ปัจจุบันเท่านั้น</p>
-                <div class="max-width-500 mx-auto">
-                  <input type="file" id="inputCsvTargetFile" class="form-control form-control-custom-file form-control-lg fs-4 mb-4" accept=".csv">
-                  <button class="btn btn-orange btn-lg w-100 py-3 fs-3 fw-bold text-white rounded-pill shadow" onclick="executeProcessingCsvUploadToServer()"><i class="fa-solid fa-upload me-2"></i> เริ่มทำงานนำเข้าข้อมูล (ทับข้อมูลเดิมทั้งหมด)</button>
+              <h2 class="fw-black text-dark pt-2 m-0">8. ศูนย์บริการจัดการระบบและฐานข้อมูลสำหรับ Admin สูงสุด</h2>
+              <p class="text-muted fs-4 mb-4">บริการจัดการล้างระบบ เขียนทับข้อมูลเป้าหมายประจำปีงบประมาณ และการอัปเดตรายชื่อบัญชีผู้เข้าใช้งาน อสม.</p>
+              
+              <div class="row g-4">
+                <!-- ฝั่งการนำเข้าไฟล์ CSV -->
+                <div class="col-lg-7">
+                  <div class="card card-container-panel p-4 h-100 bg-white">
+                    <h4 class="fw-bold text-dark mb-3"><i class="fa-solid fa-file-import text-primary me-2"></i>ระบบนำเข้าข้อมูลผ่านไฟล์ CSV</h4>
+                    
+                    <label class="form-label fw-bold fs-5 text-secondary mb-2">1. เลือกประเภทข้อมูลที่ต้องการนำเข้า</label>
+                    <div class="btn-group w-100 mb-4" role="group">
+                      <input type="radio" class="btn-check" name="csvTypeRadio" id="csv_type_target" value="target" checked>
+                      <label class="btn btn-outline-primary py-3 fs-5 fw-bold" for="csv_type_target"><i class="fa-solid fa-users me-1"></i> รายชื่อประชากรเป้าหมาย</label>
+                      
+                      <input type="radio" class="btn-check" name="csvTypeRadio" id="csv_type_users" value="users">
+                      <label class="btn btn-outline-purple py-3 fs-5 fw-bold" for="csv_type_users"><i class="fa-solid fa-user-gear me-1"></i> รายชื่อบัญชีผู้ใช้งาน อสม.</label>
+                    </div>
+
+                    <label class="form-label fw-bold fs-5 text-secondary mb-2">2. เลือกไฟล์เอกสาร (.csv)</label>
+                    <input type="file" id="inputCsvTargetFile" class="form-control form-control-custom-file form-control-lg fs-4 mb-3" accept=".csv">
+                    
+                    <p class="text-muted small mb-4">
+                      * หมายเหตุ: การนำเข้าไฟล์ CSV จะทำการล้างฐานข้อมูลแผ่นงาน (Sheet) ฝั่งหลังบ้านชุดล่าสุดออกทั้งหมด และเขียนทับด้วยข้อมูลชุดใหม่จากในไฟล์ของท่านทันที โปรดตรวจสอบความถูกต้องคอลัมน์ก่อนกดยืนยันคำสั่ง
+                    </p>
+                    
+                    <button class="btn btn-primary btn-lg w-100 py-3 fs-3 fw-bold rounded-pill shadow" onclick="executeProcessingCsvUploadToServer()">
+                      <i class="fa-solid fa-cloud-arrow-up me-2"></i> เริ่มกระบวนการนำเข้าไฟล์ข้อมูล
+                    </button>
+                  </div>
+                </div>
+
+                <!-- ฝั่งปุ่มรีเซ็ตล้างฐานข้อมูลฟอร์มคัดกรอง -->
+                <div class="col-lg-5">
+                  <div class="card card-container-panel p-4 h-100 text-center bg-white border border-danger d-flex flex-column justify-content-center">
+                    <div class="my-3"><i class="fa-solid fa-database text-danger fa-4x animate-pulse"></i></div>
+                    <h4 class="fw-bold text-danger mb-2">ล้างฐานข้อมูลประวัติการคัดกรอง</h4>
+                    <p class="text-muted fs-5 mb-4">ล้างประวัติการกรอกสัญญาณชีพ (น้ำหนัก, ส่วนสูง, รอบเอว, ความดัน, น้ำตาล) และผลแปรผลคัดกรอง NCDs ของประชากรทั้งหมดออก เพื่อเริ่มต้นเก็บข้อมูลใหม่ในรอบปีงบประมาณถัดไป</p>
+                    
+                    <div class="mt-4">
+                      <button class="btn btn-danger btn-lg w-100 py-3 fs-4 fw-bold rounded-pill shadow" onclick="executeClearScreeningDatabaseAction()">
+                        <i class="fa-solid fa-trash-can me-2"></i> รีเซ็ตฐานข้อมูลคัดกรองเป็นว่างเปล่า
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1229,20 +1265,65 @@
       setTimeout(() => { window.print(); renderTargetMgTable(); }, 500);
     }
 
+    // 📌 🔥 ฟังก์ชันคำสั่งนำเข้าไฟล์ CSV (พัฒนาให้รองรับแบบสลับโหมด Target CSV และ Users CSV)
     function executeProcessingCsvUploadToServer() {
       const fileInput = document.getElementById('inputCsvTargetFile');
-      if (!fileInput || fileInput.files.length === 0) { Swal.fire({ icon: 'warning', title: 'ยังไม่ได้เลือกไฟล์', text: 'กรุณาเลือกไฟล์ประชากรในรูปแบบนามสกุล .csv ก่อนกดปุ่มนำเข้าข้อมูลครับ' }); return; }
+      if (!fileInput || fileInput.files.length === 0) { Swal.fire({ icon: 'warning', title: 'ยังไม่ได้เลือกไฟล์', text: 'กรุณาเลือกไฟล์เอกสารในรูปแบบนามสกุล .csv ก่อนกดยืนยันคำสั่งครับ' }); return; }
+      
+      // ตรวจสอบค่าโหมดที่เลือกจากวิทยุ (target หรือ users)
+      const selectedCsvType = document.querySelector('input[name="csvTypeRadio"]:checked').value;
       const csvFile = fileInput.files[0]; const fileReader = new FileReader(); toggleLoaderDisplay(true);
+      
       fileReader.onload = function(event) {
         const textRawContent = event.target.result;
-        callBackendApi('importCsvToDataSheet', { textRawContent: textRawContent }).then(result => {
-          toggleLoaderDisplay(false);
-          if (result.success) {
-            fileInput.value = ""; Swal.fire({ icon: 'success', title: 'นำเข้าข้อมูลประชากรสำเร็จ!', text: `ระบบได้ทำการล้างข้อมูลชุดเก่า และเขียนทับข้อมูลชุดใหม่ลงชีท data เรียบร้อยแล้ว จำนวนทั้งหมด ${result.count} รายการ`, confirmButtonText: 'รับทราบ', confirmButtonColor: '#ea580c' });
-          } else { Swal.fire({ icon: 'error', title: 'การนำเข้าข้อมูลล้มเหลว', text: result.message }); }
-        });
+        // จับคู่ชื่อฟังก์ชัน API หลังบ้านให้ตรงตามโหมดที่แอดมินเลือก
+        const backendAction = (selectedCsvType === 'users') ? 'importUsersCsvToSheet' : 'importCsvToDataSheet';
+        
+        callBackendApi(backendAction, { textRawContent: textRawContent })
+          .then(result => {
+            toggleLoaderDisplay(false);
+            if (result.success) {
+              fileInput.value = ""; 
+              Swal.fire({ 
+                icon: 'success', 
+                title: 'นำเข้าข้อมูลสำเร็จ!', 
+                text: `ระบบดำเนินการล้างเนื้อหาชุดเก่า และเขียนทับข้อมูลชุดใหม่เรียบร้อยแล้ว จำนวนทั้งหมด ${result.count} รายการ`, 
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#0284c7' 
+              });
+            } else { Swal.fire({ icon: 'error', title: 'การนำเข้าข้อมูลล้มเหลว', text: result.message }); }
+          })
+          .catch(err => { toggleLoaderDisplay(false); });
       };
       fileReader.readAsText(csvFile, "UTF-8");
+    }
+
+    // 📌 🔥 ฟังก์ชันส่งคำสั่งล้างฐานข้อมูลคัดกรองการกรอกสัญญาณชีพประจำปีเป็นค่าว่าง (Reset ฐานข้อมูล)
+    function executeClearScreeningDatabaseAction() {
+      Swal.fire({
+        title: 'ยืนยันการรีเซ็ตล้างฐานข้อมูล?',
+        text: "🚨 คำเตือนสำคัญ: คำสั่งนี้จะทำการล้างประวัติการคัดกรองสัญญาณชีพของปีนี้ทั้งหมดออกจากระบบ เพื่อเคลียร์ฐานข้อมูลให้ว่างเปล่าและพร้อมสำหรับรอบปีงบประมาณถัดไป ข้อมูลเดิมจะสูญหายถาวร!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'ใช่, ฉันต้องการล้างระบบทั้งหมด',
+        cancelButtonText: 'ยกเลิก'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          toggleLoaderDisplay(true);
+          callBackendApi('clearScreeningRecordsDatabase')
+            .then(res => {
+              toggleLoaderDisplay(false);
+              if(res.success) {
+                Swal.fire({ icon: 'success', title: 'ระบบล้างฐานข้อมูลเสร็จสิ้น', text: 'ข้อมูลประวัติสัญญาณชีพและการแปรผล NCDs ทั้งหมดถูกปรับเป็นค่าว่างเรียบร้อยแล้ว' });
+              } else {
+                Swal.fire({ icon: 'error', title: 'ทำรายการไม่สำเร็จ', text: res.message });
+              }
+            })
+            .catch(err => { toggleLoaderDisplay(false); });
+        }
+      });
     }
   </script>
 </body>
